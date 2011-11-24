@@ -1,0 +1,138 @@
+body {
+  font-family: Helvetica, Tahoma, Arial;
+}
+
+body, div, p {
+  margin: 0px;
+  padding: 0px;
+}
+
+.page {
+  margin: 1em;
+
+  /*
+  padding-bottom: 1em;
+  border-bottom: 10px solid #888;
+  */
+}
+
+.page + .page {
+  page-break-before: always;  
+}
+
+.info_table {
+  padding: 8px;
+  background: #00c0c0;
+  border: 1px solid #888;
+  border-bottom: none;
+  border-radius: 1em 1em 0em 0em;
+
+  z-index: 1;
+}
+
+.footer_table {
+  width: 100%;
+  padding: 8px;
+  background: #00c0c0;
+  border: 1px solid #888;
+  border-top: none;
+  border-radius: 0em 0em 1em 1em;
+
+  z-index: 7;
+}
+
+.info_table {
+  font-weight: bold;
+  width: 100%;
+}
+
+.info_table thead td {  
+  font-size: 1.5em;
+  padding: 0px 12px;
+}
+
+.info_table td { text-align: center; }
+.info_table td:first-child { text-align: left; }
+.info_table td:last-child { text-align: right; }
+
+.footer_table td { text-align: center; }
+.footer_table td:first-child { text-align: left; }
+.footer_table td:last-child { text-align: right; }
+
+.scramble_table td { text-align: left;}
+.scramble_table td:first-child { text-align: center; font-size: 200%; }
+.scramble_table td:last-child { text-align: center; }
+
+.info_details {
+  line-height: 150%;
+}
+
+.scramble_table {
+  width: 100%;
+  font-weight: bold;
+  border-collapse: collapse;
+
+  z-index: 4;
+  background: #FFF;
+}
+
+.scramble_table td {
+  border: 1px solid #888;
+  padding: 4px 8px;
+}
+
+.wca_logo {
+  width: 40px;
+  height: 40px;
+  margin: -5px;
+}
+
+.wca_logo_top {
+  width: 100px;
+  height: 100px;
+}
+
+<style>
+body {
+  font-family: Helvetica, Tahoma, Arial;
+}
+h2 {
+  text-align: center;
+  margin: 0px;
+}
+li {
+  padding: 0.2em;
+}
+
+#interface {
+  padding: 1em;
+  margin: 1em;
+  font-family: Helvetica;
+  border: 5px solid #000;
+  border-radius: 1em;
+  background: #00c0c0;
+}
+
+@media print  
+{
+    #interface {
+        display: none;
+    }
+}
+
+#goButton {
+  font-size: 200%;
+  padding: 0.1em 1em;
+}
+
+#competitionName, #roundName {
+  font-size: 150%;
+  width: 20em;
+  text-align: center;
+}
+
+.scramble_table td.sorry {
+  padding: 2em;
+  font-size: 200%;
+  text-align: center;
+}

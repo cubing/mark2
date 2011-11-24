@@ -1,0 +1,43 @@
+<!doctype html>
+<html> 
+<head>
+
+<title>WCA Official Puzzle Scrambler</title>
+
+<link href="inc/scramble.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="inc/raphael-min.js"></script>
+<script type="text/javascript" src="inc/mersennetwister.js"></script>
+
+<script type="text/javascript" src="scramblers/scramble_333.js"></script>
+<script type="text/javascript" src="scramblers/scramble_sq1.js"></script>
+
+<script type="text/javascript" src="inc/scramble.js"></script>
+
+</head> 
+<body onload="scramble.initialize();"> 
+
+<div id="interface">
+	<center>
+		<img src="inc/WCAlogo_notext.svg" class="wca_logo_top"><br><br>
+		<h2>WCA Official Puzzle Scrambler (Mark 2)<br>[DRAFT PROPOSAL]</h2><br>
+		<select id="puzzleID">
+			<option value="333" selected="true">3x3x3</option>
+			<option value="sq1">Square-1</option>
+		</select><br><br>
+		<input id="competitionName" value="Sample Competition 2011"/><br><br>
+		<input id="roundName" value="Round X"/><br><br>
+		<button onclick="scramble.add_page(document.getElementById('puzzleID').value, document.getElementById('competitionName').value, document.getElementById('roundName').value);" id="goButton">Scramble!</button>
+		<br><br>
+		<div>This panel will not print.</div>
+	</center>
+</div>
+
+<div id="pages">
+	
+	<!-- Scrambles will be inserted here using Javascript. -->
+
+</div>
+
+</body> 
+</html> 
