@@ -4,7 +4,7 @@ scramble_222.js
 
 2x2x2 Solver / Scramble Generator in Javascript.
 
-Code taken from the official WCA scrambler, 
+Code taken from the official WCA scrambler.
 Ported by Lucas Garron, November 23, 2011.
 
  */
@@ -364,6 +364,8 @@ scramble_222 = (function() {
 
   // get all the form settings from the url parameters
   function parse() {
+
+    /*
     var s="";
     var urlquery=location.href.split("?")
     if(urlquery.length>1){
@@ -379,6 +381,7 @@ scramble_222 = (function() {
         }
       }
     }
+    */
    
     // expand colour string into 6 actual html color names
     for(var k=0; k<6; k++){
@@ -444,10 +447,9 @@ scramble_222 = (function() {
   */
   }
 
-var cubeSize = 2;
+  var cubeSize = 2;
 
-
-    var border = 2;
+  var border = 2;
   var width = 20;
   //URFLBD
   var drawingCenters = [
@@ -487,7 +489,7 @@ function drawSquare(r, cx, cy, w, fillColor) {
 
     var colorString = "wrgoby"; // UFRLBD
 
-    var r = Raphael(parentElement, border*2+width*8, border*2+width*6);
+    var r = Raphael(parentElement, border*2+width*4*cubeSize, border*2+width*3*cubeSize);
 
     var s="",i,f,d=0,q;
     ori = 0;

@@ -4,7 +4,7 @@ scramble_333.js
 
 3x3x3 Solver / Scramble Generator in Javascript.
 
-Code aken from QBX by Evan Gates.
+Code taken from QBX by Evan Gates.
 Ported by Lucas Garron, November 23, 2011.
 
  */

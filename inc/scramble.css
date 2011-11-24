@@ -109,7 +109,7 @@ li {
   padding: 1em;
   margin: 1em;
   font-family: Helvetica;
-  border: 5px solid #000;
+  border: 1px solid #888;
   border-radius: 1em;
   background: #00c0c0;
 }
@@ -148,4 +148,12 @@ li {
 
 .scramble_table td.scramble_222 {
   font-size: 200%;
+}
+
+.scramble_table td.scramble_666 {
+  font-size: 95%;
+}
+
+.scramble_table td.scramble_777 {
+  font-size: 90%;
 }

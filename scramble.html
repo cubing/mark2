@@ -11,6 +11,7 @@
 
 <script type="text/javascript" src="scramblers/scramble_222.js"></script>
 <script type="text/javascript" src="scramblers/scramble_333.js"></script>
+<script type="text/javascript" src="scramblers/scramble_NNN.js"></script>
 <script type="text/javascript" src="scramblers/scramble_sq1.js"></script>
 
 <script type="text/javascript" src="inc/scramble.js"></script>
@@ -20,12 +21,12 @@
 
 <div id="interface">
 	<center>
-		<img src="inc/WCAlogo_notext.svg" class="wca_logo_top"><br><br>
+		<img src="inc/wca_logo.svg" class="wca_logo_top"><br><br>
 		<h2>WCA Official Puzzle Scrambler (Mark 2)<br>[DRAFT PROPOSAL]</h2><br>
 		<select id="puzzleID">
 			<option value="333">Rubik's Cube</option>
-			<!--option value="444">4x4 Cube</option-->
-			<!--option value="555">5x5 Cube</option-->
+			<option value="444">4x4 Cube</option>
+			<option value="555">5x5 Cube</option>
 			<option value="222" selected="true">2x2 Cube</option>
 			<!--option value="333bf">3x3 blindfolded</option-->
 			<!--option value="333oh">3x3 one-handed</option-->
@@ -35,8 +36,8 @@
 			<!--option value="pyram">Pyraminx</option-->
 			<option value="sq1">Square-1</option>
 			<!--option value="clock">Rubik's Clock</option-->
-			<!--option value="666">6x6 Cube</option-->
-			<!--option value="777">7x7 Cube</option-->
+			<option value="666">6x6 Cube</option>
+			<option value="777">7x7 Cube</option>
 			<!--option value="magic">Rubik's Magic</option-->
 			<!--option value="mmagic">Master Magic</option-->
 			<!--option value="444bf">4x4 blindfolded</option-->
@@ -47,7 +48,7 @@
 		<input id="roundName" value="Round X"/><br><br>
 		<button onclick="scramble.add_page(document.getElementById('puzzleID').value, document.getElementById('competitionName').value, document.getElementById('roundName').value);" id="goButton">Scramble!</button>
 		<br><br>
-		<div>This panel will not print.</div>
+		<div>Each set of scrambles will print on separate pages from the others. This panel will not print.</div>
 	</center>
 </div>
 

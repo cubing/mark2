@@ -26,8 +26,8 @@ scramble = (function() {
 
 	var scramblers = {
 		"333": scramble_333,
-		//"444": scramble_444,
-		//"555": scramble_555,
+		"444": scramble_444,
+		"555": scramble_555,
 		"222": scramble_222,
 		//"333bf": scramble_333bf,
 		//"333oh": scramble_333oh,
@@ -37,8 +37,8 @@ scramble = (function() {
 		//"pyram": scramble_pyram,
 		"sq1": scramble_sq1,
 		//"clock": scramble_clock,
-		//"666": scramble_666,
-		//"777": scramble_777,
+		"666": scramble_666,
+		"777": scramble_777,
 		//"magic": scramble_magic,
 		//"mmagic": scramble_mmagic,
 		//"444bf": scramble_444bf,
@@ -105,6 +105,8 @@ scramble = (function() {
 			return;
 		}
 
+		document.title = "WCA Scrambles for " + competitionName;
+
 		// Create a new Page.
 		
 		var pages = document.getElementById("pages");
@@ -134,7 +136,7 @@ scramble = (function() {
 
 						createNewElement(newFooterTR, "td", "", '<u>Scrambles generated at:</u><br>' + (new Date().toString()));
 						createNewElement(newFooterTR, "td", "", '<div style="text-align: right;"><u>' + puzzle_names[puzzleID] + ' Scrambler Version</u><br>' + scrambler.version + '</div>');
-						createNewElement(newFooterTR, "td", "", '<img src="inc/WCAlogo_notext.svg" class="wca_logo">');
+						createNewElement(newFooterTR, "td", "", '<img src="inc/wca_logo.svg" class="wca_logo">');
 		
 		// Generate those scrambles!		
 		
