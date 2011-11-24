@@ -593,7 +593,6 @@ scramble_pyram = (function() {
 
   }
 
-
   return {
     /* mark2 interface */
     version: "November 24, 2011",

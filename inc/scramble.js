@@ -11,7 +11,7 @@ scramble = (function() {
 		"333oh": {name: "3x3 one-handed", scrambler: scramble_333},
 		"333fm": {name: "3x3 fewest moves", scrambler: scramble_333},
 		"333ft": {name: "3x3 with feet", scrambler: scramble_333},
-		//"minx": {name: "Megaminx", scrambler: scramble_minx},
+		"minx": {name: "Megaminx", scrambler: scramble_minx},
 		"pyram": {name: "Pyraminx", scrambler: scramble_pyram},
 		"sq1": {name: "Square-1", scrambler: scramble_sq1},
 		//"clock": {name: "Rubik's Clock", scrambler: scramble_clock},
@@ -48,6 +48,8 @@ scramble = (function() {
 	var initializeRandomSource = function() {
 		
 		console.log("scramble.js: Seeding Mersenne Twister.");
+
+		// We use the date the the native PRNG to get some entropy.
 		var seed = new Date().getTime() + Math.floor(Math.random()*0xffffffff);
 		
 		// Make sure we don't actually use deterministic initialization.

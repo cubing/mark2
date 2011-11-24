@@ -167,6 +167,10 @@ li {
   font-size: 90%;
 }
 
+.scramble_table td.scramble_minx {
+  font-family: monospace;
+}
+
 .unupported {
   padding: 1em;
   margin: 1em;
@@ -174,4 +178,18 @@ li {
   border: 1px solid #00c0c0;
   border-radius: 1em;
   background: #F88;
+}
+
+h2 {
+  font-size: 200%;
+  color: #FFF;
+  font-variant: small-caps;
+  text-shadow:
+    3px 0px 4px #F80,
+    -3px 0px 4px #F00,
+    2px 2px 4px #00F,
+    -2px 2px 4px #FFF,
+    2px -2px 4px #FF0,
+    -2px -2px 4px #0F0
+    ;
 }
