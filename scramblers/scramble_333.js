@@ -459,15 +459,19 @@ scramble_333 = (function() {
     return faces[Math.floor(mv / 3)] + num[mv % 3] + " ";
   }
 
+  var initialized = false;
+
   function init_cube()
   {
-    var i;
+    if (!initialized) {
+      var i;
 
-    ep_coord = cp_coord = ud2_coord = 0;
+      ep_coord = cp_coord = ud2_coord = 0;
 
-    init_trans_tables();
+      init_trans_tables();
 
-    init_prune_tables();
+      init_prune_tables();
+    }
   }
 
   function benchmark()

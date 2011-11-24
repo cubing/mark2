@@ -28,7 +28,7 @@ scramble = (function() {
 		"333": scramble_333,
 		//"444": scramble_444,
 		//"555": scramble_555,
-		//"222": scramble_222,
+		"222": scramble_222,
 		//"333bf": scramble_333bf,
 		//"333oh": scramble_333oh,
 		//"333fm": scramble_333fm,
@@ -89,7 +89,7 @@ scramble = (function() {
 			
 			var scramble = scrambler.getRandomScramble();
 			createNewElement(scrambleTR, "td", "", "" + i + ".");
-			createNewElement(scrambleTR, "td", "", scramble.scramble);
+			createNewElement(scrambleTR, "td", "scramble_" + puzzleID, scramble.scramble);
 			var drawingTD = createNewElement(scrambleTR, "td");
 			var drawingCenter = createNewElement(drawingTD, "center"); // It's 2011, and there's still not a better way to center this. :-/
 

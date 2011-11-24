@@ -79,6 +79,7 @@ body, div, p {
 .scramble_table td {
   border: 1px solid #888;
   padding: 4px 8px;
+  line-height: 150%;
 }
 
 .wca_logo {
@@ -135,4 +136,16 @@ li {
   padding: 2em;
   font-size: 200%;
   text-align: center;
+}
+
+/*
+ * Tweaks for individual scramblers.
+ */
+
+.scramble_table td.scramble_333 {
+  font-size: 150%;
+}
+
+.scramble_table td.scramble_222 {
+  font-size: 200%;
 }
