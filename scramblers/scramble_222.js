@@ -472,19 +472,20 @@ scramble_222 = (function() {
     if (col=="x") return ("#000000");
   }
 
-function drawSquare(r, cx, cy, w, fillColor) {
+  function drawSquare(r, cx, cy, w, fillColor) {
 
-  var arrx = [cx - w, cx - w, cx + w, cx + w];
-  var arry = [cy - w, cy + w, cy + w, cy - w];
+    var arrx = [cx - w, cx - w, cx + w, cx + w];
+    var arry = [cy - w, cy + w, cy + w, cy - w];
 
-  var pathString = "";
-  for (var i = 0; i < arrx.length; i++) {
-    pathString += ((i==0) ? "M" : "L") + arrx[i] + "," + arry[i];
+    var pathString = "";
+    for (var i = 0; i < arrx.length; i++) {
+      pathString += ((i==0) ? "M" : "L") + arrx[i] + "," + arry[i];
+    }
+    pathString += "z";
+      
+    r.path(pathString).attr({fill: colorGet(fillColor), stroke: "#000"})
   }
-  pathString += "z";
-    
-  r.path(pathString).attr({fill: colorGet(fillColor), stroke: "#000"})
-}
+  
   var drawScramble = function(parentElement, state) {
 
     var colorString = "wrgoby"; // UFRLBD

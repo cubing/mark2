@@ -13,3 +13,4 @@ The name "Mark 2" represents that this is an entirely rewritten second-generatio
 # Style Guide
 
 - When updating a scrambler, update date of the version at the end of the file.
+- Make sure all scramblers use implement a setRandomSource(src) methoda and use randomSource.random() instead of Math.random().

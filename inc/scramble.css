@@ -155,6 +155,10 @@ li {
   font-size: 200%;
 }
 
+.scramble_table td.scramble_pyram {
+  font-size: 180%;
+}
+
 .scramble_table td.scramble_666 {
   font-size: 95%;
 }

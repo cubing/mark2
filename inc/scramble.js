@@ -12,7 +12,7 @@ scramble = (function() {
 		"333fm": {name: "3x3 fewest moves", scrambler: scramble_333},
 		"333ft": {name: "3x3 with feet", scrambler: scramble_333},
 		//"minx": {name: "Megaminx", scrambler: scramble_minx},
-		//"pyram": {name: "Pyraminx", scrambler: scramble_pyram},
+		"pyram": {name: "Pyraminx", scrambler: scramble_pyram},
 		"sq1": {name: "Square-1", scrambler: scramble_sq1},
 		//"clock": {name: "Rubik's Clock", scrambler: scramble_clock},
 		"666": {name: "6x6 Cube", scrambler: scramble_666},
@@ -28,12 +28,16 @@ scramble = (function() {
 		initializeRandomSource();
 		document.getElementById("goButton").focus();
 
+		var defaultSelectedEvent = "333";
 
 		var eventIDSelect = document.getElementById("eventID");
 		var numEvents = 0;
 		for (eventID in events) {
 			var newOption = createNewElement(eventIDSelect, "option", "", events[eventID].name);
 			newOption.setAttribute("value", eventID);
+			if (eventID == defaultSelectedEvent) {
+				newOption.setAttribute("selected", "true");
+			}
 			numEvents++;
 		}
 		eventIDSelect.setAttribute("size", numEvents);

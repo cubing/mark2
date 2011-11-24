@@ -740,8 +740,8 @@ function drawSquare(r, cx, cy, w, fillColor) {
         
   };
 
-  /* mark2 interface */
   return {
+    /* mark2 interface */
     version: "November 22, 2011",
     initialize: init_cube,
     setRandomSource: setRandomSource,
