@@ -2,53 +2,41 @@ scramble = (function() {
 
 	var version = "November 23, 2011";
 
-	var puzzle_names = {
-		"333": "Rubik's Cube",
-		"444": "4x4 Cube",
-		"555": "5x5 Cube",
-		"222": "2x2 Cube",
-		"333bf": "3x3 blindfolded",
-		"333oh": "3x3 one-handed",
-		"333fm": "3x3 fewest moves",
-		"333ft": "3x3 with feet",
-		"minx": "Megaminx",
-		"pyram": "Pyraminx",
-		"sq1": "Square-1",
-		"clock": "Rubik's Clock",
-		"666": "6x6 Cube",
-		"777": "7x7 Cube",
-		"magic": "Rubik's Magic",
-		"mmagic": "Master Magic",
-		"444bf": "4x4 blindfolded",
-		"555bf": "5x5 blindfolded",
-		"333mbf": "3x3 multi blind",
-	}
-
-	var scramblers = {
-		"333": scramble_333,
-		"444": scramble_444,
-		"555": scramble_555,
-		"222": scramble_222,
-		//"333bf": scramble_333bf,
-		//"333oh": scramble_333oh,
-		//"333fm": scramble_333fm,
-		//"333ft": scramble_333ft,
-		//"minx": scramble_minx,
-		//"pyram": scramble_pyram,
-		"sq1": scramble_sq1,
-		//"clock": scramble_clock,
-		"666": scramble_666,
-		"777": scramble_777,
-		//"magic": scramble_magic,
-		//"mmagic": scramble_mmagic,
-		//"444bf": scramble_444bf,
-		//"555bf": scramble_555bf,
-		//"333mbf": scramble_333mbf,
+	var events = {
+		"333": {name: "Rubik's Cube", scrambler: scramble_333},
+		"444": {name: "4x4 Cube", scrambler: scramble_444},
+		"555": {name: "5x5 Cube", scrambler: scramble_555},
+		"222": {name: "2x2 Cube", scrambler: scramble_222},
+		"333bf": {name: "3x3 blindfolded", scrambler: scramble_333},
+		"333oh": {name: "3x3 one-handed", scrambler: scramble_333},
+		"333fm": {name: "3x3 fewest moves", scrambler: scramble_333},
+		"333ft": {name: "3x3 with feet", scrambler: scramble_333},
+		//"minx": {name: "Megaminx", scrambler: scramble_minx},
+		//"pyram": {name: "Pyraminx", scrambler: scramble_pyram},
+		"sq1": {name: "Square-1", scrambler: scramble_sq1},
+		//"clock": {name: "Rubik's Clock", scrambler: scramble_clock},
+		"666": {name: "6x6 Cube", scrambler: scramble_666},
+		"777": {name: "7x7 Cube", scrambler: scramble_777},
+		//"magic": {name: "Rubik's Magic", scrambler: scramble_magic},
+		//"mmagic": {name: "Master Magic", scrambler: scramble_mmagic},
+		"444bf": {name: "4x4 blindfolded", scrambler: scramble_444},
+		"555bf": {name: "5x5 blindfolded", scrambler: scramble_555},
+		"333mbf": {name: "3x3 multi blind", scrambler: scramble_333},
 	}
 
 	var initialize = function() {
 		initializeRandomSource();
 		document.getElementById("goButton").focus();
+
+
+		var eventIDSelect = document.getElementById("eventID");
+		var numEvents = 0;
+		for (eventID in events) {
+			var newOption = createNewElement(eventIDSelect, "option", "", events[eventID].name);
+			newOption.setAttribute("value", eventID);
+			numEvents++;
+		}
+		eventIDSelect.setAttribute("size", numEvents);
 	};
 
 	var randomSource = Math;
@@ -80,7 +68,7 @@ scramble = (function() {
 		return newElement;
 	};
 
-	var generate_scrambles = function(tBody, puzzleID, scrambler, num, options) {
+	var generate_scramble_set = function(tBody, eventID, scrambler, num, options) {
 		
 		scrambler.initialize();
 
@@ -89,7 +77,7 @@ scramble = (function() {
 			
 			var scramble = scrambler.getRandomScramble();
 			createNewElement(scrambleTR, "td", "", "" + i + ".");
-			createNewElement(scrambleTR, "td", "scramble_" + puzzleID, scramble.scramble);
+			createNewElement(scrambleTR, "td", "scramble_" + eventID, scramble.scramble);
 			var drawingTD = createNewElement(scrambleTR, "td");
 			var drawingCenter = createNewElement(drawingTD, "center"); // It's 2011, and there's still not a better way to center this. :-/
 
@@ -97,21 +85,20 @@ scramble = (function() {
 		}
 	}
 
-	var add_page = function(puzzleID, competitionName, roundName) {
+	var add_page = function(competitionName, eventID, roundName, numScrambles) {
 
-		var scrambler = scramblers[puzzleID];
-		if (!scrambler) {
-			alert("Sorry, but " + puzzle_names[puzzleID] + " scrambles are not supported yet.");
+		var pages = document.getElementById("scramble_sets");
+
+		if (!events[eventID]) {
+			var newPage = createNewElement(pages, "div", "unupported", "Sorry, but \"" + eventID + "\" scrambles are not currently supported.");
 			return;
 		}
 
-		document.title = "WCA Scrambles for " + competitionName;
+		var scrambler = events[eventID].scrambler;
 
 		// Create a new Page.
 		
-		var pages = document.getElementById("pages");
-
-		var newPage = createNewElement(pages, "div", "page");
+		var newPage = createNewElement(pages, "div", "scramble_set");
 
 			// Header Table
 
@@ -119,7 +106,7 @@ scramble = (function() {
 				var newInfoTHead = createNewElement(newInfoTable, "thead");
 					var newInfoTR = createNewElement(newInfoTHead, "tr");
 						
-						createNewElement(newInfoTR, "td", "puzzle_name", puzzle_names[puzzleID]);
+						createNewElement(newInfoTR, "td", "puzzle_name", events[eventID].name);
 						createNewElement(newInfoTR, "td", "competition_name", competitionName);
 						createNewElement(newInfoTR, "td", "round_name", roundName);
 
@@ -135,20 +122,30 @@ scramble = (function() {
 					var newFooterTR = createNewElement(newFooterTHead, "tr");
 
 						createNewElement(newFooterTR, "td", "", '<u>Scrambles generated at:</u><br>' + (new Date().toString()));
-						createNewElement(newFooterTR, "td", "", '<div style="text-align: right;"><u>' + puzzle_names[puzzleID] + ' Scrambler Version</u><br>' + scrambler.version + '</div>');
+						createNewElement(newFooterTR, "td", "", '<div style="text-align: right;"><u>' + events[eventID].name + ' Scrambler Version</u><br>' + scrambler.version + '</div>');
 						createNewElement(newFooterTR, "td", "", '<img src="inc/wca_logo.svg" class="wca_logo">');
 		
 		// Generate those scrambles!		
 		
-		var numScrambles = 5;
-		generate_scrambles(newScramblesTBody, puzzleID, scrambler, numScrambles, {});
+		generate_scramble_set(newScramblesTBody, eventID, scrambler, numScrambles, {});
 	};
+
+	generate_scrambles = function(competitionName, rounds) {
+
+		document.title = "WCA Scrambles for " + competitionName;
+
+		console.log(competitionName, rounds);
+		
+		for (i in rounds) {
+			add_page(competitionName, rounds[i][0], rounds[i][1], rounds[i][2]);
+		}
+		
+	}
 
 	return {
 		version: version,
-		puzzles: puzzle_names,
-		scramblers: scramblers,
+		events: events,
 		initialize: initialize,
-		add_page: add_page,
+		generate_scrambles: generate_scrambles,
 	};
 })();

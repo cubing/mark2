@@ -636,8 +636,8 @@ scramble_333 = (function() {
      pos = a.join(" ");
      var sol = solvecube(pos, 1);
 
-     console.log(pos);
-     console.log(sol);
+     //console.log(pos);
+     //console.log(sol);
      
     return {
       state: pos,
