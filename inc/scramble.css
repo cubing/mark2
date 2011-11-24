@@ -16,7 +16,7 @@ body, div, p {
   */
 }
 
-/* Page break befoer any scramble set that follows another. */
+/* Page break before any scramble set that follows another. */
 .scramble_set + .scramble_set {
   page-break-before: always;  
 }

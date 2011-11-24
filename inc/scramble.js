@@ -134,8 +134,6 @@ scramble = (function() {
 
 		document.title = "WCA Scrambles for " + competitionName;
 
-		console.log(competitionName, rounds);
-		
 		for (i in rounds) {
 			add_page(competitionName, rounds[i][0], rounds[i][1], rounds[i][2]);
 		}

@@ -146,11 +146,11 @@ function scramble_NNN(size, seqlen, mult) {
           do{
             do{
               // choose a random axis
-              ax=Math.floor(Math.random()*3);
+              ax=Math.floor(randomSource.random()*3);
               // choose a random move type on that axis
-              sl=Math.floor(Math.random()*tl);
+              sl=Math.floor(randomSource.random()*tl);
               // choose random amount
-              q=Math.floor(Math.random()*3);
+              q=Math.floor(randomSource.random()*3);
             }while( ax==la && axsl[sl]!=0 );    // loop until have found an unused movetype
           }while( ax==la          // loop while move is reducible: reductions only if on same axis as previous moves
               && !mult        // multislice moves have no reductions so always ok
@@ -188,7 +188,7 @@ function scramble_NNN(size, seqlen, mult) {
         appendmoves( seq[n], axsl, tl, la );
      
         // do a random cube orientation if necessary
-        seq[n][seq[n].length]= cubeorient ? Math.floor(Math.random()*24) : 0;
+        seq[n][seq[n].length]= cubeorient ? Math.floor(randomSource.random()*24) : 0;
       }
      
       // build lookup table
