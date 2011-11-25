@@ -3,32 +3,43 @@ scramble = (function() {
 	var version = "November 23, 2011";
 
 	var events = {
-		"333": {name: "Rubik's Cube", scrambler: scramble_333},
-		"444": {name: "4x4 Cube", scrambler: scramble_444},
-		"555": {name: "5x5 Cube", scrambler: scramble_555},
-		"222": {name: "2x2 Cube", scrambler: scramble_222},
-		"333bf": {name: "3x3 blindfolded", scrambler: scramble_333},
-		"333oh": {name: "3x3 one-handed", scrambler: scramble_333},
-		"333fm": {name: "3x3 fewest moves", scrambler: scramble_333},
-		"333ft": {name: "3x3 with feet", scrambler: scramble_333},
-		"minx": {name: "Megaminx", scrambler: scramble_minx},
-		"pyram": {name: "Pyraminx", scrambler: scramble_pyram},
-		"sq1": {name: "Square-1", scrambler: scramble_sq1},
-		//"clock": {name: "Rubik's Clock", scrambler: scramble_clock},
-		"666": {name: "6x6 Cube", scrambler: scramble_666},
-		"777": {name: "7x7 Cube", scrambler: scramble_777},
-		//"magic": {name: "Rubik's Magic", scrambler: scramble_magic},
-		//"mmagic": {name: "Master Magic", scrambler: scramble_mmagic},
-		"444bf": {name: "4x4 blindfolded", scrambler: scramble_444},
-		"555bf": {name: "5x5 blindfolded", scrambler: scramble_555},
-		"333mbf": {name: "3x3 multi blind", scrambler: scramble_333},
+		
+		// Official WCA events as of November 24, 2011
+		"333": {name: "Rubik's Cube", scrambler: scramble_333, default_round: ["avg", 5]},
+		"444": {name: "4x4 Cube", scrambler: scramble_444, default_round: ["avg", 5]},
+		"555": {name: "5x5 Cube", scrambler: scramble_555, default_round: ["avg", 5]},
+		"222": {name: "2x2 Cube", scrambler: scramble_222, default_round: ["avg", 5]},
+		"333bf": {name: "3x3 blindfolded", scrambler: scramble_333, default_round: ["best", 3]},
+		"333oh": {name: "3x3 one-handed", scrambler: scramble_333, default_round: ["avg", 5]},
+		//"333fm": {name: "3x3 fewest moves", scrambler: scramble_333, default_round: ["best", 5]}, //TODO: FCF support
+		"333ft": {name: "3x3 with feet", scrambler: scramble_333, default_round: ["avg", 5]},
+		"minx": {name: "Megaminx", scrambler: scramble_minx, default_round: ["avg", 5]},
+		"pyram": {name: "Pyraminx", scrambler: scramble_pyram, default_round: ["avg", 5]},
+		"sq1": {name: "Square-1", scrambler: scramble_sq1, default_round: ["avg", 5]},
+		"clock": {name: "Rubik's Clock", scrambler: scramble_clock, default_round: ["avg", 5]},
+		"666": {name: "6x6 Cube", scrambler: scramble_666, default_round: ["mean", 3]},
+		"777": {name: "7x7 Cube", scrambler: scramble_777, default_round: ["mean", 3]},
+		//"magic": {name: "Rubik's Magic", scrambler: scramble_magic, default_round: ["avg", 5]},
+		//"mmagic": {name: "Master Magic", scrambler: scramble_mmagic, default_round: ["avg", 5]},
+		"444bf": {name: "4x4 blindfolded", scrambler: scramble_444, default_round: ["best", 3]},
+		"555bf": {name: "5x5 blindfolded", scrambler: scramble_555, default_round: ["best", 3]},
+		//"333mbf": {name: "3x3 multi blind", scrambler: scramble_333, default_round: ["mbf"]}, //TODO: 3x3x3 with smaller images?
+		
+		// Unofficial events
+		//"skewb": {name: "Skewb", scrambler: scramble_skewb, default_round: ["avg", 5]},
 	}
 
 	var initialize = function() {
+
 		initializeRandomSource();
 		document.getElementById("goButton").focus();
 
-		var defaultSelectedEvent = "333";
+		initializeEventIDSelect("333");
+
+		scramble.generate_scrambles("Compy", [["clock", "Round &lambda;", 5]]);
+	};
+
+	var initializeEventIDSelect = function(defaultSelectedEvent) {
 
 		var eventIDSelect = document.getElementById("eventID");
 		var numEvents = 0;
@@ -41,7 +52,7 @@ scramble = (function() {
 			numEvents++;
 		}
 		eventIDSelect.setAttribute("size", numEvents);
-	};
+	}
 
 	var randomSource = Math;
 
