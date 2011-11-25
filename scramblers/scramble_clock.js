@@ -15,7 +15,7 @@ scramble_clock = (function() {
   
   function getRandomScramble(){
     var posit = new Array (0,0,0,0,0,0,0,0,0,  0,0,0,0,0,0,0,0,0);
-    var p = "Ud";
+    var p = "dU";
     var pegs = [0, 0, 0, 0];
     var seq = new Array();
     var i,j;
@@ -104,7 +104,7 @@ scramble_clock = (function() {
     turns("<_U><.U>", "<_U><.d>", ""  , turn_name("U", seq[10]), "", "&nbsp;&nbsp;&nbsp;"   );
     turns("<_U><_U>", "<.d><.U>", ""  , turn_name("U", seq[11]), "", "&nbsp;&nbsp;&nbsp;"   );
     turns("<_U><_U>", "<.U><_U>", ""  , turn_name("U", seq[12]), "", "&nbsp;&nbsp;&nbsp;"   );
-    turns("<.d><.d>", "<.d><_d>", ""  , turn_name("U", seq[13]), "", "&nbsp;&nbsp;&nbsp;"   );
+    turns("<.d><.d>", "<.d><_d>", ""  , turn_name("d", seq[13]), "", "&nbsp;&nbsp;&nbsp;"   );
     turns(p[pegs[0]] + p[pegs[1]], p[pegs[2]] + p[pegs[3]], ""  , ""   , "", "");
     
     /*
@@ -120,7 +120,7 @@ scramble_clock = (function() {
     */
 
     return {
-      state: moves,
+      state: {dials: posit, pegs: pegs},
       scramble: scramble
     };
   }
@@ -136,8 +136,125 @@ scramble_clock = (function() {
   var initializeFull = function() {
   };
 
+  function drawPolygon(r, color, arrx, arry) {
+  	
+    var pathString = "";
+    for (var i = 0; i < arrx.length; i++) {
+      pathString += ((i==0) ? "M" : "L") + arrx[i] + "," + arry[i];
+    }
+    pathString += "z";
+    
+    return r.path(pathString).attr({fill: color, stroke: "none"});
+  }
+
+  Math.TAU = Math.PI * 2;
+
+  function drawClockFace(r, cx, cy, face_fill, hour) {
+	r.circle(cx, cy, 13).attr({fill: face_fill, stroke: "none"});
+	r.circle(cx, cy, 4).attr({fill: "#F00", stroke: "none"});
+
+	var c = Math.cos(hour/12*Math.TAU);
+	var s = Math.sin(hour/12*Math.TAU);
+
+	arrx = [cx , cx + 4	, cx - 4];
+	arry = [cy - 12, cy, cy];
+	
+	var hand = drawPolygon(r, "#F00", arrx, arry);
+
+	hand.rotate(30*hour, cx, cy);
+
+
+	r.circle(cx, cy, 2).attr({fill: "#FF0", stroke: "none"});
+
+	arrx = [cx, cx + 2, cx - 2];
+	arry = [cy - 8 , cy, cy];
+	
+	var handInner = drawPolygon(r, "#FF0", arrx, arry);
+
+	handInner.rotate(30*hour, cx, cy);
+
+  }
+
+  function drawPeg(r, cx, cy, pegValue) {
+
+  	var pegRadius = 6;
+  	var color;
+  	if (pegValue == 1) {
+  		color = "#FF0";
+  	}
+  	else {
+  		color = "#440";
+  	}
+
+	r.circle(cx, cy, pegRadius).attr({fill: color, stroke: "#000"});
+  }
+
   var drawScramble = function(parentElement, state) {
-  	parentElement.innerHTML = "LOREMIPSUMLOREM";
+
+	var clock_radius = 52;
+
+	var face_dist = 30;
+	var face_background_dist = 29;
+
+	var face_radius = 15;
+	var face_background_radius = 18;
+
+    var r = Raphael(parentElement, 220, 110);
+
+    var drawSideBackground = function(cx, cy, fill, stroke, stroke_width) {
+
+
+		r.circle(cx, cy, clock_radius).attr({fill: fill, stroke: stroke, "stroke-width": stroke_width});
+
+		for (x = cx - face_background_dist; x <= cx + face_background_dist; x += face_background_dist) {
+			for (y = cy - face_background_dist; y <= cy + face_background_dist; y += face_background_dist) {
+				r.circle(x, y, face_background_radius).attr({fill: fill, stroke: stroke, "stroke-width": stroke_width});
+			}
+		}
+    }
+
+    var cx = 55;
+    var cy = 55;
+
+    drawSideBackground(cx, cy, "none", "#000", 3);
+    drawSideBackground(cx, cy, "#36F", "none");
+
+    var i = 0;
+	for (y = cy - face_dist; y <= cy + face_dist; y += face_dist) {
+		for (x = cx - face_dist; x <= cx + face_dist; x += face_dist) {
+			drawClockFace(r, x, y, "#8AF", state.dials[i]);
+			//console.log(state.dials[i]);
+			i++;
+		}
+	}
+	
+	drawPeg(r, cx - face_dist/2, cy - face_dist/2, state.pegs[0]);
+	drawPeg(r, cx + face_dist/2, cy - face_dist/2, state.pegs[1]);
+	drawPeg(r, cx - face_dist/2, cy + face_dist/2, state.pegs[2]);
+	drawPeg(r, cx + face_dist/2, cy + face_dist/2, state.pegs[3]);
+	
+
+
+    var cx = 165;
+    var cy = 55;
+
+    drawSideBackground(cx, cy, "#none", "#000", 3);
+    drawSideBackground(cx, cy, "#8AF", "none");
+
+    var i = 9;
+	for (y = cy - face_dist; y <= cy + face_dist; y += face_dist) {
+		for (x = cx - face_dist; x <= cx + face_dist; x += face_dist) {
+			drawClockFace(r, x, y, "#36F",  state.dials[i]);
+			//console.log(state.dials[i]);
+			i++;
+		}
+	}
+	
+	drawPeg(r, cx + face_dist/2, cy - face_dist/2, 1-state.pegs[0]);
+	drawPeg(r, cx - face_dist/2, cy - face_dist/2, 1-state.pegs[1]);
+	drawPeg(r, cx + face_dist/2, cy + face_dist/2, 1-state.pegs[2]);
+	drawPeg(r, cx - face_dist/2, cy + face_dist/2, 1-state.pegs[3]);
+
   };
 
   return {
