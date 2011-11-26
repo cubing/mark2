@@ -12,8 +12,8 @@ U is the regular move of the U face, according to standard cube notation.
 
 scramble_minx = (function() {
  
-  var linelen=1;
-  var linenbr=1;
+  var linelen=10;
+  var linenbr=7;
   
   function parse() {
   	/*
@@ -118,7 +118,10 @@ scramble_minx = (function() {
     randomSource = src;
   }
 
-  var initializeFull = function() {
+  var initializeFull = function(continuation) {
+    if (continuation) {
+      setTimeout(continuation, 0);
+    }
   };
 
 
@@ -195,7 +198,7 @@ scramble_minx = (function() {
 
     var r = Raphael(parentElement, 350*scale, 180*scale);
 
-    console.log(state);
+    //console.log(state);
 
     var index = 0;
 
@@ -233,7 +236,7 @@ scramble_minx = (function() {
 	    p.rotate(trans[side][0], 0, 0);
 	}
 
-	console.log(index);
+	//console.log(index);
 
   };
 

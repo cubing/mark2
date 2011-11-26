@@ -139,7 +139,10 @@ scramble_clock = (function() {
   }
 
 
-  var initializeFull = function() {
+  var initializeFull = function(continuation) {
+    if (continuation) {
+      setTimeout(continuation, 0);
+    }
   };
 
   function drawPolygon(r, color, arrx, arry) {

@@ -485,7 +485,7 @@ scramble_222 = (function() {
       
     r.path(pathString).attr({fill: colorGet(fillColor), stroke: "#000"})
   }
-  
+
   var drawScramble = function(parentElement, state) {
 
     var colorString = "wrgoby"; // UFRLBD
@@ -608,10 +608,15 @@ scramble_222 = (function() {
     };
   };
 
-  var initializeFull = function() {
+  var initializeFull = function(continuation) {
+
     calcperm();
     initialize();
     parse();
+
+    if (continuation) {
+      setTimeout(continuation, 0);
+    }
   };
 
 
