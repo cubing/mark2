@@ -35,8 +35,6 @@ scramble = (function() {
 		document.getElementById("goButton").focus();
 
 		initializeEventIDSelect("333");
-
-		scramble.generate_scrambles("Compy", [["clock", "Round &lambda;", 5]]);
 	};
 
 	var initializeEventIDSelect = function(defaultSelectedEvent) {

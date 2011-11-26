@@ -40,6 +40,8 @@ body, div, p {
   border-radius: 0em 0em 1em 1em;
 
   z-index: 7;
+
+  avoid
 }
 
 .info_table {
@@ -169,6 +171,7 @@ li {
 
 .scramble_table td.scramble_minx {
   font-family: monospace;
+  font-size: 90%;
 }
 
 .scramble_table td.scramble_clock {

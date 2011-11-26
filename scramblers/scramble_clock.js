@@ -73,7 +73,13 @@ scramble_clock = (function() {
   		if (amount == 0) {
   			return "&nbsp;&nbsp;&nbsp;";
   		}
-  		if (amount >= 0) {
+  		else if (amount == 1) {
+  			suffix = "</span>&nbsp;&nbsp;";
+  		}
+  		else if (amount == -1) {
+  			suffix = "'</span>&nbsp;&nbsp;";
+  		}
+  		else if (amount >= 0) {
   			suffix = "" + amount + "</span>&nbsp;";
   		}
   		else {
