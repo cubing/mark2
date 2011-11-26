@@ -9,3 +9,14 @@ The name "Mark 2" represents that this is an entirely rewritten second-generatio
 - Replace all scramblers by high-quality random scramblers, where possible (reasonable alternatives otherwise).
 - Implement everything entirely in client-side Javascript. Everything should work in a browser online OR offline, without any other effort. (e.g. no remote/local servers or executables to start. Sorry, tnooodle.)
 - Unify the old scramblers into one, easy-to-use interface for generating competition scrambles.
+
+# New Features
+
+- Markov Random-State 3x3x3 and Square-1 scramblers.
+- TODO: Megaminx and clock images.
+- Clearer clock and Square-1 notation.
+
+# Style Guide
+
+- When updating a scrambler, update date of the version at the end of the file.
+- Make sure all scramblers use implement a setRandomSource(src) methoda and use randomSource.random() instead of Math.random().

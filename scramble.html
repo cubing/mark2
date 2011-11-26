@@ -1,0 +1,46 @@
+<!doctype html>
+<html> 
+<head>
+
+<title>WCA Official Puzzle Scrambler [DRAFT PROPOSAL]</title>
+
+<link href="inc/scramble.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="inc/raphael-min.js"></script>
+<script type="text/javascript" src="inc/mersennetwister.js"></script>
+
+<script type="text/javascript" src="scramblers/scramble_222.js"></script>
+<script type="text/javascript" src="scramblers/scramble_333.js"></script>
+<script type="text/javascript" src="scramblers/scramble_NNN.js"></script>
+<script type="text/javascript" src="scramblers/scramble_pyram.js"></script>
+<script type="text/javascript" src="scramblers/scramble_minx.js"></script>
+<script type="text/javascript" src="scramblers/scramble_sq1.js"></script>
+<script type="text/javascript" src="scramblers/scramble_clock.js"></script>
+
+<script type="text/javascript" src="inc/scramble.js"></script>
+
+</head> 
+<body onload="scramble.initialize();"> 
+
+<div id="interface">
+	<center>
+		<img src="inc/wca_logo.svg" class="wca_logo_top"><br>
+		<h2>WCA Official Puzzle Scrambler: <span class="mark2_title">Mark 2</span><br>[DRAFT PROPOSAL]</h2><br>
+		<select id="eventID">
+		</select><br><br>
+		<input id="competitionName" value="Sample Competition 2011"/><br><br>
+		<input id="roundName" value="Round X"/><br><br>
+		<button onclick="scramble.generate_scrambles(document.getElementById('competitionName').value, [[document.getElementById('eventID').value, document.getElementById('roundName').value, 5]]);" id="goButton">Scramble!</button>
+		<br><br>
+		<div>Each set of scrambles will print on separate pages from the others. This panel will not print.</div>
+	</center>
+</div>
+
+<div id="scramble_sets">
+	
+	<!-- Scrambles will be inserted here using Javascript. -->
+
+</div>
+
+</body> 
+</html> 
