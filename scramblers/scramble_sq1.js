@@ -240,10 +240,10 @@ scramble_sq1 = (function() {
   var square1Solver_edgesDistance;
 
   /*
-   * If runAsync == true, then this function will interrupt itself using timeouts.
+   * If doneCallback is provided then this function will interrupt itself using timeouts.
    * This allows it to call statusCallback and doneCallback, in order to provide status update in a non-blocking UI.
    */
-  var square1SolverInitialize = function(runAsync, doneCallback, statusCallback) {
+  var square1SolverInitialize = function(doneCallback, statusCallback) {
 
     if (square1Solver_initialized) {
       if (doneCallback) {
@@ -273,7 +273,7 @@ scramble_sq1 = (function() {
     var iniParts = new Array();
 
     var nextIniStep = function() {
-      if (!runAsync) {
+      if (!doneCallback) {
         iniParts[ini++]();
       }
       else {

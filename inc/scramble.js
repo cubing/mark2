@@ -1,3 +1,29 @@
+
+// Implementation of bind() for Safari.
+if (!Function.prototype.bind) {
+  Function.prototype.bind = function (oThis) {
+    if (typeof this !== "function") {
+      // closest thing possible to the ECMAScript 5 internal IsCallable function
+      throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+    }
+
+    var aArgs = Array.prototype.slice.call(arguments, 1), 
+        fToBind = this, 
+        fNOP = function () {},
+        fBound = function () {
+          return fToBind.apply(this instanceof fNOP
+                                 ? this
+                                 : oThis || window,
+                               aArgs.concat(Array.prototype.slice.call(arguments)));
+        };
+
+    fNOP.prototype = this.prototype;
+    fBound.prototype = new fNOP();
+
+    return fBound;
+  };
+}
+
 scramble = (function() {
 
 	var version = "November 23, 2011";
@@ -53,6 +79,8 @@ scramble = (function() {
 
 		var numEvents = 0;
 		for (eventID in events) {
+
+			events[eventID].initialized = false;
 
 			/*
 			var newOption = createNewElement(eventIDSelect, "option", "", events[eventID].name);
@@ -143,7 +171,7 @@ scramble = (function() {
 		console.log("scramble.js: Seeding Mersenne Twister.");
 
 		// We use the date the the native PRNG to get some entropy.
-		var seed = new Date().getTime() + Math.floor(Math.random()*0xffffffff);
+		var seed = 1000;//new Date().getTime() + Math.floor(Math.random()*0xffffffff);
 		
 		// Make sure we don't actually use deterministic initialization.
 		if (isFinite(seed)) {
@@ -156,6 +184,10 @@ scramble = (function() {
 
 
 	var createNewElement = function(elementToAppendTo, type, className, content) {
+		if (elementToAppendTo == "222") {
+			console.log("ffff");
+		}
+
 		var newElement = document.createElement(type);
 		if (className) {
 			newElement.setAttribute("class", className);
@@ -167,24 +199,33 @@ scramble = (function() {
 		return newElement;
 	};
 
-	var generate_scramble_set = function(tBody, eventID, scrambler, num, options) {
+	var generate_scramble_set = function(continuation, competitionName, tBody, eventID, scrambler, num, numTotal, options) {
 		
-		scrambler.initialize();
+		addUpdateSpecific("Generating scramble #" + num + " of " + numTotal + ".");
 
-		for (var i = 1; i <= num; i++) {
-			var scrambleTR = createNewElement(tBody, "tr");
-			
-			var scramble = scrambler.getRandomScramble();
-			createNewElement(scrambleTR, "td", "", "" + i + ".");
-			createNewElement(scrambleTR, "td", "scramble_" + eventID, scramble.scramble);
-			var drawingTD = createNewElement(scrambleTR, "td");
-			var drawingCenter = createNewElement(drawingTD, "center"); // It's 2011, and there's still not a better way to center this. :-/
+		var scrambleTR = createNewElement(tBody, "tr");
+		
+		var scramble = scrambler.getRandomScramble();
+		createNewElement(scrambleTR, "td", "", "" + num + ".");
+		createNewElement(scrambleTR, "td", "scramble_" + eventID, scramble.scramble);
+		var drawingTD = createNewElement(scrambleTR, "td");
+		var drawingCenter = createNewElement(drawingTD, "center"); // It's 2011, and there's still not a better way to center this. :-/
 
-			scrambler.drawScramble(drawingCenter, scramble.state);
+		scrambler.drawScramble(drawingCenter, scramble.state);
+
+
+		var call;
+		if (num < numTotal) {
+			call = generate_scramble_set.bind(null, continuation, competitionName, tBody, eventID, scrambler, num+1, numTotal, options);
 		}
+		else {
+			hideUpdatesSpecific();
+			call = continuation;
+		}
+		setTimeout(call, 0);
 	}
 
-	var add_page = function(competitionName, eventID, roundName, numScrambles) {
+	var add_page = function(continuation, competitionName, eventID, roundName, numScrambles) {
 
 		var pages = document.getElementById("scramble_sets");
 
@@ -224,24 +265,100 @@ scramble = (function() {
 						createNewElement(newFooterTR, "td", "", '<div style="text-align: right;"><u>' + events[eventID].name + ' Scrambler Version</u><br>' + scrambler.version + '</div>');
 						createNewElement(newFooterTR, "td", "", '<img src="inc/wca_logo.svg" class="wca_logo">');
 		
-		// Generate those scrambles!		
+		// Generate those scrambles!
 		
-		generate_scramble_set(newScramblesTBody, eventID, scrambler, numScrambles, {});
+		addUpdateGeneral("Generating " + numScrambles + " scramble" + ((numScrambles == 1) ? "" : "s") + " for " + events[eventID].name + ": " + roundName + "");
+		resetUpdatesSpecific("Details for " + events[eventID].name + ": " + roundName);
+		
+		var nextContinuation = generate_scramble_set.bind(null, continuation, competitionName, newScramblesTBody, eventID, scrambler, 1, numScrambles, {});
+		var call;
+		if (!events[eventID].initialized) {
+		    addUpdateSpecific("Initializing " + events[eventID].name + " scrambler (only needs to be done once).");
+
+		    var statusCallback = function(str) {
+		    	addUpdateSpecific(str);
+		    }
+			call = scrambler.initialize.bind(null, nextContinuation, statusCallback);
+			events[eventID].initialized = true;
+		}
+		else {
+		    addUpdateSpecific("" + events[eventID].name + " scrambler already initialized.");
+			call = nextContinuation;
+		}
+		setTimeout(call, 0);
 	};
 
-	generate_scrambles = function(competitionName, rounds) {
+	var generate_scrambles = function(competitionName, rounds) {
+
+		var nextContinuation;
+		if (rounds.length > 1) {
+			nextContinuation = generate_scrambles.bind(null, competitionName, rounds.slice(1));
+		}
+		else {
+			nextContinuation = function(){
+				addUpdateGeneral("Done scrambling all events.");
+				setTimeout(hideUpdates, 1000);
+			};
+		}
 
 		document.title = "WCA Scrambles for " + competitionName;
 
-		for (i in rounds) {
-			add_page(competitionName, rounds[i][0], rounds[i][1], rounds[i][2]);
-		}
-		
+		add_page(nextContinuation, competitionName, rounds[0][0], rounds[0][1], rounds[0][2]);
 	}
 
-	go = function() {
+	var showUpdates = function() {
+		document.getElementById("updates").style.display = "block";
+	}
 
-		console.log("Go-go Gadget Scrambler!");
+	var hideUpdates = function() {
+		document.getElementById("updates").style.display = "none";
+	}
+
+	var showUpdatesSpecific = function() {
+		document.getElementById("updates_specific").style.display = "block";
+	}
+
+	var hideUpdatesSpecific = function() {
+		document.getElementById("updates_specific").style.display = "none";
+	}
+
+	var hideInterface = function() {
+		var interfaceElements = document.getElementsByClassName("interface");
+		for (var i=0; i < interfaceElements.length; i++) {
+			interfaceElements[i].style.display = "none";
+		}
+	}
+
+	var resetUpdatesGeneral = function() {
+		var updatesGeneralDiv = document.getElementById("updates_general");
+		updatesGeneralDiv.innerHTML = "";
+		createNewElement(updatesGeneralDiv, "h2", "", "Updates");
+	}
+
+	var resetUpdatesSpecific = function(str) {
+		var updatesSpecificDiv = document.getElementById("updates_specific");
+		updatesSpecificDiv.innerHTML = "";
+		createNewElement(updatesSpecificDiv, "h2", "", str);
+		showUpdatesSpecific();
+	}
+
+	var addUpdateGeneral = function(str) {
+		console.log(str);
+		var updatesGeneralDiv = document.getElementById("updates_general");
+		createNewElement(updatesGeneralDiv, "li", "", str);
+	}
+
+	var addUpdateSpecific = function(str) {
+		console.log(str);
+		var updatesSpecificDiv = document.getElementById("updates_specific");
+		createNewElement(updatesSpecificDiv, "li", "", str);
+	}
+
+	var go = function() {
+
+		showUpdates();
+		resetUpdatesGeneral();
+		hideInterface();
 
 		var pages = [];
 		var competitionName = document.getElementById('competitionName').value;
@@ -258,6 +375,8 @@ scramble = (function() {
 				pages.push([eventID, roundName + " (" + roundNames[roundType] + " " + numSolves + ")", numSolves]);
 			}
 		}
+
+		addUpdateGeneral("Generating " + pages.length + " round" + ((pages.length == 1) ? "" : "s") + " of scrambles.");
 
 		generate_scrambles(competitionName, pages);
 	};

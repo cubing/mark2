@@ -103,19 +103,47 @@ body, div, p {
   height: 100px;
 }
 
-<style>
-body {
-  font-family: Helvetica, Tahoma, Arial;
-}
-h2 {
+h1 {
   text-align: center;
   margin: 0px;
 }
+
 li {
   padding: 0.2em;
 }
 
-#interface {
+#updates {
+  padding: 1em;
+  margin: 1em;
+  font-family: Helvetica;
+  border-radius: 1em;
+  background: #00C0C0;
+  display: none;
+  padding: 4px;
+}
+
+#updates.visible {
+  display: block;
+}
+
+#updates h2 {
+  margin: 0px 0px 4px;
+}
+
+#updates > ul {
+  clear: both;
+  font-family: monospace;
+  background: #FFF;
+  border-radius: 8px;
+  margin: 8px;
+  padding: 12px;
+}
+
+#updates > ul > li {
+  margin-left: 2em;
+}
+
+.interface {
   padding: 1em;
   margin: 1em;
   font-family: Helvetica;
@@ -126,12 +154,8 @@ li {
 
 @media print  
 {
-    #interface {
-        display: none;
-    }
-
-    .unupported {
-      display: none;
+    #updates, .interface, .unsupported {
+        display: none !important;
     }
 }
 
@@ -223,7 +247,7 @@ li {
   background: #F88;
 }
 
-h2 {
+h1 {
   font-size: 200%;
   color: #FFF;
   font-variant: small-caps;
