@@ -25,14 +25,24 @@
 <div id="interface">
 	<center>
 		<img src="inc/wca_logo.svg" class="wca_logo_top"><br>
-		<h2>WCA Official Puzzle Scrambler: <span class="mark2_title">Mark 2</span><br>[DRAFT PROPOSAL]</h2><br>
-		<select id="eventID">
-		</select><br><br>
-		<input id="competitionName" value="Sample Competition 2011"/><br><br>
-		<input id="roundName" value="Round X"/><br><br>
-		<button onclick="scramble.generate_scrambles(document.getElementById('competitionName').value, [[document.getElementById('eventID').value, document.getElementById('roundName').value, 5]]);" id="goButton">Scramble!</button>
-		<br><br>
-		<div>Each set of scrambles will print on separate pages from the others. This panel will not print.</div>
+		<h2><!--WCA Official Puzzle Scrambler: <span class="mark2_title"-->Mark 2</span></h2><br>
+
+		<input id="competitionName" value="" placeholder="Competition Name"/>
+
+	<br><br>
+	<button onclick="scramble.go();" id="goButton">Scramble!</button>
+	<br><br>
+	(This may take a minute. The current version of this scrambler will not display updates. Please be patient.)
+
+		<table id="event_amounts">
+		</table>
+
+	<br>
+	<div>Each set of scrambles will print on separate pages from the others. This panel will not print.</div>
+
+	<table id="select_sets">
+	</table>
+	
 	</center>
 </div>
 
