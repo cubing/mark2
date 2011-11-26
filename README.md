@@ -1,4 +1,4 @@
-# WCA Official Puzzle Scrambler - Mark 2
+# WCA-Style Puzzle Scrambler: Mark 2
 
 NOTE: This is not the official WCA scrambler yet. It is a proposed replacement under development by Lucas Garron.
 

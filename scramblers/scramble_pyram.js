@@ -525,8 +525,12 @@ scramble_pyram = (function() {
     };
   };
 
-  var initializeFull = function() {
+  var initializeFull = function(continuation) {
     parse();
+
+    if (continuation) {
+      setTimeout(continuation, 0);
+    }
   };
 
 

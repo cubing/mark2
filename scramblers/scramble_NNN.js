@@ -458,8 +458,12 @@ function scramble_NNN(size, seqlen, mult) {
       };
     };
 
-    var initializeFull = function() {
+    var initializeFull = function(continuation) {
       parse();
+
+      if (continuation) {
+        setTimeout(continuation, 0);
+      }
     };
 
 
