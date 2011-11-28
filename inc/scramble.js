@@ -28,31 +28,39 @@ scramble = (function() {
 
 	var version = "November 23, 2011";
 
-	var events = {
+	var events;
+	var eventsPerRow = 4;
+
+	var worker;
+	var usingWebWorkers = true;
+
+	var initializeEvents = function()  {
 		
-		// Official WCA events as of November 24, 2011
-		"333": {name: "Rubik's Cube", scrambler: scramble_333, default_round: ["avg", 5], default_num_rounds: 1},
-		"444": {name: "4x4 Cube", scrambler: scramble_444, default_round: ["avg", 5], default_num_rounds: 0},
-		"555": {name: "5x5 Cube", scrambler: scramble_555, default_round: ["avg", 5], default_num_rounds: 0},
-		"222": {name: "2x2 Cube", scrambler: scramble_222, default_round: ["avg", 5], default_num_rounds: 0},
-		"333bf": {name: "3x3 blindfolded", scrambler: scramble_333, default_round: ["best", 3], default_num_rounds: 0},
-		"333oh": {name: "3x3 one-handed", scrambler: scramble_333, default_round: ["avg", 5], default_num_rounds: 0},
-		"333fm": {name: "3x3 fewest moves", scrambler: scramble_333, default_round: ["best", 2], default_num_rounds: 0}, //TODO: FCF support
-		"333ft": {name: "3x3 with feet", scrambler: scramble_333, default_round: ["avg", 5], default_num_rounds: 0},
-		"minx": {name: "Megaminx", scrambler: scramble_minx, default_round: ["avg", 5], default_num_rounds: 0},
-		"pyram": {name: "Pyraminx", scrambler: scramble_pyram, default_round: ["avg", 5], default_num_rounds: 0},
-		"sq1": {name: "Square-1", scrambler: scramble_sq1, default_round: ["avg", 5], default_num_rounds: 0},
-		"clock": {name: "Rubik's Clock", scrambler: scramble_clock, default_round: ["avg", 5], default_num_rounds: 0},
-		"666": {name: "6x6 Cube", scrambler: scramble_666, default_round: ["mean", 3], default_num_rounds: 0},
-		"777": {name: "7x7 Cube", scrambler: scramble_777, default_round: ["mean", 3], default_num_rounds: 0},
-		//"magic": {name: "Rubik's Magic", scrambler: scramble_magic, default_round: ["avg", 5], default_num_rounds: 0},
-		//"mmagic": {name: "Master Magic", scrambler: scramble_mmagic, default_round: ["avg", 5], default_num_rounds: 0},
-		"444bf": {name: "4x4 blindfolded", scrambler: scramble_444, default_round: ["best", 3], default_num_rounds: 0},
-		"555bf": {name: "5x5 blindfolded", scrambler: scramble_555, default_round: ["best", 3], default_num_rounds: 0},
-		//"333mbf": {name: "3x3 multi blind", scrambler: scramble_333, default_round: ["mbf"], default_num_rounds: 0}, //TODO: 3x3x3 with smaller images?
-		
-		// Unofficial events
-		//"skewb": {name: "Skewb", scrambler: scramble_skewb, default_round: ["avg", 5]},
+		events = {
+			// Official WCA events as of November 24, 2011
+			"333": {name: "Rubik's Cube", scrambler: scramble_333, default_round: ["avg", 5], default_num_rounds: 1},
+			"444": {name: "4x4 Cube", scrambler: scramble_444, default_round: ["avg", 5], default_num_rounds: 0},
+			"555": {name: "5x5 Cube", scrambler: scramble_555, default_round: ["avg", 5], default_num_rounds: 0},
+			"222": {name: "2x2 Cube", scrambler: scramble_222, default_round: ["avg", 5], default_num_rounds: 0},
+			"333bf": {name: "3x3 blindfolded", scrambler: scramble_333, default_round: ["best", 3], default_num_rounds: 0},
+			"333oh": {name: "3x3 one-handed", scrambler: scramble_333, default_round: ["avg", 5], default_num_rounds: 0},
+			"333fm": {name: "3x3 fewest moves", scrambler: scramble_333, default_round: ["best", 2], default_num_rounds: 0}, //TODO: FCF support
+			"333ft": {name: "3x3 with feet", scrambler: scramble_333, default_round: ["avg", 5], default_num_rounds: 0},
+			"minx": {name: "Megaminx", scrambler: scramble_minx, default_round: ["avg", 5], default_num_rounds: 0},
+			"pyram": {name: "Pyraminx", scrambler: scramble_pyram, default_round: ["avg", 5], default_num_rounds: 0},
+			"sq1": {name: "Square-1", scrambler: scramble_sq1, default_round: ["avg", 5], default_num_rounds: 0},
+			"clock": {name: "Rubik's Clock", scrambler: scramble_clock, default_round: ["avg", 5], default_num_rounds: 0},
+			"666": {name: "6x6 Cube", scrambler: scramble_666, default_round: ["mean", 3], default_num_rounds: 0},
+			"777": {name: "7x7 Cube", scrambler: scramble_777, default_round: ["mean", 3], default_num_rounds: 0},
+			//"magic": {name: "Rubik's Magic", scrambler: scramble_magic, default_round: ["avg", 5], default_num_rounds: 0},
+			//"mmagic": {name: "Master Magic", scrambler: scramble_mmagic, default_round: ["avg", 5], default_num_rounds: 0},
+			"444bf": {name: "4x4 blindfolded", scrambler: scramble_444, default_round: ["best", 3], default_num_rounds: 0},
+			"555bf": {name: "5x5 blindfolded", scrambler: scramble_555, default_round: ["best", 3], default_num_rounds: 0},
+			//"333mbf": {name: "3x3 multi blind", scrambler: scramble_333, default_round: ["mbf"], default_num_rounds: 0}, //TODO: 3x3x3 with smaller images?
+			
+			// Unofficial events
+			//"skewb": {name: "Skewb", scrambler: scramble_skewb, default_round: ["avg", 5]},
+		}
 	}
 
 	var roundNames = {
@@ -65,10 +73,70 @@ scramble = (function() {
 	var initialize = function() {
 
 		initializeRandomSource();
+		initializeEvents();
 		document.getElementById("goButton").focus();
 
 		initializeEventIDSelect("333");
+
+		initializeWorker();
 	};
+
+	var handleWorkerMessage = function(e) {
+		switch(e.data.action) {
+			case "initialized":
+				console.log("Web worker initialized successfully: " + e.data.info);
+			break;
+
+			case "initialized_event":
+				console.log("Event initialized successfully: " + e.data.info);
+			break;
+
+			case "get_random_scramble_response":
+				console.log("Received a " + events[e.data.event_id].name +	 " scramble:");
+				insertScramble(
+					e.data.return_data.trID,
+					e.data.event_id,
+					e.data.return_data.num,
+					e.data.scramble.scramble,
+					e.data.scramble.state
+				);
+			break;
+
+			case "echo_response":
+				console.log("Echo response:");
+				console.log(e.data);
+			break;
+
+			default:
+				console.error("Unknown message. Action was: " + e.data.action);
+			break;
+		}
+	}
+
+	var initializeWorker = function() {
+		
+		// From http://www.html5rocks.com/en/tutorials/workers/basics/#toc-inlineworkers
+
+		if (!Worker) {
+			console.log("No web worker support. :-(");
+			return;
+		}
+
+		try {
+			worker = new Worker("inc/scramble_all.js");
+			worker.onmessage = handleWorkerMessage;
+
+			usingWebWorkers = true;
+
+			worker.postMessage({action: "initialize"});
+
+			//worker.postMessage({action: "echo", value: 'function() {alert("Hi!");}'});
+		}
+		catch (e) {
+			console.log("Starting the web worker failed. This happens with Chrome when run from file://");
+		}
+
+	}
 
 	var initializeEventIDSelect = function(defaultSelectedEvent) {
 
@@ -93,7 +161,7 @@ scramble = (function() {
 			var newTBody = createNewElement(selectSetsTable, "tbody");
 			newTBody.setAttribute("id", "tbody_" + eventID);
 
-			if (numEvents % 4 == 0) {
+			if (numEvents % eventsPerRow == 0) {
 				currentEventAmountsTR = createNewElement(eventAmountsTable, "tr");
 			}
 
@@ -199,20 +267,51 @@ scramble = (function() {
 		return newElement;
 	};
 
+	var currentID = "0";
+
+	var nextID = function() {
+		return "auto_id_" + (currentID++);
+	}
+
+	var insertScramble = function(trID, eventID, num, scramble, state) {
+					
+		var scrambleTR = document.getElementById(trID);
+		scrambleTR.innerHTML = "";
+		createNewElement(scrambleTR, "td", "", "" + num + ".");
+		createNewElement(scrambleTR, "td", "scramble_" + eventID, scramble);
+		var drawingTD = createNewElement(scrambleTR, "td", "drawing");
+		//var drawingCenter = createNewElement(drawingTD, "center"); // It's 2011, and there's still not a better way to center this. :-/
+
+		events[eventID].scrambler.drawScramble(drawingTD, state);
+
+	}
+
 	var generate_scramble_set = function(continuation, competitionName, tBody, eventID, scrambler, num, numTotal, options) {
 		
 		addUpdateSpecific("Generating scramble #" + num + " of " + numTotal + ".");
 
 		var scrambleTR = createNewElement(tBody, "tr");
-		
-		var scramble = scrambler.getRandomScramble();
-		createNewElement(scrambleTR, "td", "", "" + num + ".");
-		createNewElement(scrambleTR, "td", "scramble_" + eventID, scramble.scramble);
-		var drawingTD = createNewElement(scrambleTR, "td", "drawing");
-		//var drawingCenter = createNewElement(drawingTD, "center"); // It's 2011, and there's still not a better way to center this. :-/
+		var trID = nextID();
+		scrambleTR.setAttribute("id", trID);
 
-		scrambler.drawScramble(drawingTD, scramble.state);
+		if (usingWebWorkers) {
 
+			var tempTD = createNewElement(scrambleTR, "td", "", "Generating scramble #" + num + "...");
+			tempTD.setAttribute("colspan", 3);
+
+			worker.postMessage({
+				action: "get_random_scramble",
+				event_id: eventID,
+				return_data: {
+					trID: trID,
+					num: num
+				}
+			});
+		}
+		else {
+			var scramble = scrambler.getRandomScramble();
+			insertScramble(trID, eventID, num, scramble.scramble, scramble.state);
+		}
 
 		var call;
 		if (num < numTotal) {
@@ -223,6 +322,10 @@ scramble = (function() {
 			call = continuation;
 		}
 		setTimeout(call, 0);
+	}
+
+	var initializeEvent = function(eventID) {
+		//worker.postMessage({action: "initialize_event", eventID: eventID});
 	}
 
 	var add_page = function(continuation, competitionName, eventID, roundName, numScrambles) {
@@ -278,6 +381,7 @@ scramble = (function() {
 		    var statusCallback = function(str) {
 		    	addUpdateSpecific(str);
 		    }
+		    initializeEvent(eventID);
 			call = scrambler.initialize.bind(null, nextContinuation, statusCallback);
 			events[eventID].initialized = true;
 		}
@@ -431,6 +535,7 @@ scramble = (function() {
 		resetUpdatesSpecific();
 		benchmarkMode = true;
 
+		document.getElementById("benchmark").style.display="block";
 		document.getElementById("select_events_interface").style.display="none";
 		document.getElementById("select_sets_interface").style.display="none";
 		document.getElementById("updates").style.display="none";

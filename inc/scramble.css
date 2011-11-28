@@ -160,6 +160,11 @@ li {
     }
 }
 
+#benchmarkButton {
+  font-size: 200%;
+  padding: 0.1em 1em;
+}
+
 #goButton {
   font-size: 200%;
   padding: 0.1em 1em;
@@ -336,6 +341,7 @@ h1 {
 }
 
 #benchmark {
+  display: none;
 }
 
 #benchmark_details {

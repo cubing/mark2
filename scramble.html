@@ -8,14 +8,7 @@
 
 <script type="text/javascript" src="inc/raphael-min.js"></script>
 <script type="text/javascript" src="inc/mersennetwister.js"></script>
-
-<script type="text/javascript" src="scramblers/scramble_222.js"></script>
-<script type="text/javascript" src="scramblers/scramble_333.js"></script>
-<script type="text/javascript" src="scramblers/scramble_NNN.js"></script>
-<script type="text/javascript" src="scramblers/scramble_pyram.js"></script>
-<script type="text/javascript" src="scramblers/scramble_minx.js"></script>
-<script type="text/javascript" src="scramblers/scramble_sq1.js"></script>
-<script type="text/javascript" src="scramblers/scramble_clock.js"></script>
+<script type="text/javascript" src="inc/scramble_all.js"></script>
 
 <script type="text/javascript" src="inc/scramble.js"></script>
 
@@ -24,7 +17,6 @@
 
 <div class="interface" id="benchmark">
 	<div id="benchmark_details">
-		<button onclick="scramble.benchmark();">Benchmark</button>
 	</div>
 </div>
 
@@ -45,6 +37,8 @@
 	<table id="event_amounts">
 	</table>
 	<button onclick="scramble.go();" id="goButton">Scramble!</button>
+	<br><br>
+	<button onclick="scramble.benchmark();" id="benchmarkButton">Benchmark Instead</button>
 	</center>
 </div>
 
