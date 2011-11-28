@@ -263,6 +263,7 @@ function scramble_NNN(size, seqlen, mult) {
       var colorString = "wrgoby"; // UFRLBD
 
       var r = Raphael(parentElement, border*2+width*4*cubeSize, border*2+width*3*cubeSize);
+    parentElement.width = border*2+width*4*cubeSize;
 
       var s="",i,f,d=0,q;
       ori = 0;

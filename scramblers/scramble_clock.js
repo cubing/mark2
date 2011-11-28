@@ -209,6 +209,7 @@ scramble_clock = (function() {
 	var face_background_radius = 18;
 
     var r = Raphael(parentElement, 220, 110);
+    parentElement.width = 220;
 
     var drawSideBackground = function(cx, cy, fill, stroke, stroke_width) {
 

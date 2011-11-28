@@ -197,6 +197,7 @@ scramble_minx = (function() {
   var drawScramble = function(parentElement, state) {
 
     var r = Raphael(parentElement, 350*scale, 180*scale);
+    parentElement.width = 350*scale;
 
     //console.log(state);
 

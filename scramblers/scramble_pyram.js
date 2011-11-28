@@ -580,6 +580,7 @@ scramble_pyram = (function() {
   var drawScramble = function(parentElement, state) {
 
     var r = Raphael(parentElement, border*2+width*9, border*2+width*5.3);
+    parentElement.width = border*2+width*9;
 
     for(var y = 0; y < 7; y++) {
       for(var x = 0; x < 13; x++) {

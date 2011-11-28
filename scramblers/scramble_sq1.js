@@ -893,6 +893,7 @@ function drawSq(stickers, middleIsSolved, shapes, parentElement, colorString) {
 
     var z = 1.366 // sqrt(2) / sqrt(1^2 + tan(15 degrees)^2)
     var r = Raphael(parentElement, 200, 110);
+    parentElement.width = 200;
 
     var arrx, arry;
    

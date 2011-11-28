@@ -20,7 +20,13 @@
 <script type="text/javascript" src="inc/scramble.js"></script>
 
 </head> 
-<body onload="scramble.initialize();"> 
+<body onload="scramble.initialize();">
+
+<div class="interface" id="benchmark">
+	<div id="benchmark_details">
+		<button onclick="scramble.benchmark();">Benchmark</button>
+	</div>
+</div>
 
 <div id="updates">
 	<ul id="updates_general">
@@ -29,7 +35,7 @@
 	</ul>
 </div>
 
-<div class="interface">
+<div class="interface" id="select_events_interface">
 	<center>
 		<img src="inc/wca_logo.svg" class="wca_logo_top"><br>
 		<h1><!--WCA Official Puzzle Scrambler: <span class="mark2_title"-->Mark 2</span></h1><br>
@@ -42,7 +48,7 @@
 	</center>
 </div>
 
-<div class="interface">
+<div class="interface" id="select_sets_interface">
 	<h1>Adjust Individual Rounds:</h1>
 	<center>
 	<table id="select_sets">

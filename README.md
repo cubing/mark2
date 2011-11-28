@@ -13,7 +13,6 @@ The name "Mark 2" represents that this is an entirely rewritten second-generatio
 # New Features
 
 - Markov Random-State 3x3x3 and Square-1 scramblers.
-- TODO: Megaminx and clock images.
 - Clearer clock and Square-1 notation.
 
 # Style Guide

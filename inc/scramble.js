@@ -37,7 +37,7 @@ scramble = (function() {
 		"222": {name: "2x2 Cube", scrambler: scramble_222, default_round: ["avg", 5], default_num_rounds: 0},
 		"333bf": {name: "3x3 blindfolded", scrambler: scramble_333, default_round: ["best", 3], default_num_rounds: 0},
 		"333oh": {name: "3x3 one-handed", scrambler: scramble_333, default_round: ["avg", 5], default_num_rounds: 0},
-		//"333fm": {name: "3x3 fewest moves", scrambler: scramble_333, default_round: ["best", 5], default_num_rounds: 0}, //TODO: FCF support
+		"333fm": {name: "3x3 fewest moves", scrambler: scramble_333, default_round: ["best", 2], default_num_rounds: 0}, //TODO: FCF support
 		"333ft": {name: "3x3 with feet", scrambler: scramble_333, default_round: ["avg", 5], default_num_rounds: 0},
 		"minx": {name: "Megaminx", scrambler: scramble_minx, default_round: ["avg", 5], default_num_rounds: 0},
 		"pyram": {name: "Pyraminx", scrambler: scramble_pyram, default_round: ["avg", 5], default_num_rounds: 0},
@@ -93,13 +93,13 @@ scramble = (function() {
 			var newTBody = createNewElement(selectSetsTable, "tbody");
 			newTBody.setAttribute("id", "tbody_" + eventID);
 
-			if (numEvents % 5 == 0) {
+			if (numEvents % 4 == 0) {
 				currentEventAmountsTR = createNewElement(eventAmountsTable, "tr");
 			}
 
-			createNewElement(currentEventAmountsTR, "td", "event_amount_id", eventID);
+			createNewElement(currentEventAmountsTR, "td", "event_amount_id_td", eventID);
 
-			var val = createNewElement(currentEventAmountsTR, "td", "event_amount_value", "");
+			var val = createNewElement(currentEventAmountsTR, "td", "event_amount_value_td", "");
 			var valInput = createNewElement(val, "input", "event_amount_value");
 				valInput.setAttribute("value", events[eventID].default_num_rounds);
 				valInput.setAttribute("id", "amount_value_" + eventID);
@@ -208,10 +208,10 @@ scramble = (function() {
 		var scramble = scrambler.getRandomScramble();
 		createNewElement(scrambleTR, "td", "", "" + num + ".");
 		createNewElement(scrambleTR, "td", "scramble_" + eventID, scramble.scramble);
-		var drawingTD = createNewElement(scrambleTR, "td");
-		var drawingCenter = createNewElement(drawingTD, "center"); // It's 2011, and there's still not a better way to center this. :-/
+		var drawingTD = createNewElement(scrambleTR, "td", "drawing");
+		//var drawingCenter = createNewElement(drawingTD, "center"); // It's 2011, and there's still not a better way to center this. :-/
 
-		scrambler.drawScramble(drawingCenter, scramble.state);
+		scrambler.drawScramble(drawingTD, scramble.state);
 
 
 		var call;
@@ -288,20 +288,20 @@ scramble = (function() {
 		setTimeout(call, 0);
 	};
 
-	var generate_scrambles = function(competitionName, rounds) {
+	var generate_scrambles = function(callback, competitionName, rounds) {
 
 		var nextContinuation;
 		if (rounds.length > 1) {
-			nextContinuation = generate_scrambles.bind(null, competitionName, rounds.slice(1));
+			nextContinuation = generate_scrambles.bind(null, callback, competitionName, rounds.slice(1));
 		}
 		else {
 			nextContinuation = function(){
 				addUpdateGeneral("Done scrambling all events.");
-				setTimeout(hideUpdates, 1000);
+				setTimeout(callback, 0);
 			};
 		}
 
-		document.title = "WCA Scrambles for " + competitionName;
+		document.title = "Scrambles for " + competitionName;
 
 		add_page(nextContinuation, competitionName, rounds[0][0], rounds[0][1], rounds[0][2]);
 	}
@@ -329,34 +329,78 @@ scramble = (function() {
 		}
 	}
 
+	var showInterface = function() {
+		var interfaceElements = document.getElementsByClassName("interface");
+		for (var i=0; i < interfaceElements.length; i++) {
+			interfaceElements[i].style.display = "none";
+		}
+	}
+
+	var benchmarkMode = false;
+	var benchmarkString = "";
+
+	var currentTime = function() {
+		return (new Date()).getTime();
+	}
+
+	var updatesGeneralStartTime;
+	var updatesGeneralLastTime;
 	var resetUpdatesGeneral = function() {
+
 		var updatesGeneralDiv = document.getElementById("updates_general");
 		updatesGeneralDiv.innerHTML = "";
 		createNewElement(updatesGeneralDiv, "h2", "", "Updates");
+
+		showUpdates();
+
+		updatesGeneralLastTime = updatesGeneralStartTime = currentTime();
 	}
 
+	var updatesSpecificStartTime;
+	var updatesSpecificLastTime;
 	var resetUpdatesSpecific = function(str) {
+
 		var updatesSpecificDiv = document.getElementById("updates_specific");
 		updatesSpecificDiv.innerHTML = "";
 		createNewElement(updatesSpecificDiv, "h2", "", str);
+
 		showUpdatesSpecific();
+
+		updatesSpecificLastTime = updatesSpecificStartTime = currentTime();
 	}
 
 	var addUpdateGeneral = function(str) {
+
 		console.log(str);
 		var updatesGeneralDiv = document.getElementById("updates_general");
+
 		createNewElement(updatesGeneralDiv, "li", "", str);
+
+		if (benchmarkMode) {
+			var cur = currentTime();
+			benchmarkString = "- General [" + (cur - updatesGeneralLastTime) + "ms, " + (cur - updatesGeneralStartTime) + "ms] " + str + "<br>" + benchmarkString;
+			updatesGeneralLastTime = cur;
+			document.getElementById("benchmark_details").innerHTML = "Benchmark Results:<br>" + benchmarkString;
+		}
 	}
 
 	var addUpdateSpecific = function(str) {
+
 		console.log(str);
 		var updatesSpecificDiv = document.getElementById("updates_specific");
+
 		createNewElement(updatesSpecificDiv, "li", "", str);
+
+		if (benchmarkMode) {
+			var cur = currentTime();
+			benchmarkString = "- Specific [" + (cur - updatesSpecificLastTime) + "ms, " + (cur - updatesSpecificStartTime) + "ms] " + str + "<br>" + benchmarkString;
+			updatesSpecificLastTime = cur;
+			document.getElementById("benchmark_details").innerHTML = "Benchmark Results:<br>" + benchmarkString;
+		}
 	}
 
 	var go = function() {
 
-		showUpdates();
 		resetUpdatesGeneral();
 		hideInterface();
 
@@ -378,8 +422,39 @@ scramble = (function() {
 
 		addUpdateGeneral("Generating " + pages.length + " round" + ((pages.length == 1) ? "" : "s") + " of scrambles.");
 
-		generate_scrambles(competitionName, pages);
+		generate_scrambles(hideUpdates, competitionName, pages);
 	};
+
+	var benchmark = function() {
+
+		resetUpdatesGeneral();
+		resetUpdatesSpecific();
+		benchmarkMode = true;
+
+		document.getElementById("select_events_interface").style.display="none";
+		document.getElementById("select_sets_interface").style.display="none";
+		document.getElementById("updates").style.display="none";
+
+		// Give everyone the same benchmark.
+		randomSource = new MersenneTwisterObject(123);
+
+		var callback = function (){
+			document.getElementById("benchmark_details").innerHTML = "Benchmark Results:<br><br>Done!<br><br>" + benchmarkString;
+		};
+		generate_scrambles(callback, "Benchmark", [
+			["222", "Round 2x2x2", 5],
+			["333", "Round 3x3x3", 5],
+			["444", "Round 4x4x4", 5],
+			["555", "Round 5x5x5", 5],
+			["666", "Round 6x6x6", 3],
+			["777", "Round 7x7x7", 3],
+			["clock", "Round Clock", 5],
+			["pyram", "Round Pyraminx", 5],
+			["minx", "Round Megaminx", 5],
+			["sq1", "Round Square-1", 5],
+			["333", "Round 3x3x3 Again", 5]
+		]);
+	}
 
 	return {
 		version: version,
@@ -387,6 +462,7 @@ scramble = (function() {
 		initialize: initialize,
 		generate_scrambles: generate_scrambles,
 		go: go,
-		changeNumRounds: changeNumRounds
+		changeNumRounds: changeNumRounds,
+		benchmark: benchmark
 	};
 })();

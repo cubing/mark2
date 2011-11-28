@@ -781,6 +781,7 @@ function drawSquare(r, cx, cy, w, fillColor) {
     };
 
     var r = Raphael(parentElement, border*2+width*12, border*2+width*9);
+    parentElement.width = border*2+width*12;
 
     var stateWithCenters = state + " URFLBD";
 
