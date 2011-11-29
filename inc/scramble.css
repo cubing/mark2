@@ -158,6 +158,9 @@ li {
     #updates, .interface, .unsupported {
         display: none !important;
     }
+    body {
+      background: none;
+    }
 }
 
 #benchmarkButton {
@@ -351,10 +354,13 @@ h1 {
   border-radius: 8px;
   margin: 8px;
   padding: 12px;
+  height: 10em;
+  width: 534px;
+  overflow: scroll;
 }
 
 
-.loading {
+.loading_scramble {
   
   background-color: #FAA;
   background-image: -webkit-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
@@ -362,14 +368,34 @@ h1 {
   background-image: -o-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
   background-image: repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
 
-  -webkit-animation-name: loading;
+  -webkit-animation-name: loading_scramble_frames;
   -webkit-animation-duration: 2s;
   -webkit-animation-iteration-count: infinite;
   -webkit-animation-direction: linear;
 }
 
-@-webkit-keyframes loading{
-  0%{background: #8DD;}
-  50%{background: #FFF;}
-  100%{background: #8DD;}
+@-webkit-keyframes loading_scramble_frames {
+  0% {background: #8DD;}
+  50% {background: #FFF;}
+  100% {background: #8DD;}
+}
+
+.loading_scrambler {
+  
+  background-color: #FAA;
+  background-image: -webkit-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
+  background-image: -moz-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
+  background-image: -o-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
+  background-image: repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
+
+  -webkit-animation-name: loading_scrambler_frames;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-direction: linear;
+}
+
+@-webkit-keyframes loading_scrambler_frames {
+  0% {background: #D88;}
+  50% {background: #FFF;}
+  100% {background: #D88;}
 }

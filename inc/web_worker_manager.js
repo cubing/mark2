@@ -8,36 +8,63 @@ else {
 	console.error = function() {};
 }
 
-var scrambler;
+var workerScramblers = {};
+var workerScramblersInitialized = {};
 var initialized = false;
+var randomSource = undefined;
 
-var initialize = function(eventID, scramblerFile) {
-	if (!initialized) {
+var initialize = function(eventIDs, scramblerFiles, random_seed) {
 
-		importScripts(scramblerFile);
-		scrambler = scramblers[eventID];
+	importScripts("mersennetwister.js");
+	randomSource = new MersenneTwisterObject(random_seed);
 
-		scrambler.initialize();
+	for (i in eventIDs) {
 
-		initialized = true;
+		importScripts(scramblerFiles[eventIDs[i]]);
+
+		workerScramblers[eventIDs[i]] = scramblers[eventIDs[i]];
+		workerScramblers[eventIDs[i]].setRandomSource(randomSource);
+
+		workerScramblersInitialized[eventIDs[i]] = false;
+
 	}
+
+	initialized = true;
 
 	postMessage({
 		action: "initialized",
-		info: ["Successfully initialized web worker for " + eventID + "(version " + scrambler.version + ")"]
+		info: ["Successfully initialized web worker for [" + eventIDs.toString() + "]."]
 	});
 }
 
 var getRandomScramble = function (eventID, returnData) {
+
+	if (!initialized) {
+		postMessage({
+			action: "echo_response",
+			info: "Web worker for " + eventID + " is not initialized yet."
+		});
+	}
+
+	if (!workerScramblersInitialized[eventID]) {
+
+		postMessage({
+			action: "get_random_scramble_initializing_scrambler",
+			return_data: returnData
+		});
+
+		workerScramblers[eventID].initialize();
+
+		workerScramblersInitialized[eventID] = true;
+
+	}
 
 	postMessage({
 		action: "get_random_scramble_starting",
 		return_data: returnData
 	});
 
-	postMessage({action: "echo_response", info: "Event " + eventID + ", " + scrambler.version});
-
-	var scramble = scrambler.getRandomScramble();
+	var scramble = workerScramblers[eventID].getRandomScramble();
 	postMessage({
 		action: "get_random_scramble_response",
 		scramble: scramble,
@@ -50,7 +77,7 @@ var getRandomScramble = function (eventID, returnData) {
 onmessage = function(e) {
 	switch(e.data.action) {
 		case "initialize":
-			initialize(e.data.event_id, e.data.scrambler_file);
+			initialize(e.data.event_ids, e.data.scrambler_files, e.data.random_seed);
 		break;
 
 		case "get_random_scramble":

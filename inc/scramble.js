@@ -94,8 +94,16 @@ scramble = (function() {
 				);
 			break;
 
+			case "get_random_scramble_initializing_scrambler":
+				iniScramblerNotice(
+					e.data.return_data.trID,
+					e.data.event_id,
+					e.data.return_data.num
+				);
+			break;
+
 			case "get_random_scramble_response":
-				console.log("Received a " + events[e.data.event_id].name +	 " scramble: " + e.data.scramble.scramble);
+				//console.log("Received a " + events[e.data.event_id].name +	 " scramble: " + e.data.scramble.scramble);
 				insertScramble(
 					e.data.return_data.trID,
 					e.data.event_id,
@@ -127,14 +135,24 @@ scramble = (function() {
 
 		try {
 
-			for (eventID in events) {
+			var workerGroups = [
+				["333", "333bf", "333oh", "333fm", "333ft"],
+				["222", "444", "555", "666", "777", "444bf", "555bf", "minx", "pyram", "clock"],
+				["sq1"]
+			];
+
+			for (i in workerGroups) {
 
 				var worker = new Worker("inc/web_worker_manager.js");
-				events[eventID].worker = worker;
+				var scramblerFiles = {};
+
+				for (j in workerGroups[i]) {
+					events[workerGroups[i][j]].worker = worker;
+					scramblerFiles[workerGroups[i][j]] = "scramblers/" + events[workerGroups[i][j]].scrambler_file;
+				}
 				worker.onmessage = handleWorkerMessage;
-				
-				console.log("inc/scramblers/" + events[eventID].scrambler_file);
-				worker.postMessage({action: "initialize", event_id: eventID, scrambler_file: "scramblers/" + events[eventID].scrambler_file});
+
+				worker.postMessage({action: "initialize", event_ids: workerGroups[i], scrambler_files: scramblerFiles, random_seed: getRandomSeed()});
 			}
 
 			usingWebWorkers = true;
@@ -142,6 +160,8 @@ scramble = (function() {
 		}
 		catch (e) {
 			console.log("Starting the web workers failed. This happens with Chrome when run from file://");
+			console.log("Error below:");
+			console.log(e);
 		}
 
 	}
@@ -240,22 +260,28 @@ scramble = (function() {
 			removeButton.setAttribute("onclick", "this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement)");
 	}
 
-	var randomSource = Math;
+	var randomSource = undefined;
 
 	var initializeRandomSource = function() {
 		
-		console.log("scramble.js: Seeding Mersenne Twister.");
-
 		// We use the date the the native PRNG to get some entropy.
-		var seed = 1000;//new Date().getTime() + Math.floor(Math.random()*0xffffffff);
+		var seed = new Date().getTime() + Math.floor(Math.random()*0xffffffff);
 		
 		// Make sure we don't actually use deterministic initialization.
 		if (isFinite(seed)) {
 			randomSource = new MersenneTwisterObject(seed);
+			console.log("scramble.js: Seeded Mersenne Twister.");
+
 		}
 		else {
+			randomSource = Math;
   			console.log("WARNING: Seeding Mersenne Twister did not work. Falling back to Math.random().");
   		}
+	}
+
+	// For seeding the workers.
+	var getRandomSeed = function() {
+		return (new Date().getTime() + Math.floor(randomSource.random()*0xffffffff));
 	}
 
 
@@ -275,6 +301,9 @@ scramble = (function() {
 		return newElement;
 	};
 
+	var doneCreatingRounds = false;
+	var scramblesStillAwaiting = [];
+
 	var currentID = "0";
 
 	var nextID = function() {
@@ -285,14 +314,35 @@ scramble = (function() {
 					
 		var scrambleTR = document.getElementById(trID);
 		scrambleTR.innerHTML = "";
-		var tempTD = createNewElement(scrambleTR, "td", "loading", "Generating scramble #" + num + "...");
+		var tempTD = createNewElement(scrambleTR, "td", "loading_scramble", "Generating scramble #" + num + "...");
+			tempTD.setAttribute("colspan", 3);
+	}
+
+	var iniScramblerNotice = function(trID, eventID, num) {
+					
+		var scrambleTR = document.getElementById(trID);
+		scrambleTR.innerHTML = "";
+		var tempTD = createNewElement(scrambleTR, "td", "loading_scrambler", "Initializing scrambler...");
 			tempTD.setAttribute("colspan", 3);
 	}
 
 	var insertScramble = function(trID, eventID, num, scramble, state) {
 
 		if (usingWebWorkers) {
-			addUpdateSpecific("Generated " + eventID + " scramble #" + num + " for some round.");
+
+			var stillRemainingString = "";
+			if (doneCreatingRounds) {
+				stillRemainingString = " " + scramblesStillAwaiting.length + " scrambles still remaining overall."
+			}
+
+			addUpdateSpecific("Generated " + eventID + " scramble #" + num + " for some round." + stillRemainingString);
+
+			var index = scramblesStillAwaiting.indexOf(trID);
+			scramblesStillAwaiting.splice(index, 1)
+
+			if (scramblesStillAwaiting.length == 0 && doneCreatingRounds) {
+				addUpdateGeneral("\n\nDone generating all scrambles for all rounds.\n");
+			}
 		}
 					
 		var scrambleTR = document.getElementById(trID);
@@ -317,6 +367,8 @@ scramble = (function() {
 
 			var tempTD = createNewElement(scrambleTR, "td", "", "[Space for Scramble #" + num + "]");
 			tempTD.setAttribute("colspan", 3);
+
+			scramblesStillAwaiting.push(trID);
 
 			events[eventID].worker.postMessage({
 				action: "get_random_scramble",
@@ -383,8 +435,8 @@ scramble = (function() {
 				var newFooterTHead = createNewElement(newFooterTable, "thead");
 					var newFooterTR = createNewElement(newFooterTHead, "tr");
 
-						createNewElement(newFooterTR, "td", "", '<u>Scrambles generated at:</u><br>' + (new Date().toString()));
-						createNewElement(newFooterTR, "td", "", '<div style="text-align: right;"><u>' + events[eventID].name + ' Scrambler Version</u><br>' + scrambler.version + '</div>');
+						createNewElement(newFooterTR, "td", "", '<u>Scrambles generated at:</u>\n' + (new Date().toString()));
+						createNewElement(newFooterTR, "td", "", '<div style="text-align: right;"><u>' + events[eventID].name + ' Scrambler Version</u>\n' + scrambler.version + '</div>');
 						createNewElement(newFooterTR, "td", "", '<img src="inc/wca_logo.svg" class="wca_logo">');
 		
 		// Generate those scrambles!
@@ -429,7 +481,15 @@ scramble = (function() {
 		}
 		else {
 			nextContinuation = function(){
-				addUpdateGeneral("Done scrambling all events.");
+
+				if (usingWebWorkers) {
+					addUpdateGeneral("Done creating all rounds. " + scramblesStillAwaiting.length + " scrambles still need to be filled in.");
+					doneCreatingRounds = true;
+				}
+				else {
+					addUpdateGeneral("Done creating all rounds.");
+				}
+
 				setTimeout(callback, 0);
 			};
 		}
@@ -511,9 +571,9 @@ scramble = (function() {
 
 		if (benchmarkMode) {
 			var cur = currentTime();
-			benchmarkString = "- General [" + (cur - updatesGeneralLastTime) + "ms, " + (cur - updatesGeneralStartTime) + "ms] " + str + "<br>" + benchmarkString;
+			benchmarkString = "- General [" + (cur - updatesGeneralLastTime) + "ms, " + (cur - updatesGeneralStartTime) + "ms] " + str + "\n" + benchmarkString;
 			updatesGeneralLastTime = cur;
-			document.getElementById("benchmark_details").innerHTML = "Benchmark Results:<br>" + benchmarkString;
+			document.getElementById("benchmark_details").innerHTML = "Benchmark In Progress:\n\n" + benchmarkString;
 		}
 	}
 
@@ -526,9 +586,9 @@ scramble = (function() {
 
 		if (benchmarkMode) {
 			var cur = currentTime();
-			benchmarkString = "- Specific [" + (cur - updatesSpecificLastTime) + "ms, " + (cur - updatesSpecificStartTime) + "ms] " + str + "<br>" + benchmarkString;
+			benchmarkString = "- Detail [" + (cur - updatesSpecificLastTime) + "ms, " + (cur - updatesSpecificStartTime) + "ms, " + (cur - updatesGeneralStartTime) + "ms] " + str + "\n" + benchmarkString;
 			updatesSpecificLastTime = cur;
-			document.getElementById("benchmark_details").innerHTML = "Benchmark Results:<br>" + benchmarkString;
+			document.getElementById("benchmark_details").innerHTML = "Benchmark In Progress:\n\n" + benchmarkString;
 		}
 	}
 
@@ -564,8 +624,9 @@ scramble = (function() {
 		resetUpdatesSpecific();
 		benchmarkMode = true;
 
-		benchmarkString = "<br>Benchmark Settings:<br>" + 
-			"- Web Workers: " + (usingWebWorkers? "yes" : "no");
+		benchmarkString = "\nBenchmark Settings:\n" + 
+			"- Web Workers: " + (usingWebWorkers? "yes" : "no") + "\n" +
+			"- Benchmark version: 3 (November 29, 2011)";
 
 		document.getElementById("benchmark").style.display="block";
 		document.getElementById("select_events_interface").style.display="none";
@@ -576,7 +637,7 @@ scramble = (function() {
 		randomSource = new MersenneTwisterObject(123);
 
 		var callback = function (){
-			document.getElementById("benchmark_details").innerHTML = "Benchmark Results:<br><br>Done!<br><br>" + benchmarkString;
+			//document.getElementById("benchmark_details").innerHTML = "Benchmark Results:\n\nDone!\n\n" + benchmarkString;
 		};
 		generate_scrambles(callback, "Benchmark", [
 			["222", "Round 2x2x2", 5],
