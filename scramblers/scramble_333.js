@@ -14,30 +14,30 @@ scramble_333 = (function() {
   var names = [ "UFU", "URU", "UBU", "ULU", "DFD", "DRD", "DBD", "DLD", "FRF", "FLF", "BRB", "BLB",
                 "UFRUF", "URBUR", "UBLUB", "ULFUL", "DRFDR", "DFLDF", "DLBDL", "DBRDB" ];
 
-  var co_trans  = make_array( 2187 * 6);
-  var eo_trans  = make_array( 2048 * 6);
-  var ud1_trans = make_array(  495 * 6);
-  var cp_trans  = make_array(40320 * 6);
-  var ep_trans  = make_array(40320 * 6);
-  var ud2_trans = make_array(   24 * 6);
+  var co_trans  = new Array( 2187 * 6);
+  var eo_trans  = new Array( 2048 * 6);
+  var ud1_trans = new Array(  495 * 6);
+  var cp_trans  = new Array(40320 * 6);
+  var ep_trans  = new Array(40320 * 6);
+  var ud2_trans = new Array(   24 * 6);
 
-  var co_prune  = make_array( 2187);
-  var eo_prune  = make_array( 2048);
-  var ud1_prune = make_array(  495);
-  var cp_prune  = make_array(40320);
-  var ep_prune  = make_array(40320);
-  var ud2_prune = make_array(   24);
+  var co_prune  = new Array( 2187);
+  var eo_prune  = new Array( 2048);
+  var ud1_prune = new Array(  495);
+  var cp_prune  = new Array(40320);
+  var ep_prune  = new Array(40320);
+  var ud2_prune = new Array(   24);
 
-  var co = make_array( 8);
-  var eo = make_array(12);
-  var cp = make_array( 8);
-  var ep = make_array(12);
+  var co = new Array( 8);
+  var eo = new Array(12);
+  var cp = new Array( 8);
+  var ep = new Array(12);
 
   var co_coord, eo_coord, ud1_coord;
   var cp_coord, co_coord, ud2_coord;
 
-  var phase_1_moves = make_array(12);
-  var phase_2_moves = make_array(18);
+  var phase_1_moves = new Array(12);
+  var phase_2_moves = new Array(18);
 
   var c_cycles = [
     [ 0, 1, 2, 3 ], // U
@@ -71,15 +71,6 @@ scramble_333 = (function() {
     [ 0, 0, 0, 0 ], // R
     [ 0, 0, 0, 0 ], // L
   ];
-
-  function make_array(len)
-  {
-    var array;
-
-    array = new Array();
-    array.length = len;
-    return array;
-  }
 
   function move_pieces(perm, orie, cycle, twist, mod)
   {
@@ -539,19 +530,19 @@ scramble_333 = (function() {
       "FU LB LD FR DR LU RU UB FD FL RB BD LUB RUF RBU DRF DBR BDL ULF LDF",
     ];
 
-    co_trans  = make_array( 2187 * 6);
-    eo_trans  = make_array( 2048 * 6);
-    ud1_trans = make_array(  495 * 6);
-    cp_trans  = make_array(40320 * 6);
-    ep_trans  = make_array(40320 * 6);
-    ud2_trans = make_array(   24 * 6);
+    co_trans  = new Array( 2187 * 6);
+    eo_trans  = new Array( 2048 * 6);
+    ud1_trans = new Array(  495 * 6);
+    cp_trans  = new Array(40320 * 6);
+    ep_trans  = new Array(40320 * 6);
+    ud2_trans = new Array(   24 * 6);
     
-    co_prune  = make_array( 2187);
-    eo_prune  = make_array( 2048);
-    ud1_prune = make_array(  495);
-    cp_prune  = make_array(40320);
-    ep_prune  = make_array(40320);
-    ud2_prune = make_array(   24);
+    co_prune  = new Array( 2187);
+    eo_prune  = new Array( 2048);
+    ud1_prune = new Array(  495);
+    cp_prune  = new Array(40320);
+    ep_prune  = new Array(40320);
+    ud2_prune = new Array(   24);
 
     very_beg = beg = new Date();
     init_trans_tables();
@@ -578,8 +569,8 @@ scramble_333 = (function() {
   }
 
   function solvecube_benchmark(pos) {
-    phase_1_moves = make_array(12);
-    phase_2_moves = make_array(18);
+    phase_1_moves = new Array(12);
+    phase_2_moves = new Array(18);
     set_cube(pos);
     var i, beg, end;
     var sol = "";
@@ -604,8 +595,8 @@ scramble_333 = (function() {
   }
 
   function solvecube(pos, invert) {
-    phase_1_moves = make_array(12);
-    phase_2_moves = make_array(18);
+    phase_1_moves = new Array(12);
+    phase_2_moves = new Array(18);
     set_cube(pos);
     var i, sol = "";
 
