@@ -520,7 +520,7 @@ scramble_pyram = (function() {
     scramble();
 
     return {
-      state: posit,
+      state: colmap,
       scramble: scramblestring[0]
     };
   };
@@ -584,7 +584,7 @@ scramble_pyram = (function() {
 
     for(var y = 0; y < 7; y++) {
       for(var x = 0; x < 13; x++) {
-        var col = colmap[0][y * 13 + x];
+        var col = state[0][y * 13 + x];
         if (col != 0) {
           var xx = border + width + x*width/2*2/Math.sqrt(3);
           var yy = border + y * width;

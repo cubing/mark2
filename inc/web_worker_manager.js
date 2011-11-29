@@ -36,10 +36,21 @@ else {
 
 var initialize = function() {
 
+	for (eventID in events) {
+		events[eventID].initialized = false;
+	}
+
 	postMessage({
 		action: "initialized",
 		info: "Successfully initialized web worker."
 	});
+}
+
+var initializeEventOnce = function(eventID) {
+	if (!events[eventID].initialized) {
+		events[eventID].scrambler.initialize();
+		events[eventID].initialized = true;
+	}
 }
 
 var initializeEvent = function(eventID) {
@@ -52,13 +63,19 @@ var initializeEvent = function(eventID) {
 }
 
 var getRandomScramble = function (eventID, returnData) {
-	events[eventID].scrambler.initialize();
+
+	postMessage({
+		action: "get_random_scramble_starting",
+		return_data: returnData
+	});
+
+	initializeEventOnce(eventID);
 	var scramble = events[eventID].scrambler.getRandomScramble();
 	postMessage({
 		action: "get_random_scramble_response",
 		scramble: scramble,
 		event_id: eventID,
-		return_data: returnData,
+		return_data: returnData
 	});
 }
 

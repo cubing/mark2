@@ -86,6 +86,34 @@ function scramble_NNN(size, seqlen, mult) {
           }
         }
       }*/
+
+      // build lookup table
+      flat2posit=new Array(12*size*size);
+      for(i=0; i<flat2posit.length; i++) flat2posit[i]=-1;
+      for(i=0; i<size; i++){
+        for(j=0; j<size; j++){
+          flat2posit[4*size*(3*size-i-1)+  size+j  ]=        i *size+j; //D
+          flat2posit[4*size*(  size+i  )+  size-j-1]=(  size+i)*size+j; //L
+          flat2posit[4*size*(  size+i  )+4*size-j-1]=(2*size+i)*size+j; //B
+          flat2posit[4*size*(       i  )+  size+j  ]=(3*size+i)*size+j; //U
+          flat2posit[4*size*(  size+i  )+2*size+j  ]=(4*size+i)*size+j; //R
+          flat2posit[4*size*(  size+i  )+  size+j  ]=(5*size+i)*size+j; //F
+        }
+      }
+     
+      /*
+             19                32
+         16           48           35
+             31   60      51   44
+         28     80    63    67     47
+                    83  64
+                92          79
+                    95  76
+       
+                       0
+                   12     3
+                      15
+      */
      
       // expand colour string into 6 actual html color names
       for(var k=0; k<6; k++){
@@ -191,33 +219,6 @@ function scramble_NNN(size, seqlen, mult) {
         seq[n][seq[n].length]= cubeorient ? Math.floor(randomSource.random()*24) : 0;
       }
      
-      // build lookup table
-      flat2posit=new Array(12*size*size);
-      for(i=0; i<flat2posit.length; i++) flat2posit[i]=-1;
-      for(i=0; i<size; i++){
-        for(j=0; j<size; j++){
-          flat2posit[4*size*(3*size-i-1)+  size+j  ]=        i *size+j; //D
-          flat2posit[4*size*(  size+i  )+  size-j-1]=(  size+i)*size+j; //L
-          flat2posit[4*size*(  size+i  )+4*size-j-1]=(2*size+i)*size+j; //B
-          flat2posit[4*size*(       i  )+  size+j  ]=(3*size+i)*size+j; //U
-          flat2posit[4*size*(  size+i  )+2*size+j  ]=(4*size+i)*size+j; //R
-          flat2posit[4*size*(  size+i  )+  size+j  ]=(5*size+i)*size+j; //F
-        }
-      }
-     
-    /*
-           19                32
-       16           48           35
-           31   60      51   44
-       28     80    63    67     47
-                  83  64
-              92          79
-                  95  76
-     
-                     0
-                 12     3
-                    15
-    */
     }
 
     var cubeSize = size;
@@ -275,7 +276,7 @@ function scramble_NNN(size, seqlen, mult) {
           if(flat2posit[d]<0){
             s+="<td><\/td>";
           }else{
-            var c = colorPerm[ori][posit[flat2posit[d]]];
+            var c = colorPerm[ori][state[flat2posit[d]]];
             var col = colorList[colors[c]+0];
             drawSquare(r, border + width /2 + f*width, border + width /2 + i*width, width/2, col);
             //s+="<td style='background-color:"+colorList[colors[c]+2]+"'><img src='scrbg/"+colorList[colors[c]+1]+"' width=10 border=1 height=10><\/td>";
@@ -459,8 +460,18 @@ function scramble_NNN(size, seqlen, mult) {
       };
     };
 
-    var initializeFull = function(continuation) {
+    var initializeDrawing = function(continuation) {
+
       parse();
+
+      if (continuation) {
+        setTimeout(continuation, 0);
+      }
+    };
+
+    var initializeFull = function(continuation) {
+
+      initializeDrawing();
 
       if (continuation) {
         setTimeout(continuation, 0);
@@ -472,6 +483,7 @@ function scramble_NNN(size, seqlen, mult) {
     return {
       version: "November 24, 2011",
       initialize: initializeFull,
+      initializeDrawing: initializeDrawing,
       setRandomSource: setRandomSource,
       getRandomScramble: getRandomScramble,
       drawScramble: drawScramble,

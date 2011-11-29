@@ -32,7 +32,7 @@ scramble = (function() {
 	var eventsPerRow = 4;
 
 	var worker;
-	var usingWebWorkers = true;
+	var usingWebWorkers = false;
 
 	var initializeEvents = function()  {
 		
@@ -91,8 +91,16 @@ scramble = (function() {
 				console.log("Event initialized successfully: " + e.data.info);
 			break;
 
+			case "get_random_scramble_starting":
+				startScramble(
+					e.data.return_data.trID,
+					e.data.event_id,
+					e.data.return_data.num
+				);
+			break;
+
 			case "get_random_scramble_response":
-				console.log("Received a " + events[e.data.event_id].name +	 " scramble:");
+				console.log("Received a " + events[e.data.event_id].name +	 " scramble: " + e.data.scramble.scramble);
 				insertScramble(
 					e.data.return_data.trID,
 					e.data.event_id,
@@ -130,7 +138,6 @@ scramble = (function() {
 
 			worker.postMessage({action: "initialize"});
 
-			//worker.postMessage({action: "echo", value: 'function() {alert("Hi!");}'});
 		}
 		catch (e) {
 			console.log("Starting the web worker failed. This happens with Chrome when run from file://");
@@ -273,6 +280,14 @@ scramble = (function() {
 		return "auto_id_" + (currentID++);
 	}
 
+	var startScramble = function(trID, eventID, num) {
+					
+		var scrambleTR = document.getElementById(trID);
+		scrambleTR.innerHTML = "";
+		var tempTD = createNewElement(scrambleTR, "td", "loading", "Generating scramble #" + num + "...");
+			tempTD.setAttribute("colspan", 3);
+	}
+
 	var insertScramble = function(trID, eventID, num, scramble, state) {
 					
 		var scrambleTR = document.getElementById(trID);
@@ -283,7 +298,6 @@ scramble = (function() {
 		//var drawingCenter = createNewElement(drawingTD, "center"); // It's 2011, and there's still not a better way to center this. :-/
 
 		events[eventID].scrambler.drawScramble(drawingTD, state);
-
 	}
 
 	var generate_scramble_set = function(continuation, competitionName, tBody, eventID, scrambler, num, numTotal, options) {
@@ -296,7 +310,7 @@ scramble = (function() {
 
 		if (usingWebWorkers) {
 
-			var tempTD = createNewElement(scrambleTR, "td", "", "Generating scramble #" + num + "...");
+			var tempTD = createNewElement(scrambleTR, "td", "", "[Space for Scramble #" + num + "]");
 			tempTD.setAttribute("colspan", 3);
 
 			worker.postMessage({
@@ -375,17 +389,27 @@ scramble = (function() {
 		
 		var nextContinuation = generate_scramble_set.bind(null, continuation, competitionName, newScramblesTBody, eventID, scrambler, 1, numScrambles, {});
 		var call;
-		if (!events[eventID].initialized) {
+		if (!usingWebWorkers && !events[eventID].initialized) {
 		    addUpdateSpecific("Initializing " + events[eventID].name + " scrambler (only needs to be done once).");
 
 		    var statusCallback = function(str) {
 		    	addUpdateSpecific(str);
+
 		    }
-		    initializeEvent(eventID);
+		    //initializeEvent(eventID);
+
 			call = scrambler.initialize.bind(null, nextContinuation, statusCallback);
 			events[eventID].initialized = true;
 		}
 		else {
+
+			if (usingWebWorkers) {
+			    if (scrambler.initializeDrawing) {
+			    	console.log("Initializing drawing code for " + events[eventID].name + ".");
+			    	scrambler.initializeDrawing();
+			    }
+			}
+
 		    addUpdateSpecific("" + events[eventID].name + " scrambler already initialized.");
 			call = nextContinuation;
 		}
