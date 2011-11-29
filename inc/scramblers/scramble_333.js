@@ -9,7 +9,12 @@ Ported by Lucas Garron, November 23, 2011.
 
  */
 
-scramble_333 = (function() {
+
+if (typeof scramblers == "undefined") {
+  var scramblers = {};
+}
+
+scramblers["333fm"] = scramblers["333ft"] = scramblers["333bf"] = scramblers["333oh"] = scramblers["333"] = (function() {
 
   var names = [ "UFU", "URU", "UBU", "ULU", "DFD", "DRD", "DBD", "DLD", "FRF", "FLF", "BRB", "BLB",
                 "UFRUF", "URBUR", "UBLUB", "ULFUL", "DRFDR", "DFLDF", "DLBDL", "DBRDB" ];

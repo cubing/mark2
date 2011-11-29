@@ -31,35 +31,34 @@ scramble = (function() {
 	var events;
 	var eventsPerRow = 4;
 
-	var worker;
 	var usingWebWorkers = false;
 
 	var initializeEvents = function()  {
 		
 		events = {
 			// Official WCA events as of November 24, 2011
-			"333": {name: "Rubik's Cube", scrambler: scramble_333, default_round: ["avg", 5], default_num_rounds: 1},
-			"444": {name: "4x4 Cube", scrambler: scramble_444, default_round: ["avg", 5], default_num_rounds: 0},
-			"555": {name: "5x5 Cube", scrambler: scramble_555, default_round: ["avg", 5], default_num_rounds: 0},
-			"222": {name: "2x2 Cube", scrambler: scramble_222, default_round: ["avg", 5], default_num_rounds: 0},
-			"333bf": {name: "3x3 blindfolded", scrambler: scramble_333, default_round: ["best", 3], default_num_rounds: 0},
-			"333oh": {name: "3x3 one-handed", scrambler: scramble_333, default_round: ["avg", 5], default_num_rounds: 0},
-			"333fm": {name: "3x3 fewest moves", scrambler: scramble_333, default_round: ["best", 2], default_num_rounds: 0}, //TODO: FCF support
-			"333ft": {name: "3x3 with feet", scrambler: scramble_333, default_round: ["avg", 5], default_num_rounds: 0},
-			"minx": {name: "Megaminx", scrambler: scramble_minx, default_round: ["avg", 5], default_num_rounds: 0},
-			"pyram": {name: "Pyraminx", scrambler: scramble_pyram, default_round: ["avg", 5], default_num_rounds: 0},
-			"sq1": {name: "Square-1", scrambler: scramble_sq1, default_round: ["avg", 5], default_num_rounds: 0},
-			"clock": {name: "Rubik's Clock", scrambler: scramble_clock, default_round: ["avg", 5], default_num_rounds: 0},
-			"666": {name: "6x6 Cube", scrambler: scramble_666, default_round: ["mean", 3], default_num_rounds: 0},
-			"777": {name: "7x7 Cube", scrambler: scramble_777, default_round: ["mean", 3], default_num_rounds: 0},
-			//"magic": {name: "Rubik's Magic", scrambler: scramble_magic, default_round: ["avg", 5], default_num_rounds: 0},
-			//"mmagic": {name: "Master Magic", scrambler: scramble_mmagic, default_round: ["avg", 5], default_num_rounds: 0},
-			"444bf": {name: "4x4 blindfolded", scrambler: scramble_444, default_round: ["best", 3], default_num_rounds: 0},
-			"555bf": {name: "5x5 blindfolded", scrambler: scramble_555, default_round: ["best", 3], default_num_rounds: 0},
-			//"333mbf": {name: "3x3 multi blind", scrambler: scramble_333, default_round: ["mbf"], default_num_rounds: 0}, //TODO: 3x3x3 with smaller images?
+			"333": {name: "Rubik's Cube", scrambler_file: "scramble_333.js", default_round: ["avg", 5], default_num_rounds: 1},
+			"444": {name: "4x4 Cube", scrambler_file: "scramble_NNN.js", default_round: ["avg", 5], default_num_rounds: 0},
+			"555": {name: "5x5 Cube", scrambler_file: "scramble_NNN.js", default_round: ["avg", 5], default_num_rounds: 0},
+			"222": {name: "2x2 Cube", scrambler_file: "scramble_222.js", default_round: ["avg", 5], default_num_rounds: 0},
+			"333bf": {name: "3x3 blindfolded", scrambler_file: "scramble_333.js", default_round: ["best", 3], default_num_rounds: 0},
+			"333oh": {name: "3x3 one-handed", scrambler_file: "scramble_333.js", default_round: ["avg", 5], default_num_rounds: 0},
+			"333fm": {name: "3x3 fewest moves", scrambler_file: "scramble_333.js", default_round: ["best", 2], default_num_rounds: 0}, //TODO: FCF support
+			"333ft": {name: "3x3 with feet", scrambler_file: "scramble_333.js", default_round: ["avg", 5], default_num_rounds: 0},
+			"minx": {name: "Megaminx", scrambler_file: "scramble_minx.js", default_round: ["avg", 5], default_num_rounds: 0},
+			"pyram": {name: "Pyraminx", scrambler_file: "scramble_pyram.js", default_round: ["avg", 5], default_num_rounds: 0},
+			"sq1": {name: "Square-1", scrambler_file: "scramble_sq1.js", default_round: ["avg", 5], default_num_rounds: 0},
+			"clock": {name: "Rubik's Clock", scrambler_file: "scramble_clock.js", default_round: ["avg", 5], default_num_rounds: 0},
+			"666": {name: "6x6 Cube", scrambler_file: "scramble_NNN.js", default_round: ["mean", 3], default_num_rounds: 0},
+			"777": {name: "7x7 Cube", scrambler_file: "scramble_NNN.js", default_round: ["mean", 3], default_num_rounds: 0},
+			//"magic": {name: "Rubik's Magic", scrambler_file: "scramble_magic.js", default_round: ["avg", 5], default_num_rounds: 0},
+			//"mmagic": {name: "Master Magic", scrambler_file: "scramble_mmagic.js", default_round: ["avg", 5], default_num_rounds: 0},
+			"444bf": {name: "4x4 blindfolded", scrambler_file: "scramble_NNN.js", default_round: ["best", 3], default_num_rounds: 0},
+			"555bf": {name: "5x5 blindfolded", scrambler_file: "scramble_NNN.js", default_round: ["best", 3], default_num_rounds: 0},
+			//"333mbf": {name: "3x3 multi blind", scrambler_file: "scramble_333.js", default_round: ["mbf"], default_num_rounds: 0}, //TODO: 3x3x3 with smaller images?
 			
 			// Unofficial events
-			//"skewb": {name: "Skewb", scrambler: scramble_skewb, default_round: ["avg", 5]},
+			//"skewb": {name: "Skewb", scrambler_file: "scramble_skewb.js", default_round: ["avg", 5]},
 		}
 	}
 
@@ -78,17 +77,13 @@ scramble = (function() {
 
 		initializeEventIDSelect("333");
 
-		initializeWorker();
+		initializeWorkers();
 	};
 
 	var handleWorkerMessage = function(e) {
 		switch(e.data.action) {
 			case "initialized":
 				console.log("Web worker initialized successfully: " + e.data.info);
-			break;
-
-			case "initialized_event":
-				console.log("Event initialized successfully: " + e.data.info);
 			break;
 
 			case "get_random_scramble_starting":
@@ -121,7 +116,7 @@ scramble = (function() {
 		}
 	}
 
-	var initializeWorker = function() {
+	var initializeWorkers = function() {
 		
 		// From http://www.html5rocks.com/en/tutorials/workers/basics/#toc-inlineworkers
 
@@ -131,16 +126,22 @@ scramble = (function() {
 		}
 
 		try {
-			worker = new Worker("inc/scramble_all.js");
-			worker.onmessage = handleWorkerMessage;
+
+			for (eventID in events) {
+
+				var worker = new Worker("inc/web_worker_manager.js");
+				events[eventID].worker = worker;
+				worker.onmessage = handleWorkerMessage;
+				
+				console.log("inc/scramblers/" + events[eventID].scrambler_file);
+				worker.postMessage({action: "initialize", event_id: eventID, scrambler_file: "scramblers/" + events[eventID].scrambler_file});
+			}
 
 			usingWebWorkers = true;
 
-			worker.postMessage({action: "initialize"});
-
 		}
 		catch (e) {
-			console.log("Starting the web worker failed. This happens with Chrome when run from file://");
+			console.log("Starting the web workers failed. This happens with Chrome when run from file://");
 		}
 
 	}
@@ -289,6 +290,10 @@ scramble = (function() {
 	}
 
 	var insertScramble = function(trID, eventID, num, scramble, state) {
+
+		if (usingWebWorkers) {
+			addUpdateSpecific("Generated " + eventID + " scramble #" + num + " for some round.");
+		}
 					
 		var scrambleTR = document.getElementById(trID);
 		scrambleTR.innerHTML = "";
@@ -297,12 +302,12 @@ scramble = (function() {
 		var drawingTD = createNewElement(scrambleTR, "td", "drawing");
 		//var drawingCenter = createNewElement(drawingTD, "center"); // It's 2011, and there's still not a better way to center this. :-/
 
-		events[eventID].scrambler.drawScramble(drawingTD, state);
+		scramblers[eventID].drawScramble(drawingTD, state);
 	}
 
 	var generate_scramble_set = function(continuation, competitionName, tBody, eventID, scrambler, num, numTotal, options) {
 		
-		addUpdateSpecific("Generating scramble #" + num + " of " + numTotal + ".");
+		//addUpdateSpecific("Generating scramble #" + num + " of " + numTotal + ".");
 
 		var scrambleTR = createNewElement(tBody, "tr");
 		var trID = nextID();
@@ -313,7 +318,7 @@ scramble = (function() {
 			var tempTD = createNewElement(scrambleTR, "td", "", "[Space for Scramble #" + num + "]");
 			tempTD.setAttribute("colspan", 3);
 
-			worker.postMessage({
+			events[eventID].worker.postMessage({
 				action: "get_random_scramble",
 				event_id: eventID,
 				return_data: {
@@ -351,7 +356,7 @@ scramble = (function() {
 			return;
 		}
 
-		var scrambler = events[eventID].scrambler;
+		var scrambler = scramblers[eventID];
 
 		// Create a new Page.
 		
@@ -558,6 +563,9 @@ scramble = (function() {
 		resetUpdatesGeneral();
 		resetUpdatesSpecific();
 		benchmarkMode = true;
+
+		benchmarkString = "<br>Benchmark Settings:<br>" + 
+			"- Web Workers: " + (usingWebWorkers? "yes" : "no");
 
 		document.getElementById("benchmark").style.display="block";
 		document.getElementById("select_events_interface").style.display="none";

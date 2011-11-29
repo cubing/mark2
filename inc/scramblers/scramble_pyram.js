@@ -4,7 +4,11 @@
 /* Optimal modification by Michael Gottlieb (qqwref a t gmail d o t com) from Jaap's code */
 /* Version 1.0*/
 
-scramble_pyram = (function() {
+if (typeof scramblers == "undefined") {
+  var scramblers = {};
+}
+
+scramblers["pyram"] = (function() {
 
   var numcub = 1;
 

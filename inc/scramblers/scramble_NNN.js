@@ -494,7 +494,11 @@ function scramble_NNN(size, seqlen, mult) {
   })();
 }
 
-scramble_444 = scramble_NNN(4, 40, true);
-scramble_555 = scramble_NNN(5, 60, true);
-scramble_666 = scramble_NNN(6, 70, true);
-scramble_777 = scramble_NNN(7, 100, true);
+if (typeof scramblers == "undefined") {
+  var scramblers = {};
+}
+
+scramblers["444bf"] = scramblers["444"] = scramble_NNN(4, 40, true);
+scramblers["555bf"] = scramblers["555"] = scramble_NNN(5, 60, true);
+scramblers["666"] = scramble_NNN(6, 70, true);
+scramblers["777"] = scramble_NNN(7, 100, true);

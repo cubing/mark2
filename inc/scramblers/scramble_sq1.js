@@ -13,7 +13,11 @@ TODO:
 
 */
 
-scramble_sq1 = (function() {
+if (typeof scramblers == "undefined") {
+  var scramblers = {};
+}
+
+scramblers["sq1"] = (function() {
 
   var makeArrayZeroed = function(len) {
     var array, i;

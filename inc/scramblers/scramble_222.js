@@ -9,7 +9,11 @@ Ported by Lucas Garron, November 23, 2011.
 
  */
 
-scramble_222 = (function() {
+if (typeof scramblers == "undefined") {
+  var scramblers = {};
+}
+
+scramblers["222"] = (function() {
 
   var posit = new Array ();
   function initbrd(){

@@ -1,5 +1,10 @@
 
-scramble_clock = (function() {
+
+if (typeof scramblers == "undefined") {
+  var scramblers = {};
+}
+
+scramblers["clock"] = (function() {
   /*
   function prt(p){
     if(p<10) document.write(" ");
