@@ -48,8 +48,6 @@ body {
   border-radius: 0em 0em 1em 1em;
 
   z-index: 7;
-
-  avoid
 }
 
 .info_table {
@@ -144,7 +142,7 @@ li {
   margin-left: 2em;
 }
 
-.interface {
+.interface, #about {
   padding: 1em;
   margin: 1em;
   font-family: Helvetica;
@@ -155,7 +153,7 @@ li {
 
 @media print  
 {
-    #updates, .interface, .unsupported {
+    #updates, .interface, #about, .unsupported {
         display: none !important;
     }
     body {
@@ -357,6 +355,7 @@ h1 {
   height: 10em;
   width: 534px;
   overflow: scroll;
+  box-shadow: inset 0px -2px 8px #000;
 }
 
 

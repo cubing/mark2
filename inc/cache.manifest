@@ -1,0 +1,18 @@
+CACHE MANIFEST
+# Revision 64
+mersennetwister.js
+offline_storage_example.png
+offline.html
+raphael-min.js
+scramble.css
+scramble.js
+wca_logo.svg
+web_worker_manager.js
+scramblers/scramble_222.js
+scramblers/scramble_333.js
+scramblers/scramble_clock.js
+scramblers/scramble_minx.js
+scramblers/scramble_NNN.js
+scramblers/scramble_pyram.js
+scramblers/scramble_sq1.js
+../scramble.html

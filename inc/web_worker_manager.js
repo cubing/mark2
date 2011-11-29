@@ -1,3 +1,5 @@
+importScripts("mersennetwister.js");
+
 var console;
 if (typeof window !== "undefined") {
 	console = window.console;
@@ -13,19 +15,19 @@ var workerScramblersInitialized = {};
 var initialized = false;
 var randomSource = undefined;
 
-var initialize = function(eventIDs, scramblerFiles, random_seed) {
+var initialize = function(eventIDs, scramblerFiles, randomSeed) {
 
-	importScripts("mersennetwister.js");
-	randomSource = new MersenneTwisterObject(random_seed);
+	randomSource = new MersenneTwisterObject(randomSeed);
 
 	for (i in eventIDs) {
+		var eventID = eventIDs[i];
 
-		importScripts(scramblerFiles[eventIDs[i]]);
+		importScripts(scramblerFiles[eventID]);
 
-		workerScramblers[eventIDs[i]] = scramblers[eventIDs[i]];
-		workerScramblers[eventIDs[i]].setRandomSource(randomSource);
+		workerScramblers[eventID] = scramblers[eventID];
+		workerScramblers[eventID].setRandomSource(randomSource);
 
-		workerScramblersInitialized[eventIDs[i]] = false;
+		workerScramblersInitialized[eventID] = false;
 
 	}
 
@@ -75,21 +77,27 @@ var getRandomScramble = function (eventID, returnData) {
 
 
 onmessage = function(e) {
-	switch(e.data.action) {
-		case "initialize":
-			initialize(e.data.event_ids, e.data.scrambler_files, e.data.random_seed);
-		break;
+	try {
+		switch(e.data.action) {
+			case "initialize":
+				initialize(e.data.event_ids, e.data.scrambler_files, e.data.random_seed);
+			break;
 
-		case "get_random_scramble":
-			getRandomScramble(e.data.event_id, e.data.return_data);
-		break;
+			case "get_random_scramble":
+				getRandomScramble(e.data.event_id, e.data.return_data);
+			break;
 
-		case "echo":
-			postMessage({action: "echo_response", info: e.data});
-		break;
+			case "echo":
+				postMessage({action: "echo_response", info: e.data});
+			break;
 
-		default:
-			console.error("Unknown message.");
-		break;
+			default:
+				console.error("Unknown message.");
+			break;
+		}
+	}
+	catch (e) {
+		console.log(e);
+		postMessage({action: "echo_response", info: JSON.stringify(e)});
 	}
 }

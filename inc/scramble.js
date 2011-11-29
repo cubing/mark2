@@ -1,4 +1,11 @@
 
+// Offline caching.
+var cache = window.applicationCache;
+function updateReadyCache() {
+  window.applicationCache.swapCache();
+  location.reload(true); // For now
+}
+
 // Implementation of bind() for Safari.
 if (!Function.prototype.bind) {
   Function.prototype.bind = function (oThis) {
@@ -202,6 +209,8 @@ scramble = (function() {
 				valInput.setAttribute("type", "number");
 				valInput.setAttribute("min", "0");
 				valInput.setAttribute("onchange", "scramble.changeNumRounds(\"" + eventID + "\");");
+				valInput.setAttribute("onkeyup", "scramble.changeNumRounds(\"" + eventID + "\");");
+				valInput.setAttribute("onmouseup", "scramble.changeNumRounds(\"" + eventID + "\");");
 				valInput.setAttribute("onclick", "scramble.changeNumRounds(\"" + eventID + "\");");
 
 
@@ -216,7 +225,7 @@ scramble = (function() {
 
 		var eventTBody = document.getElementById("tbody_" + eventID);
 		var prevNum = eventTBody.children.length;
-		var num = document.getElementById("amount_value_"+eventID).value;
+		var num = document.getElementById("amount_value_"+eventID).valueAsNumber;
 
 		if (num > prevNum) {
 			for (var i = 0; i < num - prevNum; i++) {
@@ -257,7 +266,12 @@ scramble = (function() {
 
 		var removeTD = createNewElement(newEventTR, "td");
 		var removeButton = createNewElement(removeTD, "button", "", "X");
-			removeButton.setAttribute("onclick", "this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement)");
+			removeButton.setAttribute("onclick", "this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement); scramble.updateSetCount(\"" + eventID + "\");");
+	}
+
+	var updateSetCount = function(eventID) {
+		var eventTBody = document.getElementById("tbody_" + eventID);
+		document.getElementById("amount_value_"+eventID).value = eventTBody.children.length;
 	}
 
 	var randomSource = undefined;
@@ -435,8 +449,8 @@ scramble = (function() {
 				var newFooterTHead = createNewElement(newFooterTable, "thead");
 					var newFooterTR = createNewElement(newFooterTHead, "tr");
 
-						createNewElement(newFooterTR, "td", "", '<u>Scrambles generated at:</u>\n' + (new Date().toString()));
-						createNewElement(newFooterTR, "td", "", '<div style="text-align: right;"><u>' + events[eventID].name + ' Scrambler Version</u>\n' + scrambler.version + '</div>');
+						createNewElement(newFooterTR, "td", "", '<u>Scrambles generated at:</u><br>' + (new Date().toString()));
+						createNewElement(newFooterTR, "td", "", '<div style="text-align: right;"><u>' + events[eventID].name + ' Scrambler Version</u><br>' + scrambler.version + '</div>');
 						createNewElement(newFooterTR, "td", "", '<img src="inc/wca_logo.svg" class="wca_logo">');
 		
 		// Generate those scrambles!
@@ -613,6 +627,11 @@ scramble = (function() {
 			}
 		}
 
+		if (pages.length == 0) {
+			addUpdateGeneral("Nothing to do, because there are no rounds to scramble.");
+			return;
+		}
+
 		addUpdateGeneral("Generating " + pages.length + " round" + ((pages.length == 1) ? "" : "s") + " of scrambles.");
 
 		generate_scrambles(hideUpdates, competitionName, pages);
@@ -628,9 +647,8 @@ scramble = (function() {
 			"- Web Workers: " + (usingWebWorkers? "yes" : "no") + "\n" +
 			"- Benchmark version: 3 (November 29, 2011)";
 
+		hideInterface();
 		document.getElementById("benchmark").style.display="block";
-		document.getElementById("select_events_interface").style.display="none";
-		document.getElementById("select_sets_interface").style.display="none";
 		document.getElementById("updates").style.display="none";
 
 		// Give everyone the same benchmark.
@@ -661,6 +679,7 @@ scramble = (function() {
 		generate_scrambles: generate_scrambles,
 		go: go,
 		changeNumRounds: changeNumRounds,
-		benchmark: benchmark
+		benchmark: benchmark,
+		updateSetCount: updateSetCount
 	};
 })();
