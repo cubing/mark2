@@ -354,7 +354,8 @@ h1 {
   padding: 12px;
   height: 10em;
   width: 534px;
-  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: scroll;
   box-shadow: inset 0px -2px 8px #000;
 }
 

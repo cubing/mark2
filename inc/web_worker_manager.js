@@ -6,8 +6,19 @@ if (typeof window !== "undefined") {
 }
 else {
 	console = {};
-	console.log = function() {};
-	console.error = function() {};
+	// TODO: Handle multiple args.
+	console.log = function(data) {
+		postMessage({
+			action: "console_log",
+			data: data
+		});
+	};
+	console.error = function(data) {
+		postMessage({
+			action: "console_error",
+			data: data
+		});
+	};
 }
 
 var workerScramblers = {};
@@ -42,10 +53,7 @@ var initialize = function(eventIDs, scramblerFiles, randomSeed) {
 var getRandomScramble = function (eventID, returnData) {
 
 	if (!initialized) {
-		postMessage({
-			action: "echo_response",
-			info: "Web worker for " + eventID + " is not initialized yet."
-		});
+		console.error("Web worker for " + eventID + " is not initialized yet.");
 	}
 
 	if (!workerScramblersInitialized[eventID]) {
@@ -97,7 +105,6 @@ onmessage = function(e) {
 		}
 	}
 	catch (e) {
-		console.log(e);
-		postMessage({action: "echo_response", info: JSON.stringify(e)});
+		postMessage({action: "message_exception", data: JSON.stringify(e)});
 	}
 }

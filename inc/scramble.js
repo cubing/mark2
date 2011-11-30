@@ -101,6 +101,18 @@ scramble = (function() {
 				);
 			break;
 
+			case "console_log":
+				console.log("[Web worker log]", e.data.data);
+			break;
+
+			case "console_error":
+				console.log("[Web worker error]", e.data.data);
+			break;
+
+			case "message_exception":
+				console.log("[Web worker exception]", e.data.data);
+			break;
+
 			case "get_random_scramble_initializing_scrambler":
 				iniScramblerNotice(
 					e.data.return_data.trID,
