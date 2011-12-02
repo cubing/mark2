@@ -10,7 +10,11 @@ U is the regular move of the U face, according to standard cube notation.
 <br>
  */
 
-scramble_minx = (function() {
+if (typeof scramblers == "undefined") {
+  var scramblers = {};
+}
+
+scramblers["minx"] = (function() {
  
   var linelen=10;
   var linenbr=7;
@@ -197,6 +201,7 @@ scramble_minx = (function() {
   var drawScramble = function(parentElement, state) {
 
     var r = Raphael(parentElement, 350*scale, 180*scale);
+    parentElement.width = 350*scale;
 
     //console.log(state);
 

@@ -4,7 +4,11 @@
 /* Optimal modification by Michael Gottlieb (qqwref a t gmail d o t com) from Jaap's code */
 /* Version 1.0*/
 
-scramble_pyram = (function() {
+if (typeof scramblers == "undefined") {
+  var scramblers = {};
+}
+
+scramblers["pyram"] = (function() {
 
   var numcub = 1;
 
@@ -520,7 +524,7 @@ scramble_pyram = (function() {
     scramble();
 
     return {
-      state: posit,
+      state: colmap,
       scramble: scramblestring[0]
     };
   };
@@ -580,10 +584,11 @@ scramble_pyram = (function() {
   var drawScramble = function(parentElement, state) {
 
     var r = Raphael(parentElement, border*2+width*9, border*2+width*5.3);
+    parentElement.width = border*2+width*9;
 
     for(var y = 0; y < 7; y++) {
       for(var x = 0; x < 13; x++) {
-        var col = colmap[0][y * 13 + x];
+        var col = state[0][y * 13 + x];
         if (col != 0) {
           var xx = border + width + x*width/2*2/Math.sqrt(3);
           var yy = border + y * width;

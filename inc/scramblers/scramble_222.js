@@ -9,11 +9,15 @@ Ported by Lucas Garron, November 23, 2011.
 
  */
 
-scramble_222 = (function() {
+if (typeof scramblers == "undefined") {
+  var scramblers = {};
+}
+
+scramblers["222"] = (function() {
 
   var posit = new Array ();
   function initbrd(){
-      posit = new Array (
+    posit = new Array (
                   1,1,1,1,
                   2,2,2,2,
                   5,5,5,5,
@@ -491,6 +495,7 @@ scramble_222 = (function() {
     var colorString = "wrgoby"; // UFRLBD
 
     var r = Raphael(parentElement, border*2+width*4*cubeSize, border*2+width*3*cubeSize);
+    parentElement.width = border*2+width*4*cubeSize;
 
     var s="",i,f,d=0,q;
     ori = 0;
@@ -502,7 +507,7 @@ scramble_222 = (function() {
         if(flat2posit[d]<0){
           s+="<td><\/td>";
         }else{
-          var c = colorPerm[ori][posit[flat2posit[d]]];
+          var c = colorPerm[ori][state[flat2posit[d]]];
           var col = colorList[colors[c]+0];
           drawSquare(r, border + width /2 + f*width, border + width /2 + i*width, width/2, col);
           //s+="<td style='background-color:"+colorList[colors[c]+2]+"'><img src='scrbg/"+colorList[colors[c]+1]+"' width=10 border=1 height=10><\/td>";
@@ -608,11 +613,20 @@ scramble_222 = (function() {
     };
   };
 
-  var initializeFull = function(continuation) {
+  var initializeDrawing = function(continuation) {
 
     calcperm();
-    initialize();
     parse();
+    initialize();
+
+    if (continuation) {
+      setTimeout(continuation, 0);
+    }
+  };
+
+  var initializeFull = function(continuation) {
+
+    initializeDrawing();
 
     if (continuation) {
       setTimeout(continuation, 0);
@@ -624,6 +638,7 @@ scramble_222 = (function() {
   return {
     version: "November 23, 2011",
     initialize: initializeFull,
+    initializeDrawing: initializeDrawing,
     setRandomSource: setRandomSource,
     getRandomScramble: getRandomScramble,
     drawScramble: drawScramble,
