@@ -237,7 +237,7 @@ scramble = (function() {
 
 		var eventTBody = document.getElementById("tbody_" + eventID);
 		var prevNum = eventTBody.children.length;
-		var num = document.getElementById("amount_value_"+eventID).valueAsNumber;
+		var num = document.getElementById("amount_value_"+eventID).value;
 
 		if (num > prevNum) {
 			for (var i = 0; i < num - prevNum; i++) {
