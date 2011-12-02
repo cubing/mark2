@@ -368,13 +368,24 @@ h1 {
   background-image: -o-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
   background-image: repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
 
-  -webkit-animation-name: loading_scramble_frames;
-  -webkit-animation-duration: 2s;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-animation-direction: linear;
+  -webkit-animation: loading_scramble_frames 2s infinite linear;
+  -moz-animation: loading_scramble_frames 2s infinite linear;
+  animation: loading_scramble_frames 2s infinite linear;
 }
 
 @-webkit-keyframes loading_scramble_frames {
+  0% {background: #8DD;}
+  50% {background: #FFF;}
+  100% {background: #8DD;}
+}
+
+@-moz-keyframes loading_scramble_frames {
+  0% {background: #8DD;}
+  50% {background: #FFF;}
+  100% {background: #8DD;}
+}
+
+@keyframes loading_scramble_frames {
   0% {background: #8DD;}
   50% {background: #FFF;}
   100% {background: #8DD;}
@@ -388,13 +399,24 @@ h1 {
   background-image: -o-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
   background-image: repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
 
-  -webkit-animation-name: loading_scrambler_frames;
-  -webkit-animation-duration: 2s;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-animation-direction: linear;
+  -webkit-animation: loading_scrambler_frames 2s infinite linear;
+  -moz-animation: loading_scrambler_frames 2s infinite linear;
+  animation: loading_scrambler_frames 2s infinite linear;
 }
 
 @-webkit-keyframes loading_scrambler_frames {
+  0% {background: #D88;}
+  50% {background: #FFF;}
+  100% {background: #D88;}
+}
+
+@-moz-keyframes loading_scrambler_frames {
+  0% {background: #D88;}
+  50% {background: #FFF;}
+  100% {background: #D88;}
+}
+
+@keyframes loading_scrambler_frames {
   0% {background: #D88;}
   50% {background: #FFF;}
   100% {background: #D88;}
