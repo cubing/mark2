@@ -1,5 +1,10 @@
 
-scramble_clock = (function() {
+
+if (typeof scramblers == "undefined") {
+  var scramblers = {};
+}
+
+scramblers["clock"] = (function() {
   /*
   function prt(p){
     if(p<10) document.write(" ");
@@ -209,6 +214,7 @@ scramble_clock = (function() {
 	var face_background_radius = 18;
 
     var r = Raphael(parentElement, 220, 110);
+    parentElement.width = 220;
 
     var drawSideBackground = function(cx, cy, fill, stroke, stroke_width) {
 

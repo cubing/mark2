@@ -13,22 +13,15 @@ TODO:
 
 */
 
-scramble_sq1 = (function() {
+if (typeof scramblers == "undefined") {
+  var scramblers = {};
+}
 
-
-  /*
-    Array initialization helper methods.
-    This is a trick from QBX (by Evan Gates).
-  */
-  var makeArray = function(len) {
-    var array = new Array;
-    array.length = len; // This gives Javascript a hint about how much space to allocate.
-    return array;
-  };
+scramblers["sq1"] = (function() {
 
   var makeArrayZeroed = function(len) {
     var array, i;
-    array = makeArray(len);
+    array = new Array(len);
     for(i = 0; i < len; i++) {
       array[i] = 0;
     }
@@ -37,9 +30,9 @@ scramble_sq1 = (function() {
 
   var make2DArray = function(lenOuter, lenInner) {
     var i, outer;
-    outer = makeArray(lenOuter);
+    outer = new Array(lenOuter);
     for(i = 0; i < lenOuter; i++) {
-      outer[i] = makeArray(lenInner);
+      outer[i] = new Array(lenInner);
     }
     return outer;
   };
@@ -70,7 +63,7 @@ scramble_sq1 = (function() {
 
   var IndexMappingIndexToPermutation = function(index, length) {
     var i, j, permutation;
-    permutation = makeArray(length);
+    permutation = new Array(length);
     permutation[length - 1] = 0;
     for (i = length - 2; i >= 0; i--) {
       permutation[i] = index % (length - i);
@@ -118,7 +111,7 @@ scramble_sq1 = (function() {
 
   var IndexMappingIndexToCombination = function(index, k, length) {
     var combination, i;
-    combination = makeArray(length);
+    combination = new Array(length);
     for (i = length - 1; i >= 0 && k >= 0; i--) {
       if (index >= IndexMappingNChooseK(i, k)) {
         combination[i] = true;
@@ -140,7 +133,7 @@ scramble_sq1 = (function() {
 
   var stateMultiply = function(permutation, move) {
     var i, newPermutation;
-    newPermutation = makeArray(24);
+    newPermutation = new Array(24);
     for(i = 0; i < 24; i++) {
       newPermutation[i] = permutation[move[i]];
     }
@@ -149,7 +142,7 @@ scramble_sq1 = (function() {
 
   var stateGetShapeIndex = function(permutation) {
     var cuts, i, next;
-    cuts = makeArray(24);
+    cuts = new Array(24);
     for(i = 0; i < 24; i++) {
       cuts[i] = 0;
     }
@@ -170,7 +163,7 @@ scramble_sq1 = (function() {
 
   var stateGetPiecesPermutation = function(permutation) {
     var i, newPermutation, next, nextSlot;
-    newPermutation = makeArray(16);
+    newPermutation = new Array(16);
     nextSlot = 0;
     for (i = 0; i <= 11; i++) {
       next = (i + 1) % 12;
@@ -194,12 +187,12 @@ scramble_sq1 = (function() {
   var stateToCubeState = function(permutation) {
     var cornerIndices, cornersPermutation, edgeIndices, edgesPermutation, i;
     cornerIndices = [0, 3, 6, 9, 12, 15, 18, 21];
-    cornersPermutation = makeArray(8);
+    cornersPermutation = new Array(8);
     for(i = 0; i < 8; i++) {
       cornersPermutation[i] = permutation[cornerIndices[i]];
     }
     edgeIndices = [1, 4, 7, 10, 13, 16, 19, 22];
-    edgesPermutation = makeArray(8);
+    edgesPermutation = new Array(8);
     for(i = 0; i < 8; i++) {
       edgesPermutation[i] = permutation[edgeIndices[i]] - 8;
     }
@@ -208,8 +201,8 @@ scramble_sq1 = (function() {
 
   var cubeStateMultiply = function(state, move) {
     var cornersPermutation, edgesPermutation, i;
-    cornersPermutation = makeArray(8);
-    edgesPermutation = makeArray(8);
+    cornersPermutation = new Array(8);
+    edgesPermutation = new Array(8);
     for (i = 0; i < 8; i++) {
       cornersPermutation[i] = state[0][move[0][i]];
       edgesPermutation[i] = state[1][move[1][i]];
@@ -230,7 +223,7 @@ scramble_sq1 = (function() {
   var square1Solver_shapes = new Array();
   var square1Solver_evenShapeDistance = {};
   var square1Solver_oddShapeDistance = {};
-  var square1Solver_moves1 = makeArray(23);
+  var square1Solver_moves1 = new Array(23);
   var square1Solver_moves2;
   var square1Solver_cornersPermutationMove;
   var square1Solver_cornersCombinationMove;
@@ -366,7 +359,7 @@ scramble_sq1 = (function() {
       square1Solver_cornersCombinationMove = make2DArray(square1Solver_N_CORNERS_COMBINATIONS, square1Solver_moves2.length);
       for(i = 0; i < square1Solver_N_CORNERS_COMBINATIONS; i++) {
         combination = IndexMappingIndexToCombination(i, 4, 8);
-        corners = makeArray(8);
+        corners = new Array(8);
         nextTop = 0;
         nextBottom = 4;
         for(j = 0; j < 8; j++) {
@@ -376,10 +369,10 @@ scramble_sq1 = (function() {
             corners[j] = nextBottom++;
           }
         }
-        state = [corners, makeArray(8)];
+        state = [corners, new Array(8)];
         for(j = 0; j < square1Solver_moves2.length; j++) {
           result = cubeStateMultiply(state, square1Solver_moves2[j]);
-          isTopCorner = makeArray(8);
+          isTopCorner = new Array(8);
           for(k = 0; k < 8; k++) {
             isTopCorner[k] = result[0][k] < 4;
           }
@@ -405,7 +398,7 @@ scramble_sq1 = (function() {
       square1Solver_edgesCombinationMove = make2DArray(square1Solver_N_EDGES_COMBINATIONS, square1Solver_moves2.length);
       for(i = 0; i < square1Solver_N_EDGES_COMBINATIONS; i++) {
         combination = IndexMappingIndexToCombination(i, 4, 8);
-        edges = makeArray(8);
+        edges = new Array(8);
         nextTop = 0;
         nextBottom = 4;
         for(j = 0; j < 8; j++) {
@@ -415,10 +408,10 @@ scramble_sq1 = (function() {
             edges[j] = nextBottom++;
           }
         }
-        state = [makeArray(8), edges];
+        state = [new Array(8), edges];
         for(j = 0; j < square1Solver_moves2.length; j++) {
           result = cubeStateMultiply(state, square1Solver_moves2[j]);
-          isTopEdge = makeArray(8);
+          isTopEdge = new Array(8);
           for(k = 0; k < 8; k++) {
             isTopEdge[k] = result[1][k] < 4;
           }
@@ -760,13 +753,13 @@ scramble_sq1 = (function() {
   var square1SolverSolution2 = function(state, maxDepth) {
     var cornersCombination, cornersPermutation, depth, edgesCombination, edgesPermutation, isTopCorner, isTopEdge, k, solution;
     cornersPermutation = IndexMappingPermutationToIndex(state[0]);
-    isTopCorner = makeArray(8);
+    isTopCorner = new Array(8);
     for(k = 0; k < 8; k++) {
       isTopCorner[k] = state[0][k] < 4;
     }
     cornersCombination = IndexMappingCombinationToIndex(isTopCorner, 4);
     edgesPermutation = IndexMappingPermutationToIndex(state[1]);
-    isTopEdge = makeArray(8);
+    isTopEdge = new Array(8);
     for(k = 0; k < 8; k++) {
       isTopEdge[k] = state[1][k] < 4;
     }
@@ -812,7 +805,7 @@ scramble_sq1 = (function() {
     shape = square1Solver_shapes[randomIntBelow(square1Solver_shapes.length)];
     cornersPermutation = IndexMappingIndexToPermutation(randomIntBelow(square1Solver_N_CORNERS_PERMUTATIONS), 8);
     edgesPermutation = IndexMappingIndexToPermutation(randomIntBelow(square1Solver_N_EDGES_PERMUTATIONS), 8);
-    permutation = makeArray(shape.length);
+    permutation = new Array(shape.length);
     for(i = 0; i < shape.length; i++) {
       if (shape[i] < 8) {
         permutation[i] = cornersPermutation[shape[i]];
@@ -893,6 +886,7 @@ function drawSq(stickers, middleIsSolved, shapes, parentElement, colorString) {
 
     var z = 1.366 // sqrt(2) / sqrt(1^2 + tan(15 degrees)^2)
     var r = Raphael(parentElement, 200, 110);
+    parentElement.width = 200;
 
     var arrx, arry;
    

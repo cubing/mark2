@@ -1,3 +1,8 @@
+body, div, p {
+  margin: 0px auto;
+  padding: 0px;
+}
+
 body {
   font-family: Helvetica, Tahoma, Arial;
 
@@ -6,12 +11,8 @@ body {
   background-image: -moz-repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
   background-image: -o-repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
   background-image: repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
-}
 
-body, div, p {
-  margin: 0px auto;
-  padding: 0px;
-  max-width: 1000px;
+  width: 640px;
 }
 
 .scramble_set {
@@ -159,6 +160,11 @@ li {
     }
 }
 
+#benchmarkButton {
+  font-size: 200%;
+  padding: 0.1em 1em;
+}
+
 #goButton {
   font-size: 200%;
   padding: 0.1em 1em;
@@ -207,12 +213,13 @@ li {
 
 .scramble_table td.scramble_clock {
   font-family: monospace;
+  padding: 4px 4px;
 }
 
 .scramble_table td.scramble_clock div.clock_inner {
   display: block;
   width: 3.5em;
-  padding: 0.5em;
+  padding: 0.2em;
   font-weight: normal;
   border-left: 1px solid #EEE;
   border-right: 1px solid #EEE;
@@ -222,7 +229,7 @@ li {
 
 .scramble_table td.scramble_clock div.clock_outer {
   float: left;
-  width: 4.5em;
+  width: 3.9em;
 }
 
 .scramble_table td.scramble_clock span.clock_pegs {
@@ -236,6 +243,10 @@ li {
 
 .scramble_table td.scramble_clock span.clock_turns {
   font-weight: bold;
+}
+
+.scramble_table .drawing {
+  /*width: 250px;*/
 }
 
 .unupported {
@@ -280,7 +291,11 @@ h1 {
   font-size: 1em;
 }
 
-#select_sets td input.round_number {
+#select_sets td input.round_name {
+  width: 10em;
+}
+
+#select_sets td input.num_solves {
   width: 3em;
 }
 
@@ -292,7 +307,6 @@ h1 {
   border-collapse: collapse;
   background: #CCC;
   box-shadow: 2px 2px 5px #888;
-  border-radius: 6px;
   margin: 12px;
   font-size: 1.2em;
 }
@@ -301,16 +315,18 @@ h1 {
   padding: 4px;
 }
 
-.event_amount_id {
+.event_amount_id_td {
   text-align: right;
-}
-
-td + .event_amount_id {
   border-left: 1px solid #888;
 }
 
-#event_amounts tr + tr {
+.event_amount_value_td {
+  border-right: 1px solid #888;
+}
+
+#event_amounts tr {
   border-top: 1px solid #888;
+  border-bottom: 1px solid #888;
 }
 
 #event_amounts td.event_amount_id {
@@ -324,18 +340,36 @@ td + .event_amount_id {
   text-align: center;
 }
 
-/*
-ul#event_amounts li {
-  display: inline;
-  margin: 12px;
+#benchmark {
+  display: none;
 }
 
-.event_amount {
-  background: #CCC;
-  display: inline;
-  padding: 4px;
-  margin: 4px;
-  border: 1px solid #000;
-  border-radius: 6px;
+#benchmark_details {
+  clear: both;
+  font-family: monospace;
+  background: #FFF;
+  border-radius: 8px;
+  margin: 8px;
+  padding: 12px;
 }
-*/
+
+
+.loading {
+  
+  background-color: #FAA;
+  background-image: -webkit-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
+  background-image: -moz-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
+  background-image: -o-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
+  background-image: repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
+
+  -webkit-animation-name: loading;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-direction: linear;
+}
+
+@-webkit-keyframes loading{
+  0%{background: #8DD;}
+  50%{background: #FFF;}
+  100%{background: #8DD;}
+}

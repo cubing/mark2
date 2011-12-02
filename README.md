@@ -13,10 +13,22 @@ The name "Mark 2" represents that this is an entirely rewritten second-generatio
 # New Features
 
 - Markov Random-State 3x3x3 and Square-1 scramblers.
-- TODO: Megaminx and clock images.
 - Clearer clock and Square-1 notation.
 
 # Style Guide
 
 - When updating a scrambler, update date of the version at the end of the file.
 - Make sure all scramblers use implement a setRandomSource(src) methoda and use randomSource.random() instead of Math.random().
+
+# Credit
+
+- Jaap Scherphuis (original scramblers for all puzzles
+- Conrad Rider (2x2x2 and 3x3x3 ini)
+- Walter Souza (Square-1 solver)
+- Herbert Kociemba (for the Kociemba algorithm)
+- Stefan Pochmann (Megaminx)
+- Clement Gallet (Megaminx)
+- Syoji Takamatsu (Pyraminx)
+- Andrew Nelsoon (Square-1 drawings)
+- Michael Gottlieb (Square-1)
+- Lucas Garron (Square-1, Mark 2)
