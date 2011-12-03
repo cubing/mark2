@@ -34,6 +34,7 @@ var web_worker_manager = (function() {
 		workerID = iniWorkerID;
 
 		randomSource = new MersenneTwisterObject(randomSeed);
+		Math.random = undefined; // So we won't use it by accident.
 
 		for (i in eventIDs) {
 			var eventID = eventIDs[i];
@@ -67,7 +68,7 @@ var web_worker_manager = (function() {
 				return_data: returnData
 			});
 
-			workerScramblers[eventID].initialize(null, randomSource);
+			workerScramblers[eventID].initialize(null, randomSource, console.log);
 
 			workerScramblersInitialized[eventID] = true;
 
@@ -90,7 +91,6 @@ var web_worker_manager = (function() {
 	var initializeBenchmark = function(randomSeed) {
 
 		randomSource.init(randomSeed);
-		console.log("Seed " + randomSeed + ", " + randomSource.random());
 
 		postMessage({action: "initialize_benchmark_response", worker_id: workerID});
 	}

@@ -326,6 +326,7 @@ scramble = (function() {
 		if (isFinite(seed)) {
 			randomSource = new MersenneTwisterObject(seed);
 			console.log("scramble.js: Seeded Mersenne Twister.");
+			Math.random = undefined; // So we won't use it by accident.
 
 		}
 		else {
@@ -513,8 +514,9 @@ scramble = (function() {
 			    	scrambler.initializeDrawing();
 			    }
 			}
-
-		    addUpdateSpecific("" + events[eventID].name + " scrambler already initialized.");
+			else if (events[eventID].initialized) {
+		    	addUpdateSpecific("" + events[eventID].name + " scrambler already initialized.");
+			}
 			call = nextContinuation;
 		}
 		setTimeout(call, 0);
