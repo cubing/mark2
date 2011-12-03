@@ -313,32 +313,20 @@ h1 {
 }
 
 #event_amounts td {
-  padding: 4px;
-}
-
-.event_amount_id_td {
-  text-align: right;
-  border-left: 1px solid #888;
-}
-
-.event_amount_value_td {
-  border-right: 1px solid #888;
+  padding: 0px;
+  margin: 0px;
 }
 
 #event_amounts tr {
-  border-top: 1px solid #888;
-  border-bottom: 1px solid #888;
+  padding: 0px;
+  margin: 0px;
 }
 
-#event_amounts td.event_amount_id {
-  font-weight: bold;
-  padding-left: 10px;
-}
-
-.event_amount_value {
-  font-size: 1.2em;
-  width: 2em;
-  text-align: center;
+.addRoundButton {
+  font-size: 100%;
+  width: 100%;
+  padding: 4px 4px;
+  margin: 0px;
 }
 
 #benchmark {
@@ -358,7 +346,6 @@ h1 {
   overflow-y: scroll;
   box-shadow: inset 0px -2px 8px #000;
 }
-
 
 .loading_scramble {
   

@@ -35,39 +35,65 @@ scramble = (function() {
 
 	var version = "November 23, 2011";
 
-	var events;
-	var eventsPerRow = 4;
+	var eventsPerRow = 8;
 
 	var usingWebWorkers = false;
 
-	var initializeEvents = function()  {
+	var events = {
+		// Official WCA events as of November 24, 2011
+		"333": {name: "Rubik's Cube", scrambler_file: "scramble_333.js", default_round: ["avg", 5], default_num_rounds: 1},
+		"444": {name: "4x4 Cube", scrambler_file: "scramble_NNN.js", default_round: ["avg", 5], default_num_rounds: 0},
+		"555": {name: "5x5 Cube", scrambler_file: "scramble_NNN.js", default_round: ["avg", 5], default_num_rounds: 0},
+		"222": {name: "2x2 Cube", scrambler_file: "scramble_222.js", default_round: ["avg", 5], default_num_rounds: 0},
+		"333bf": {name: "3x3 blindfolded", scrambler_file: "scramble_333.js", default_round: ["best", 3], default_num_rounds: 0},
+		"333oh": {name: "3x3 one-handed", scrambler_file: "scramble_333.js", default_round: ["avg", 5], default_num_rounds: 0},
+		"333fm": {name: "3x3 fewest moves", scrambler_file: "scramble_333.js", default_round: ["best", 2], default_num_rounds: 0}, //TODO: FCF support
+		"333ft": {name: "3x3 with feet", scrambler_file: "scramble_333.js", default_round: ["avg", 5], default_num_rounds: 0},
+		"minx": {name: "Megaminx", scrambler_file: "scramble_minx.js", default_round: ["avg", 5], default_num_rounds: 0},
+		"pyram": {name: "Pyraminx", scrambler_file: "scramble_pyram.js", default_round: ["avg", 5], default_num_rounds: 0},
+		"sq1": {name: "Square-1", scrambler_file: "scramble_sq1.js", default_round: ["avg", 5], default_num_rounds: 0},
+		"clock": {name: "Rubik's Clock", scrambler_file: "scramble_clock.js", default_round: ["avg", 5], default_num_rounds: 0},
+		"666": {name: "6x6 Cube", scrambler_file: "scramble_NNN.js", default_round: ["mean", 3], default_num_rounds: 0},
+		"777": {name: "7x7 Cube", scrambler_file: "scramble_NNN.js", default_round: ["mean", 3], default_num_rounds: 0},
+		//"magic": {name: "Rubik's Magic", scrambler_file: "scramble_magic.js", default_round: ["avg", 5], default_num_rounds: 0},
+		//"mmagic": {name: "Master Magic", scrambler_file: "scramble_mmagic.js", default_round: ["avg", 5], default_num_rounds: 0},
+		"444bf": {name: "4x4 blindfolded", scrambler_file: "scramble_NNN.js", default_round: ["best", 3], default_num_rounds: 0},
+		"555bf": {name: "5x5 blindfolded", scrambler_file: "scramble_NNN.js", default_round: ["best", 3], default_num_rounds: 0},
+		//"333mbf": {name: "3x3 multi blind", scrambler_file: "scramble_333.js", default_round: ["mbf"], default_num_rounds: 0}, //TODO: 3x3x3 with smaller images?
 		
-		events = {
-			// Official WCA events as of November 24, 2011
-			"333": {name: "Rubik's Cube", scrambler_file: "scramble_333.js", default_round: ["avg", 5], default_num_rounds: 1},
-			"444": {name: "4x4 Cube", scrambler_file: "scramble_NNN.js", default_round: ["avg", 5], default_num_rounds: 0},
-			"555": {name: "5x5 Cube", scrambler_file: "scramble_NNN.js", default_round: ["avg", 5], default_num_rounds: 0},
-			"222": {name: "2x2 Cube", scrambler_file: "scramble_222.js", default_round: ["avg", 5], default_num_rounds: 0},
-			"333bf": {name: "3x3 blindfolded", scrambler_file: "scramble_333.js", default_round: ["best", 3], default_num_rounds: 0},
-			"333oh": {name: "3x3 one-handed", scrambler_file: "scramble_333.js", default_round: ["avg", 5], default_num_rounds: 0},
-			"333fm": {name: "3x3 fewest moves", scrambler_file: "scramble_333.js", default_round: ["best", 2], default_num_rounds: 0}, //TODO: FCF support
-			"333ft": {name: "3x3 with feet", scrambler_file: "scramble_333.js", default_round: ["avg", 5], default_num_rounds: 0},
-			"minx": {name: "Megaminx", scrambler_file: "scramble_minx.js", default_round: ["avg", 5], default_num_rounds: 0},
-			"pyram": {name: "Pyraminx", scrambler_file: "scramble_pyram.js", default_round: ["avg", 5], default_num_rounds: 0},
-			"sq1": {name: "Square-1", scrambler_file: "scramble_sq1.js", default_round: ["avg", 5], default_num_rounds: 0},
-			"clock": {name: "Rubik's Clock", scrambler_file: "scramble_clock.js", default_round: ["avg", 5], default_num_rounds: 0},
-			"666": {name: "6x6 Cube", scrambler_file: "scramble_NNN.js", default_round: ["mean", 3], default_num_rounds: 0},
-			"777": {name: "7x7 Cube", scrambler_file: "scramble_NNN.js", default_round: ["mean", 3], default_num_rounds: 0},
-			//"magic": {name: "Rubik's Magic", scrambler_file: "scramble_magic.js", default_round: ["avg", 5], default_num_rounds: 0},
-			//"mmagic": {name: "Master Magic", scrambler_file: "scramble_mmagic.js", default_round: ["avg", 5], default_num_rounds: 0},
-			"444bf": {name: "4x4 blindfolded", scrambler_file: "scramble_NNN.js", default_round: ["best", 3], default_num_rounds: 0},
-			"555bf": {name: "5x5 blindfolded", scrambler_file: "scramble_NNN.js", default_round: ["best", 3], default_num_rounds: 0},
-			//"333mbf": {name: "3x3 multi blind", scrambler_file: "scramble_333.js", default_round: ["mbf"], default_num_rounds: 0}, //TODO: 3x3x3 with smaller images?
-			
-			// Unofficial events
-			//"skewb": {name: "Skewb", scrambler_file: "scramble_skewb.js", default_round: ["avg", 5]},
-		}
+		// Unofficial events
+		//"skewb": {name: "Skewb", scrambler_file: "scramble_skewb.js", default_round: ["avg", 5]},
 	}
+
+	// Javascript object don't retain key order in all browsers.
+	var eventOrder = [
+		"222",
+		"333",
+		"444",
+		"555",
+		"666",
+		"777",
+		"333bf",
+		"333oh",
+		"333fm",
+		"333ft",
+		"minx",
+		"pyram",
+		"sq1",
+		"clock",
+		//"magic",
+		//"mmagic",
+		"444bf",
+		"555bf",
+		//"333mbf",
+		//"skewb"
+	];
+
+	var workerGroups = [
+		["333", "333bf", "333oh", "333fm", "333ft"],
+		["222", "444", "555", "666", "777", "444bf", "555bf", "minx", "pyram", "clock"],
+		["sq1"]
+	];
 
 	var roundNames = {
 		"avg": "Average of",
@@ -79,7 +105,6 @@ scramble = (function() {
 	var initialize = function() {
 
 		initializeRandomSource();
-		initializeEvents();
 		document.getElementById("goButton").focus();
 
 		initializeEventIDSelect("333");
@@ -154,12 +179,6 @@ scramble = (function() {
 
 		try {
 
-			var workerGroups = [
-				["333", "333bf", "333oh", "333fm", "333ft"],
-				["222", "444", "555", "666", "777", "444bf", "555bf", "minx", "pyram", "clock"],
-				["sq1"]
-			];
-
 			for (i in workerGroups) {
 
 				var worker = new Worker("inc/web_worker_manager.js");
@@ -179,8 +198,7 @@ scramble = (function() {
 		}
 		catch (e) {
 			console.log("Starting the web workers failed. This happens with Chrome when run from file://");
-			console.log("Error below:");
-			console.log(e);
+			console.log("This was the web worker error:", e);
 		}
 
 	}
@@ -193,7 +211,8 @@ scramble = (function() {
 		var currentEventAmountsTR;
 
 		var numEvents = 0;
-		for (eventID in events) {
+		for (i in eventOrder) {
+			eventID = eventOrder[i]
 
 			events[eventID].initialized = false;
 
@@ -212,11 +231,17 @@ scramble = (function() {
 				currentEventAmountsTR = createNewElement(eventAmountsTable, "tr");
 			}
 
-			createNewElement(currentEventAmountsTR, "td", "event_amount_id_td", eventID);
+
+			//createNewElement(currentEventAmountsTR, "td", "event_amount_id_td", eventID);
+			var eventTD = createNewElement(currentEventAmountsTR, "td");
+			var eventAddRoundButton = createNewElement(eventTD, "button", "addRoundButton", eventID);
+			eventAddRoundButton.setAttribute("onclick", "scramble.addRound(\"" + eventID + "\");");
+
+			/*
 
 			var val = createNewElement(currentEventAmountsTR, "td", "event_amount_value_td", "");
 			var valInput = createNewElement(val, "input", "event_amount_value");
-				valInput.setAttribute("value", events[eventID].default_num_rounds);
+				valInput.setAttribute("value", );
 				valInput.setAttribute("id", "amount_value_" + eventID);
 				valInput.setAttribute("type", "number");
 				valInput.setAttribute("min", "0");
@@ -225,36 +250,32 @@ scramble = (function() {
 				valInput.setAttribute("onmouseup", "scramble.changeNumRounds(\"" + eventID + "\");");
 				valInput.setAttribute("onclick", "scramble.changeNumRounds(\"" + eventID + "\");");
 
+			*/
 
-			changeNumRounds(eventID);
-
+			for (var i = numCurrentRounds(eventID); i < events[eventID].default_num_rounds; i++) {
+				addRound(eventID);
+			}
 
 			numEvents++;
 		}
 	}
 
-	var changeNumRounds = function(eventID) {
-
-		var eventTBody = document.getElementById("tbody_" + eventID);
-		var prevNum = eventTBody.children.length;
-		var num = document.getElementById("amount_value_"+eventID).value;
-
-		if (num > prevNum) {
-			for (var i = 0; i < num - prevNum; i++) {
-				addRound(eventID, "Round " + (prevNum+i+1));
-			}
-		}
-		else if (prevNum > num) {
-			for (var i = 0; i < prevNum - num; i++) {
-				eventTBody.removeChild(eventTBody.lastChild);
-			}
-		}
-		
+	var numCurrentRounds = function(eventID) {
+		return document.getElementsByClassName("event_tr_" + eventID).length;
 	}
 
-	var addRound = function(eventID, roundName) {
-		var eventTBody = document.getElementById("tbody_" + eventID);
-		var newEventTR = createNewElement(eventTBody, "tr");
+	var addRound = function(eventID, roundNameOpt) {
+
+		var roundName = roundNameOpt;
+		if (roundNameOpt === undefined) {
+			roundName = "Round " + (numCurrentRounds(eventID)+1);
+		}
+
+		var eventTBody = document.getElementById("events_tbody");
+
+
+		var newEventTR = createNewElement(eventTBody, "tr", "event_tr_" + eventID);
+			newEventTR.setAttribute("data-event-id", eventID);
 
 		var nameTD = createNewElement(newEventTR, "td", "event_name", events[eventID].name);
 		
@@ -626,17 +647,20 @@ scramble = (function() {
 		var pages = [];
 		var competitionName = document.getElementById('competitionName').value;
 
-		for (eventID in events) {
-			var eventTBodyChildren = document.getElementById("tbody_" + eventID).children;
 
-			for (var i =0; i < eventTBodyChildren.length; i++) {
-				var tr = eventTBodyChildren[i];
-				var roundName = tr.getElementsByClassName("round_name")[0].value;
-				var roundType = tr.getElementsByClassName("round_type")[0].value;
-				var numSolves = tr.getElementsByClassName("num_solves")[0].value;
+		var eventsTBody = document.getElementById("events_tbody").children;
 
-				pages.push([eventID, roundName + " (" + roundNames[roundType] + " " + numSolves + ")", numSolves]);
-			}
+		for (var i = 0; i < eventsTBody.length; i++) {
+
+			var tr = eventsTBody[i];
+
+			var eventID = tr.getAttribute("data-event-id");
+
+			var roundName = tr.getElementsByClassName("round_name")[0].value;
+			var roundType = tr.getElementsByClassName("round_type")[0].value;
+			var numSolves = tr.getElementsByClassName("num_solves")[0].value;
+
+			pages.push([eventID, roundName + " (" + roundNames[roundType] + " " + numSolves + ")", numSolves]);
 		}
 
 		if (pages.length == 0) {
@@ -690,7 +714,7 @@ scramble = (function() {
 		initialize: initialize,
 		generate_scrambles: generate_scrambles,
 		go: go,
-		changeNumRounds: changeNumRounds,
+		addRound: addRound,
 		benchmark: benchmark,
 		updateSetCount: updateSetCount
 	};
