@@ -95,6 +95,8 @@ scramble = (function() {
 		["sq1"]
 	];
 
+	var workers = {};
+
 	var roundNames = {
 		"avg": "Average of",
 		"best": "Best of",
@@ -136,6 +138,10 @@ scramble = (function() {
 
 			case "message_exception":
 				console.log("[Web worker exception]", e.data.data);
+			break;
+
+			case "initialize_benchmark_response":
+				console.log("Benchmark initialized for worker " + e.data.worker_id + ".");
 			break;
 
 			case "get_random_scramble_initializing_scrambler":
@@ -190,7 +196,9 @@ scramble = (function() {
 				}
 				worker.onmessage = handleWorkerMessage;
 
-				worker.postMessage({action: "initialize", event_ids: workerGroups[i], scrambler_files: scramblerFiles, random_seed: getRandomSeed()});
+				workers[i] = worker;
+
+				worker.postMessage({action: "initialize", worker_id: i, event_ids: workerGroups[i], scrambler_files: scramblerFiles, random_seed: getRandomSeed()});
 			}
 
 			usingWebWorkers = true;
@@ -333,9 +341,6 @@ scramble = (function() {
 
 
 	var createNewElement = function(elementToAppendTo, type, className, content) {
-		if (elementToAppendTo == "222") {
-			console.log("ffff");
-		}
 
 		var newElement = document.createElement(type);
 		if (className) {
@@ -688,7 +693,13 @@ scramble = (function() {
 		document.getElementById("updates").style.display="none";
 
 		// Give everyone the same benchmark.
-		randomSource = new MersenneTwisterObject(123);
+		randomSource = new MersenneTwisterObject(12345);
+		console.log(randomSource.random());
+
+
+		for (i in workers) {
+			workers[i].postMessage({action: "initialize_benchmark", random_seed: Math.floor(randomSource.random()*0xffffffff)});
+		}
 
 		var callback = function (){
 			//document.getElementById("benchmark_details").innerHTML = "Benchmark Results:\n\nDone!\n\n" + benchmarkString;

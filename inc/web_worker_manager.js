@@ -21,12 +21,15 @@ else {
 	};
 }
 
+var workerID;
 var workerScramblers = {};
 var workerScramblersInitialized = {};
 var initialized = false;
 var randomSource = undefined;
 
-var initialize = function(eventIDs, scramblerFiles, randomSeed) {
+var initialize = function(iniWorkerID, eventIDs, scramblerFiles, randomSeed) {
+
+	workerID = iniWorkerID;
 
 	randomSource = new MersenneTwisterObject(randomSeed);
 
@@ -83,12 +86,19 @@ var getRandomScramble = function (eventID, returnData) {
 	});
 }
 
+var initializeBenchmark = function(randomSeed) {
+
+	randomSource.init(randomSeed);
+	console.log("Seed " + randomSeed + ", " + randomSource.random());
+
+	postMessage({action: "initialize_benchmark_response", worker_id: workerID});
+}
 
 onmessage = function(e) {
 	try {
 		switch(e.data.action) {
 			case "initialize":
-				initialize(e.data.event_ids, e.data.scrambler_files, e.data.random_seed);
+				initialize(e.data.worker_id, e.data.event_ids, e.data.scrambler_files, e.data.random_seed);
 			break;
 
 			case "get_random_scramble":
@@ -97,6 +107,10 @@ onmessage = function(e) {
 
 			case "echo":
 				postMessage({action: "echo_response", info: e.data});
+			break;
+
+			case "initialize_benchmark":
+				initializeBenchmark(e.data.random_seed);
 			break;
 
 			default:
