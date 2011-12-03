@@ -1,124 +1,135 @@
-importScripts("mersennetwister.js");
+var web_worker_manager = (function() {
 
-var console;
-if (typeof window !== "undefined") {
-	console = window.console;
-}
-else {
-	console = {};
-	// TODO: Handle multiple args.
-	console.log = function(data) {
-		postMessage({
-			action: "console_log",
-			data: data
-		});
-	};
-	console.error = function(data) {
-		postMessage({
-			action: "console_error",
-			data: data
-		});
-	};
-}
+	importScripts("mersennetwister.js");
 
-var workerID;
-var workerScramblers = {};
-var workerScramblersInitialized = {};
-var initialized = false;
-var randomSource = undefined;
-
-var initialize = function(iniWorkerID, eventIDs, scramblerFiles, randomSeed) {
-
-	workerID = iniWorkerID;
-
-	randomSource = new MersenneTwisterObject(randomSeed);
-
-	for (i in eventIDs) {
-		var eventID = eventIDs[i];
-
-		importScripts(scramblerFiles[eventID]);
-
-		workerScramblers[eventID] = scramblers[eventID];
-		workerScramblers[eventID].setRandomSource(randomSource);
-
-		workerScramblersInitialized[eventID] = false;
-
+	var console;
+	if (typeof window !== "undefined") {
+		console = window.console;
+	}
+	else {
+		console = {};
+		// TODO: Handle multiple args.
+		console.log = function(data) {
+			postMessage({
+				action: "console_log",
+				data: data
+			});
+		};
+		console.error = function(data) {
+			postMessage({
+				action: "console_error",
+				data: data
+			});
+		};
 	}
 
-	initialized = true;
+	var workerID;
+	var workerScramblers = {};
+	var workerScramblersInitialized = {};
+	var initialized = false;
+	var randomSource = undefined;
 
-	postMessage({
-		action: "initialized",
-		info: ["Successfully initialized web worker for [" + eventIDs.toString() + "]."]
-	});
-}
+	var initialize = function(iniWorkerID, eventIDs, scramblerFiles, randomSeed) {
 
-var getRandomScramble = function (eventID, returnData) {
+		workerID = iniWorkerID;
 
-	if (!initialized) {
-		console.error("Web worker for " + eventID + " is not initialized yet.");
-	}
+		randomSource = new MersenneTwisterObject(randomSeed);
 
-	if (!workerScramblersInitialized[eventID]) {
+		for (i in eventIDs) {
+			var eventID = eventIDs[i];
+
+			importScripts(scramblerFiles[eventID]);
+
+			workerScramblers[eventID] = scramblers[eventID];
+			workerScramblers[eventID].setRandomSource(randomSource);
+
+			workerScramblersInitialized[eventID] = false;
+
+		}
+
+		initialized = true;
 
 		postMessage({
-			action: "get_random_scramble_initializing_scrambler",
+			action: "initialized",
+			info: ["Successfully initialized web worker for [" + eventIDs.toString() + "]."]
+		});
+	}
+
+	var getRandomScramble = function (eventID, returnData) {
+
+		if (!initialized) {
+			console.error("Web worker for " + eventID + " is not initialized yet.");
+		}
+
+		if (!workerScramblersInitialized[eventID]) {
+
+			postMessage({
+				action: "get_random_scramble_initializing_scrambler",
+				return_data: returnData
+			});
+
+			workerScramblers[eventID].initialize();
+
+			workerScramblersInitialized[eventID] = true;
+
+		}
+
+		postMessage({
+			action: "get_random_scramble_starting",
 			return_data: returnData
 		});
 
-		workerScramblers[eventID].initialize();
-
-		workerScramblersInitialized[eventID] = true;
-
+		var scramble = workerScramblers[eventID].getRandomScramble();
+		postMessage({
+			action: "get_random_scramble_response",
+			scramble: scramble,
+			event_id: eventID,
+			return_data: returnData
+		});
 	}
 
-	postMessage({
-		action: "get_random_scramble_starting",
-		return_data: returnData
-	});
+	var initializeBenchmark = function(randomSeed) {
 
-	var scramble = workerScramblers[eventID].getRandomScramble();
-	postMessage({
-		action: "get_random_scramble_response",
-		scramble: scramble,
-		event_id: eventID,
-		return_data: returnData
-	});
-}
+		randomSource.init(randomSeed);
+		console.log("Seed " + randomSeed + ", " + randomSource.random());
 
-var initializeBenchmark = function(randomSeed) {
+		postMessage({action: "initialize_benchmark_response", worker_id: workerID});
+	}
 
-	randomSource.init(randomSeed);
-	console.log("Seed " + randomSeed + ", " + randomSource.random());
+	onmessage = function(e) {
+		try {
+			switch(e.data.action) {
+				case "initialize":
+					initialize(e.data.worker_id, e.data.event_ids, e.data.scrambler_files, e.data.random_seed);
+				break;
 
-	postMessage({action: "initialize_benchmark_response", worker_id: workerID});
-}
+				case "get_random_scramble":
+					getRandomScramble(e.data.event_id, e.data.return_data);
+				break;
 
-onmessage = function(e) {
-	try {
-		switch(e.data.action) {
-			case "initialize":
-				initialize(e.data.worker_id, e.data.event_ids, e.data.scrambler_files, e.data.random_seed);
-			break;
+				case "echo":
+					postMessage({action: "echo_response", info: e.data});
+				break;
 
-			case "get_random_scramble":
-				getRandomScramble(e.data.event_id, e.data.return_data);
-			break;
+				case "initialize_benchmark":
+					initializeBenchmark(e.data.random_seed);
+				break;
 
-			case "echo":
-				postMessage({action: "echo_response", info: e.data});
-			break;
-
-			case "initialize_benchmark":
-				initializeBenchmark(e.data.random_seed);
-			break;
-
-			default:
-				console.error("Unknown message.");
-			break;
+				default:
+					console.error("Unknown message.");
+				break;
+			}
+		}
+		catch (e) {
+			postMessage({action: "message_exception", data: JSON.stringify(e)});
 		}
 	}
-	catch (e) {
-		postMessage({action: "message_exception", data: JSON.stringify(e)});
+
+	return {
+		console: console,
+		onmessage: onmessage
 	}
-}
+})();
+
+var console = web_worker_manager.console;
+onmessage = web_worker_manager.onmessage;

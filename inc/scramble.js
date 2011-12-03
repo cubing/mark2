@@ -694,8 +694,6 @@ scramble = (function() {
 
 		// Give everyone the same benchmark.
 		randomSource = new MersenneTwisterObject(12345);
-		console.log(randomSource.random());
-
 
 		for (i in workers) {
 			workers[i].postMessage({action: "initialize_benchmark", random_seed: Math.floor(randomSource.random()*0xffffffff)});
