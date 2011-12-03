@@ -41,7 +41,6 @@ var web_worker_manager = (function() {
 			importScripts(scramblerFiles[eventID]);
 
 			workerScramblers[eventID] = scramblers[eventID];
-			workerScramblers[eventID].setRandomSource(randomSource);
 
 			workerScramblersInitialized[eventID] = false;
 
@@ -68,7 +67,7 @@ var web_worker_manager = (function() {
 				return_data: returnData
 			});
 
-			workerScramblers[eventID].initialize();
+			workerScramblers[eventID].initialize(null, randomSource);
 
 			workerScramblersInitialized[eventID] = true;
 

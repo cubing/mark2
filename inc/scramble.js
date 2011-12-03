@@ -447,10 +447,6 @@ scramble = (function() {
 		setTimeout(call, 0);
 	}
 
-	var initializeEvent = function(eventID) {
-		//worker.postMessage({action: "initialize_event", eventID: eventID});
-	}
-
 	var add_page = function(continuation, competitionName, eventID, roundName, numScrambles) {
 
 		var pages = document.getElementById("scramble_sets");
@@ -505,9 +501,8 @@ scramble = (function() {
 		    	addUpdateSpecific(str);
 
 		    }
-		    //initializeEvent(eventID);
 
-			call = scrambler.initialize.bind(null, nextContinuation, statusCallback);
+			call = scrambler.initialize.bind(null, nextContinuation, randomSource, statusCallback);
 			events[eventID].initialized = true;
 		}
 		else {
@@ -686,7 +681,7 @@ scramble = (function() {
 
 		benchmarkString = "\nBenchmark Settings:\n" + 
 			"- Web Workers: " + (usingWebWorkers? "yes" : "no") + "\n" +
-			"- Benchmark version: 3 (November 29, 2011)";
+			"- Benchmark version: 4 (November 29, 2011)";
 
 		hideInterface();
 		document.getElementById("benchmark").style.display="block";
