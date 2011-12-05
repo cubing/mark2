@@ -178,7 +178,7 @@ scramble = (function() {
 		
 		// From http://www.html5rocks.com/en/tutorials/workers/basics/#toc-inlineworkers
 
-		if (!Worker) {
+		if (typeof Worker === "undefined") {
 			console.log("No web worker support. :-(");
 			return;
 		}
