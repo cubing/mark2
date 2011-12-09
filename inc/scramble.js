@@ -1,4 +1,11 @@
 
+// Offline caching.
+var cache = window.applicationCache;
+function updateReadyCache() {
+  window.applicationCache.swapCache();
+  location.reload(true); // For now
+}
+
 // Implementation of bind() for Safari.
 if (!Function.prototype.bind) {
   Function.prototype.bind = function (oThis) {
@@ -28,39 +35,25 @@ scramble = (function() {
 
 	var version = "November 23, 2011";
 
-	var events;
-	var eventsPerRow = 4;
+	var eventsPerRow = 8;
 
 	var usingWebWorkers = false;
 
-	var initializeEvents = function()  {
-		
-		events = {
-			// Official WCA events as of November 24, 2011
-			"333": {name: "Rubik's Cube", scrambler_file: "scramble_333.js", default_round: ["avg", 5], default_num_rounds: 1},
-			"444": {name: "4x4 Cube", scrambler_file: "scramble_NNN.js", default_round: ["avg", 5], default_num_rounds: 0},
-			"555": {name: "5x5 Cube", scrambler_file: "scramble_NNN.js", default_round: ["avg", 5], default_num_rounds: 0},
-			"222": {name: "2x2 Cube", scrambler_file: "scramble_222.js", default_round: ["avg", 5], default_num_rounds: 0},
-			"333bf": {name: "3x3 blindfolded", scrambler_file: "scramble_333.js", default_round: ["best", 3], default_num_rounds: 0},
-			"333oh": {name: "3x3 one-handed", scrambler_file: "scramble_333.js", default_round: ["avg", 5], default_num_rounds: 0},
-			"333fm": {name: "3x3 fewest moves", scrambler_file: "scramble_333.js", default_round: ["best", 2], default_num_rounds: 0}, //TODO: FCF support
-			"333ft": {name: "3x3 with feet", scrambler_file: "scramble_333.js", default_round: ["avg", 5], default_num_rounds: 0},
-			"minx": {name: "Megaminx", scrambler_file: "scramble_minx.js", default_round: ["avg", 5], default_num_rounds: 0},
-			"pyram": {name: "Pyraminx", scrambler_file: "scramble_pyram.js", default_round: ["avg", 5], default_num_rounds: 0},
-			"sq1": {name: "Square-1", scrambler_file: "scramble_sq1.js", default_round: ["avg", 5], default_num_rounds: 0},
-			"clock": {name: "Rubik's Clock", scrambler_file: "scramble_clock.js", default_round: ["avg", 5], default_num_rounds: 0},
-			"666": {name: "6x6 Cube", scrambler_file: "scramble_NNN.js", default_round: ["mean", 3], default_num_rounds: 0},
-			"777": {name: "7x7 Cube", scrambler_file: "scramble_NNN.js", default_round: ["mean", 3], default_num_rounds: 0},
-			//"magic": {name: "Rubik's Magic", scrambler_file: "scramble_magic.js", default_round: ["avg", 5], default_num_rounds: 0},
-			//"mmagic": {name: "Master Magic", scrambler_file: "scramble_mmagic.js", default_round: ["avg", 5], default_num_rounds: 0},
-			"444bf": {name: "4x4 blindfolded", scrambler_file: "scramble_NNN.js", default_round: ["best", 3], default_num_rounds: 0},
-			"555bf": {name: "5x5 blindfolded", scrambler_file: "scramble_NNN.js", default_round: ["best", 3], default_num_rounds: 0},
-			//"333mbf": {name: "3x3 multi blind", scrambler_file: "scramble_333.js", default_round: ["mbf"], default_num_rounds: 0}, //TODO: 3x3x3 with smaller images?
-			
-			// Unofficial events
-			//"skewb": {name: "Skewb", scrambler_file: "scramble_skewb.js", default_round: ["avg", 5]},
-		}
+	var events = {
+		// Official WCA events as of November 24, 2011
+		"sq1": {name: "Square-1", scrambler_file: "scramble_sq1.js", default_round: ["avg", 5], default_num_rounds: 1},
 	}
+
+	// Javascript object don't retain key order in all browsers.
+	var eventOrder = [
+		"sq1"
+	];
+
+	var workerGroups = [
+		["sq1"]
+	];
+
+	var workers = {};
 
 	var roundNames = {
 		"avg": "Average of",
@@ -72,7 +65,6 @@ scramble = (function() {
 	var initialize = function() {
 
 		initializeRandomSource();
-		initializeEvents();
 		document.getElementById("goButton").focus();
 
 		initializeEventIDSelect("333");
@@ -94,8 +86,32 @@ scramble = (function() {
 				);
 			break;
 
+			case "console_log":
+				console.log("[Web worker log]", e.data.data);
+			break;
+
+			case "console_error":
+				console.log("[Web worker error]", e.data.data);
+			break;
+
+			case "message_exception":
+				console.log("[Web worker exception]", e.data.data);
+			break;
+
+			case "initialize_benchmark_response":
+				console.log("Benchmark initialized for worker " + e.data.worker_id + ".");
+			break;
+
+			case "get_random_scramble_initializing_scrambler":
+				iniScramblerNotice(
+					e.data.return_data.trID,
+					e.data.event_id,
+					e.data.return_data.num
+				);
+			break;
+
 			case "get_random_scramble_response":
-				console.log("Received a " + events[e.data.event_id].name +	 " scramble: " + e.data.scramble.scramble);
+				//console.log("Received a " + events[e.data.event_id].name +	 " scramble: " + e.data.scramble.scramble);
 				insertScramble(
 					e.data.return_data.trID,
 					e.data.event_id,
@@ -120,21 +136,27 @@ scramble = (function() {
 		
 		// From http://www.html5rocks.com/en/tutorials/workers/basics/#toc-inlineworkers
 
-		if (!Worker) {
+		if (typeof Worker === "undefined") {
 			console.log("No web worker support. :-(");
 			return;
 		}
 
 		try {
 
-			for (eventID in events) {
+			for (i in workerGroups) {
 
 				var worker = new Worker("inc/web_worker_manager.js");
-				events[eventID].worker = worker;
+				var scramblerFiles = {};
+
+				for (j in workerGroups[i]) {
+					events[workerGroups[i][j]].worker = worker;
+					scramblerFiles[workerGroups[i][j]] = "scramblers/" + events[workerGroups[i][j]].scrambler_file;
+				}
 				worker.onmessage = handleWorkerMessage;
-				
-				console.log("inc/scramblers/" + events[eventID].scrambler_file);
-				worker.postMessage({action: "initialize", event_id: eventID, scrambler_file: "scramblers/" + events[eventID].scrambler_file});
+
+				workers[i] = worker;
+
+				worker.postMessage({action: "initialize", worker_id: i, event_ids: workerGroups[i], scrambler_files: scramblerFiles, random_seed: getRandomSeed()});
 			}
 
 			usingWebWorkers = true;
@@ -142,6 +164,7 @@ scramble = (function() {
 		}
 		catch (e) {
 			console.log("Starting the web workers failed. This happens with Chrome when run from file://");
+			console.log("This was the web worker error:", e);
 		}
 
 	}
@@ -154,7 +177,8 @@ scramble = (function() {
 		var currentEventAmountsTR;
 
 		var numEvents = 0;
-		for (eventID in events) {
+		for (i in eventOrder) {
+			eventID = eventOrder[i]
 
 			events[eventID].initialized = false;
 
@@ -173,47 +197,51 @@ scramble = (function() {
 				currentEventAmountsTR = createNewElement(eventAmountsTable, "tr");
 			}
 
-			createNewElement(currentEventAmountsTR, "td", "event_amount_id_td", eventID);
+
+			//createNewElement(currentEventAmountsTR, "td", "event_amount_id_td", eventID);
+			var eventTD = createNewElement(currentEventAmountsTR, "td");
+			var eventAddRoundButton = createNewElement(eventTD, "button", "addRoundButton", eventID);
+			eventAddRoundButton.setAttribute("onclick", "scramble.addRound(\"" + eventID + "\");");
+
+			/*
 
 			var val = createNewElement(currentEventAmountsTR, "td", "event_amount_value_td", "");
 			var valInput = createNewElement(val, "input", "event_amount_value");
-				valInput.setAttribute("value", events[eventID].default_num_rounds);
+				valInput.setAttribute("value", );
 				valInput.setAttribute("id", "amount_value_" + eventID);
 				valInput.setAttribute("type", "number");
 				valInput.setAttribute("min", "0");
 				valInput.setAttribute("onchange", "scramble.changeNumRounds(\"" + eventID + "\");");
+				valInput.setAttribute("onkeyup", "scramble.changeNumRounds(\"" + eventID + "\");");
+				valInput.setAttribute("onmouseup", "scramble.changeNumRounds(\"" + eventID + "\");");
 				valInput.setAttribute("onclick", "scramble.changeNumRounds(\"" + eventID + "\");");
 
+			*/
 
-			changeNumRounds(eventID);
-
+			for (var i = numCurrentRounds(eventID); i < events[eventID].default_num_rounds; i++) {
+				addRound(eventID);
+			}
 
 			numEvents++;
 		}
 	}
 
-	var changeNumRounds = function(eventID) {
-
-		var eventTBody = document.getElementById("tbody_" + eventID);
-		var prevNum = eventTBody.children.length;
-		var num = document.getElementById("amount_value_"+eventID).value;
-
-		if (num > prevNum) {
-			for (var i = 0; i < num - prevNum; i++) {
-				addRound(eventID, "Round " + (prevNum+i+1));
-			}
-		}
-		else if (prevNum > num) {
-			for (var i = 0; i < prevNum - num; i++) {
-				eventTBody.removeChild(eventTBody.lastChild);
-			}
-		}
-		
+	var numCurrentRounds = function(eventID) {
+		return document.getElementsByClassName("event_tr_" + eventID).length;
 	}
 
-	var addRound = function(eventID, roundName) {
-		var eventTBody = document.getElementById("tbody_" + eventID);
-		var newEventTR = createNewElement(eventTBody, "tr");
+	var addRound = function(eventID, roundNameOpt) {
+
+		var roundName = roundNameOpt;
+		if (roundNameOpt === undefined) {
+			roundName = "Round " + (numCurrentRounds(eventID)+1);
+		}
+
+		var eventTBody = document.getElementById("events_tbody");
+
+
+		var newEventTR = createNewElement(eventTBody, "tr", "event_tr_" + eventID);
+			newEventTR.setAttribute("data-event-id", eventID);
 
 		var nameTD = createNewElement(newEventTR, "td", "event_name", events[eventID].name);
 		
@@ -237,32 +265,41 @@ scramble = (function() {
 
 		var removeTD = createNewElement(newEventTR, "td");
 		var removeButton = createNewElement(removeTD, "button", "", "X");
-			removeButton.setAttribute("onclick", "this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement)");
+			removeButton.setAttribute("onclick", "this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement); scramble.updateSetCount(\"" + eventID + "\");");
 	}
 
-	var randomSource = Math;
+	var updateSetCount = function(eventID) {
+		var eventTBody = document.getElementById("tbody_" + eventID);
+		document.getElementById("amount_value_"+eventID).value = eventTBody.children.length;
+	}
+
+	var randomSource = undefined;
 
 	var initializeRandomSource = function() {
 		
-		console.log("scramble.js: Seeding Mersenne Twister.");
-
 		// We use the date the the native PRNG to get some entropy.
-		var seed = 1000;//new Date().getTime() + Math.floor(Math.random()*0xffffffff);
+		var seed = new Date().getTime() + Math.floor(Math.random()*0xffffffff);
 		
 		// Make sure we don't actually use deterministic initialization.
 		if (isFinite(seed)) {
 			randomSource = new MersenneTwisterObject(seed);
+			console.log("scramble.js: Seeded Mersenne Twister.");
+			Math.random = undefined; // So we won't use it by accident.
+
 		}
 		else {
+			randomSource = Math;
   			console.log("WARNING: Seeding Mersenne Twister did not work. Falling back to Math.random().");
   		}
 	}
 
+	// For seeding the workers.
+	var getRandomSeed = function() {
+		return (new Date().getTime() + Math.floor(randomSource.random()*0xffffffff));
+	}
+
 
 	var createNewElement = function(elementToAppendTo, type, className, content) {
-		if (elementToAppendTo == "222") {
-			console.log("ffff");
-		}
 
 		var newElement = document.createElement(type);
 		if (className) {
@@ -275,6 +312,9 @@ scramble = (function() {
 		return newElement;
 	};
 
+	var doneCreatingRounds = false;
+	var scramblesStillAwaiting = [];
+
 	var currentID = "0";
 
 	var nextID = function() {
@@ -285,14 +325,35 @@ scramble = (function() {
 					
 		var scrambleTR = document.getElementById(trID);
 		scrambleTR.innerHTML = "";
-		var tempTD = createNewElement(scrambleTR, "td", "loading", "Generating scramble #" + num + "...");
+		var tempTD = createNewElement(scrambleTR, "td", "loading_scramble", "Generating scramble #" + num + "...");
+			tempTD.setAttribute("colspan", 3);
+	}
+
+	var iniScramblerNotice = function(trID, eventID, num) {
+					
+		var scrambleTR = document.getElementById(trID);
+		scrambleTR.innerHTML = "";
+		var tempTD = createNewElement(scrambleTR, "td", "loading_scrambler", "Initializing scrambler...");
 			tempTD.setAttribute("colspan", 3);
 	}
 
 	var insertScramble = function(trID, eventID, num, scramble, state) {
 
 		if (usingWebWorkers) {
-			addUpdateSpecific("Generated " + eventID + " scramble #" + num + " for some round.");
+
+			var stillRemainingString = "";
+			if (doneCreatingRounds) {
+				stillRemainingString = " " + scramblesStillAwaiting.length + " scrambles still remaining overall."
+			}
+
+			addUpdateSpecific("Generated " + eventID + " scramble #" + num + " for some round." + stillRemainingString);
+
+			var index = scramblesStillAwaiting.indexOf(trID);
+			scramblesStillAwaiting.splice(index, 1)
+
+			if (scramblesStillAwaiting.length == 0 && doneCreatingRounds) {
+				addUpdateGeneral("\n\nDone generating all scrambles for all rounds.\n");
+			}
 		}
 					
 		var scrambleTR = document.getElementById(trID);
@@ -318,6 +379,8 @@ scramble = (function() {
 			var tempTD = createNewElement(scrambleTR, "td", "", "[Space for Scramble #" + num + "]");
 			tempTD.setAttribute("colspan", 3);
 
+			scramblesStillAwaiting.push(trID);
+
 			events[eventID].worker.postMessage({
 				action: "get_random_scramble",
 				event_id: eventID,
@@ -341,10 +404,6 @@ scramble = (function() {
 			call = continuation;
 		}
 		setTimeout(call, 0);
-	}
-
-	var initializeEvent = function(eventID) {
-		//worker.postMessage({action: "initialize_event", eventID: eventID});
 	}
 
 	var add_page = function(continuation, competitionName, eventID, roundName, numScrambles) {
@@ -401,9 +460,8 @@ scramble = (function() {
 		    	addUpdateSpecific(str);
 
 		    }
-		    //initializeEvent(eventID);
 
-			call = scrambler.initialize.bind(null, nextContinuation, statusCallback);
+			call = scrambler.initialize.bind(null, nextContinuation, randomSource, statusCallback);
 			events[eventID].initialized = true;
 		}
 		else {
@@ -414,8 +472,9 @@ scramble = (function() {
 			    	scrambler.initializeDrawing();
 			    }
 			}
-
-		    addUpdateSpecific("" + events[eventID].name + " scrambler already initialized.");
+			else if (events[eventID].initialized) {
+		    	addUpdateSpecific("" + events[eventID].name + " scrambler already initialized.");
+			}
 			call = nextContinuation;
 		}
 		setTimeout(call, 0);
@@ -429,7 +488,15 @@ scramble = (function() {
 		}
 		else {
 			nextContinuation = function(){
-				addUpdateGeneral("Done scrambling all events.");
+
+				if (usingWebWorkers) {
+					addUpdateGeneral("Done creating all rounds. " + scramblesStillAwaiting.length + " scrambles still need to be filled in.");
+					doneCreatingRounds = true;
+				}
+				else {
+					addUpdateGeneral("Done creating all rounds.");
+				}
+
 				setTimeout(callback, 0);
 			};
 		}
@@ -511,9 +578,9 @@ scramble = (function() {
 
 		if (benchmarkMode) {
 			var cur = currentTime();
-			benchmarkString = "- General [" + (cur - updatesGeneralLastTime) + "ms, " + (cur - updatesGeneralStartTime) + "ms] " + str + "<br>" + benchmarkString;
+			benchmarkString = "- General [" + (cur - updatesGeneralLastTime) + "ms, " + (cur - updatesGeneralStartTime) + "ms] " + str + "\n" + benchmarkString;
 			updatesGeneralLastTime = cur;
-			document.getElementById("benchmark_details").innerHTML = "Benchmark Results:<br>" + benchmarkString;
+			document.getElementById("benchmark_details").innerHTML = "Benchmark In Progress:\n\n" + benchmarkString;
 		}
 	}
 
@@ -526,9 +593,9 @@ scramble = (function() {
 
 		if (benchmarkMode) {
 			var cur = currentTime();
-			benchmarkString = "- Specific [" + (cur - updatesSpecificLastTime) + "ms, " + (cur - updatesSpecificStartTime) + "ms] " + str + "<br>" + benchmarkString;
+			benchmarkString = "- Detail [" + (cur - updatesSpecificLastTime) + "ms, " + (cur - updatesSpecificStartTime) + "ms, " + (cur - updatesGeneralStartTime) + "ms] " + str + "\n" + benchmarkString;
 			updatesSpecificLastTime = cur;
-			document.getElementById("benchmark_details").innerHTML = "Benchmark Results:<br>" + benchmarkString;
+			document.getElementById("benchmark_details").innerHTML = "Benchmark In Progress:\n\n" + benchmarkString;
 		}
 	}
 
@@ -540,17 +607,25 @@ scramble = (function() {
 		var pages = [];
 		var competitionName = document.getElementById('competitionName').value;
 
-		for (eventID in events) {
-			var eventTBodyChildren = document.getElementById("tbody_" + eventID).children;
 
-			for (var i =0; i < eventTBodyChildren.length; i++) {
-				var tr = eventTBodyChildren[i];
-				var roundName = tr.getElementsByClassName("round_name")[0].value;
-				var roundType = tr.getElementsByClassName("round_type")[0].value;
-				var numSolves = tr.getElementsByClassName("num_solves")[0].value;
+		var eventsTBody = document.getElementById("events_tbody").children;
 
-				pages.push([eventID, roundName + " (" + roundNames[roundType] + " " + numSolves + ")", numSolves]);
-			}
+		for (var i = 0; i < eventsTBody.length; i++) {
+
+			var tr = eventsTBody[i];
+
+			var eventID = tr.getAttribute("data-event-id");
+
+			var roundName = tr.getElementsByClassName("round_name")[0].value;
+			var roundType = tr.getElementsByClassName("round_type")[0].value;
+			var numSolves = tr.getElementsByClassName("num_solves")[0].value;
+
+			pages.push([eventID, roundName + " (" + roundNames[roundType] + " " + numSolves + ")", numSolves]);
+		}
+
+		if (pages.length == 0) {
+			addUpdateGeneral("Nothing to do, because there are no rounds to scramble.");
+			return;
 		}
 
 		addUpdateGeneral("Generating " + pages.length + " round" + ((pages.length == 1) ? "" : "s") + " of scrambles.");
@@ -564,19 +639,23 @@ scramble = (function() {
 		resetUpdatesSpecific();
 		benchmarkMode = true;
 
-		benchmarkString = "<br>Benchmark Settings:<br>" + 
-			"- Web Workers: " + (usingWebWorkers? "yes" : "no");
+		benchmarkString = "\nBenchmark Settings:\n" + 
+			"- Web Workers: " + (usingWebWorkers? "yes" : "no") + "\n" +
+			"- Benchmark version: 4 (November 29, 2011)";
 
+		hideInterface();
 		document.getElementById("benchmark").style.display="block";
-		document.getElementById("select_events_interface").style.display="none";
-		document.getElementById("select_sets_interface").style.display="none";
 		document.getElementById("updates").style.display="none";
 
 		// Give everyone the same benchmark.
-		randomSource = new MersenneTwisterObject(123);
+		randomSource = new MersenneTwisterObject(12345);
+
+		for (i in workers) {
+			workers[i].postMessage({action: "initialize_benchmark", random_seed: Math.floor(randomSource.random()*0xffffffff)});
+		}
 
 		var callback = function (){
-			document.getElementById("benchmark_details").innerHTML = "Benchmark Results:<br><br>Done!<br><br>" + benchmarkString;
+			//document.getElementById("benchmark_details").innerHTML = "Benchmark Results:\n\nDone!\n\n" + benchmarkString;
 		};
 		generate_scrambles(callback, "Benchmark", [
 			["222", "Round 2x2x2", 5],
@@ -599,7 +678,8 @@ scramble = (function() {
 		initialize: initialize,
 		generate_scrambles: generate_scrambles,
 		go: go,
-		changeNumRounds: changeNumRounds,
-		benchmark: benchmark
+		addRound: addRound,
+		benchmark: benchmark,
+		updateSetCount: updateSetCount
 	};
 })();
