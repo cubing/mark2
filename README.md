@@ -32,3 +32,5 @@ The name "Mark 2" represents that this is an entirely rewritten second-generatio
 - Andrew Nelsoon (Square-1 drawings)
 - Michael Gottlieb (Square-1)
 - Lucas Garron (Square-1, Mark 2)
+- Evan Gates (QBX)
+- Shuang Chen (Fast GWT-compiled 3x3x3 scrambler)
