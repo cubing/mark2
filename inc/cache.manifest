@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# Revision 65
+# Revision 72
 mersennetwister.js
 offline_storage_example.png
 offline.html
@@ -15,4 +15,5 @@ scramblers/scramble_minx.js
 scramblers/scramble_NNN.js
 scramblers/scramble_pyram.js
 scramblers/scramble_sq1.js
-../scramble.html
+# Most servers should serve up index.html at the document root:
+../
