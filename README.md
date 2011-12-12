@@ -22,15 +22,20 @@ The name "Mark 2" represents that this is an entirely rewritten second-generatio
 
 # Credit
 
-- Jaap Scherphuis (original scramblers for all puzzles
-- Conrad Rider (2x2x2 and 3x3x3 ini)
-- Walter Souza (Square-1 solver)
-- Herbert Kociemba (for the Kociemba algorithm)
-- Stefan Pochmann (Megaminx)
+## Software
+- [GWT](https://code.google.com/webtoolkit/) for Java -> Javascript compilation.
+
+## People
+- [Jaap Scherphuis](http://www.jaapsch.net/puzzles/) (original scramblers for all puzzles
+- Tom van der Zanden (2x2x2)
+- [Conrad Rider](http://cube.crider.co.uk/) (2x2x2 and 3x3x3 ini)
+- Walter Souza ([Square-1 solver](https://bitbucket.org/walter/puzzle-timer/raw/7049018bbdc7/src/com/puzzletimer/solvers/Square1Solver.java) from [Prisma Puzzle Timer](http://prismapuzzletimer.com/))
+- [Herbert Kociemba](http://kociemba.org/cube.htm) (for the [Kociemba two-phase algorithm](http://kociemba.org/math/imptwophase.htm))
+- [Stefan Pochmann](http://www.stefan-pochmann.info/spocc/) (Megaminx)
 - Clement Gallet (Megaminx)
 - Syoji Takamatsu (Pyraminx)
-- Andrew Nelsoon (Square-1 drawings)
-- Michael Gottlieb (Square-1)
-- Lucas Garron (Square-1, Mark 2)
+- [Andrew Nelson](http://crunchatize.me/) (Square-1 drawings)
+- [Michael Gottlieb](http://mzrg.com/) (Square-1)
+- [Lucas Garron](http://www.garron.us/) (Square-1, Mark 2)
 - Evan Gates (QBX)
 - Shuang Chen (Fast GWT-compiled 3x3x3 scrambler)
