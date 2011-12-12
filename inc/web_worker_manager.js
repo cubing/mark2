@@ -120,7 +120,7 @@ var web_worker_manager = (function() {
 			}
 		}
 		catch (e) {
-			postMessage({action: "message_exception", data: JSON.stringify(e)});
+			postMessage({action: "message_exception", data: [e.toString(), JSON.stringify(e)]});
 		}
 	}
 
