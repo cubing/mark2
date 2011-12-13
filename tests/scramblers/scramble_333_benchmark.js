@@ -19,10 +19,14 @@ console.log("[" + elapsedTime() + "ms] Starting 3x3x3 benchmark");
 // From http://stackoverflow.com/questions/5797852/in-node-js-how-do-i-include-functions-from-my-other-files
 // Closest thing we have to simulating web-worker-style includes.
 eval(fs.readFileSync('../../inc/scramblers/scramble_333.js')+'');
+eval(fs.readFileSync('../../inc/mersennetwister.js')+'');
+
+var randomSource = new MersenneTwisterObject(0);
+//Math.random = undefined; // So we won't use it by accident
 
 console.log("[" + elapsedTime() + "ms] Initializing...");
 
-scramblers["333"].initialize();
+scramblers["333"].initialize(null, randomSource);
 
 console.log("[" + elapsedTime() + "ms] Done initializing.");
 
