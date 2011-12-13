@@ -25,11 +25,12 @@ var web_worker_manager = (function() {
 
 	var workerID;
 	var workerScramblers = {};
+	var importedFiles = [];
 	var workerScramblersInitialized = {};
 	var initialized = false;
 	var randomSource = undefined;
 
-	var initialize = function(iniWorkerID, eventIDs, scramblerFiles, randomSeed) {
+	var initialize = function(iniWorkerID, eventIDs, auto_ini, scramblerFiles, randomSeed) {
 
 		workerID = iniWorkerID;
 
@@ -39,11 +40,21 @@ var web_worker_manager = (function() {
 		for (i in eventIDs) {
 			var eventID = eventIDs[i];
 
-			importScripts(scramblerFiles[eventID]);
+			// Import script if not already done. (Allows multiple scramblers to use the same scrambler, like 3x3x3 events.)
+			if (importedFiles.indexOf(scramblerFiles[eventID]) == -1) {
+				importScripts(scramblerFiles[eventID]);
+				importedFiles.push(scramblerFiles[eventID]);
+			}
 
 			workerScramblers[eventID] = scramblers[eventID];
 
-			workerScramblersInitialized[eventID] = false;
+			if (auto_ini) {
+				workerScramblers[eventID].initialize(null, randomSource, console.log);
+				workerScramblersInitialized[eventID] = true;
+			}
+			else {
+				workerScramblersInitialized[eventID] = false;
+			}
 
 		}
 
@@ -99,7 +110,7 @@ var web_worker_manager = (function() {
 		try {
 			switch(e.data.action) {
 				case "initialize":
-					initialize(e.data.worker_id, e.data.event_ids, e.data.scrambler_files, e.data.random_seed);
+					initialize(e.data.worker_id, e.data.event_ids, e.data.auto_ini, e.data.scrambler_files, e.data.random_seed);
 				break;
 
 				case "get_random_scramble":

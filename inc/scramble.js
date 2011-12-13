@@ -90,9 +90,9 @@ scramble = (function() {
 	];
 
 	var workerGroups = [
-		["333", "333bf", "333oh", "333fm", "333ft"],
-		["222", "444", "555", "666", "777", "444bf", "555bf", "minx", "pyram", "clock"],
-		["sq1"]
+		{events: ["333", "333bf", "333oh", "333fm", "333ft"], auto_ini: true},
+		{events: ["222", "444", "555", "666", "777", "444bf", "555bf", "minx", "pyram", "clock"], auto_ini: false},
+		{events: ["sq1"], auto_ini: false}
 	];
 
 	var workers = {};
@@ -190,15 +190,15 @@ scramble = (function() {
 				var worker = new Worker("inc/web_worker_manager.js");
 				var scramblerFiles = {};
 
-				for (j in workerGroups[i]) {
-					events[workerGroups[i][j]].worker = worker;
-					scramblerFiles[workerGroups[i][j]] = "scramblers/" + events[workerGroups[i][j]].scrambler_file;
+				for (j in workerGroups[i].events) {
+					events[workerGroups[i].events[j]].worker = worker;
+					scramblerFiles[workerGroups[i].events[j]] = "scramblers/" + events[workerGroups[i].events[j]].scrambler_file;
 				}
 				worker.onmessage = handleWorkerMessage;
 
 				workers[i] = worker;
 
-				worker.postMessage({action: "initialize", worker_id: i, event_ids: workerGroups[i], scrambler_files: scramblerFiles, random_seed: getRandomSeed()});
+				worker.postMessage({action: "initialize", worker_id: i, event_ids: workerGroups[i].events, auto_ini: workerGroups[i].auto_ini, scrambler_files: scramblerFiles, random_seed: getRandomSeed()});
 			}
 
 			usingWebWorkers = true;
