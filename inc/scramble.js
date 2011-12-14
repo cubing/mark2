@@ -225,33 +225,16 @@ scramble = (function() {
 
 			events[eventID].initialized = false;
 
-			var newTBody = createNewElement(selectSetsTable, "tbody");
-			newTBody.setAttribute("id", "tbody_" + eventID);
+			var newTBody = createNewElement(selectSetsTable, "tbody", null, "tbody_" + eventID);
 
 			if (numEvents % eventsPerRow == 0) {
 				currentEventAmountsTR = createNewElement(eventAmountsTable, "tr");
 			}
 
 
-			//createNewElement(currentEventAmountsTR, "td", "event_amount_id_td", eventID);
 			var eventTD = createNewElement(currentEventAmountsTR, "td");
-			var eventAddRoundButton = createNewElement(eventTD, "button", "addRoundButton", eventID);
+			var eventAddRoundButton = createNewElement(eventTD, "button", "addRoundButton", null, eventID);
 			eventAddRoundButton.setAttribute("onclick", "scramble.addRound(\"" + eventID + "\");");
-
-			/*
-
-			var val = createNewElement(currentEventAmountsTR, "td", "event_amount_value_td", "");
-			var valInput = createNewElement(val, "input", "event_amount_value");
-				valInput.setAttribute("value", );
-				valInput.setAttribute("id", "amount_value_" + eventID);
-				valInput.setAttribute("type", "number");
-				valInput.setAttribute("min", "0");
-				valInput.setAttribute("onchange", "scramble.changeNumRounds(\"" + eventID + "\");");
-				valInput.setAttribute("onkeyup", "scramble.changeNumRounds(\"" + eventID + "\");");
-				valInput.setAttribute("onmouseup", "scramble.changeNumRounds(\"" + eventID + "\");");
-				valInput.setAttribute("onclick", "scramble.changeNumRounds(\"" + eventID + "\");");
-
-			*/
 
 			for (var i = numCurrentRounds(eventID); i < events[eventID].default_num_rounds; i++) {
 				addRound(eventID);
@@ -276,11 +259,10 @@ scramble = (function() {
 
 
 		var newEventTR_ID = nextID();
-		var newEventTR = createNewElement(eventTBody, "tr", "event_tr_" + eventID);
-			newEventTR.setAttribute("id", newEventTR_ID);
+		var newEventTR = createNewElement(eventTBody, "tr", "event_tr_" + eventID, newEventTR_ID);
 			newEventTR.setAttribute("data-event-id", eventID);
 
-		var nameTD = createNewElement(newEventTR, "td", "event_name", events[eventID].name);
+		var nameTD = createNewElement(newEventTR, "td", "event_name", null, events[eventID].name);
 		
 		var roundNameTD = createNewElement(newEventTR, "td");
 		var roundNameInput = createNewElement(roundNameTD, "input", "round_name");
@@ -299,7 +281,7 @@ scramble = (function() {
 			numSolvesInput.setAttribute("min", "1");
 
 		var removeTD = createNewElement(newEventTR, "td", "round_remove");
-		var removeButton = createNewElement(removeTD, "button", "", "&nbsp;&nbsp;X&nbsp;&nbsp;");
+		var removeButton = createNewElement(removeTD, "button", null, null, "&nbsp;&nbsp;X&nbsp;&nbsp;");
 			removeButton.setAttribute("onclick", "document.getElementById(\"events_tbody\").removeChild(document.getElementById(\"" + (newEventTR_ID) + "\"));");
 	}
 
@@ -329,7 +311,7 @@ scramble = (function() {
 	}
 
 
-	var createNewElement = function(elementToAppendTo, type, className, content) {
+	var createNewElement = function(elementToAppendTo, type, className, id, content) {
 
 		var newElement = document.createElement(type);
 		if (className) {
@@ -337,6 +319,9 @@ scramble = (function() {
 		}
 		if (content) {
 			newElement.innerHTML = content
+		}
+		if (id) {
+			newElement.setAttribute("id", id);
 		}
 		elementToAppendTo.appendChild(newElement);
 		return newElement;
@@ -355,7 +340,7 @@ scramble = (function() {
 					
 		var scrambleTR = document.getElementById(trID);
 		scrambleTR.innerHTML = "";
-		var tempTD = createNewElement(scrambleTR, "td", "loading_scramble", "Generating scramble #" + num + "...");
+		var tempTD = createNewElement(scrambleTR, "td", "loading_scramble", null, "Generating scramble #" + num + "...");
 			tempTD.setAttribute("colspan", 3);
 	}
 
@@ -363,7 +348,7 @@ scramble = (function() {
 					
 		var scrambleTR = document.getElementById(trID);
 		scrambleTR.innerHTML = "";
-		var tempTD = createNewElement(scrambleTR, "td", "loading_scrambler", "Initializing scrambler...");
+		var tempTD = createNewElement(scrambleTR, "td", "loading_scrambler", null, "Initializing scrambler...");
 			tempTD.setAttribute("colspan", 3);
 	}
 
@@ -388,25 +373,22 @@ scramble = (function() {
 					
 		var scrambleTR = document.getElementById(trID);
 		scrambleTR.innerHTML = "";
-		createNewElement(scrambleTR, "td", "", "" + num + ".");
-		createNewElement(scrambleTR, "td", "scramble_" + eventID, scramble);
+		createNewElement(scrambleTR, "td", null, null, "" + num + ".");
+		createNewElement(scrambleTR, "td", "scramble_" + eventID, null,  scramble);
 		var drawingTD = createNewElement(scrambleTR, "td", "drawing");
-		//var drawingCenter = createNewElement(drawingTD, "center"); // It's 2011, and there's still not a better way to center this. :-/
 
 		scramblers[eventID].drawScramble(drawingTD, state);
 	}
 
 	var generate_scramble_set = function(continuation, competitionName, tBody, eventID, scrambler, num, numTotal, options) {
 		
-		//addUpdateSpecific("Generating scramble #" + num + " of " + numTotal + ".");
-
 		var scrambleTR = createNewElement(tBody, "tr");
 		var trID = nextID();
 		scrambleTR.setAttribute("id", trID);
 
 		if (usingWebWorkers) {
 
-			var tempTD = createNewElement(scrambleTR, "td", "", "[Space for Scramble #" + num + "]");
+			var tempTD = createNewElement(scrambleTR, "td", null, null, "[Space for Scramble #" + num + "]");
 			tempTD.setAttribute("colspan", 3);
 
 			scramblesStillAwaiting.push(trID);
@@ -441,7 +423,7 @@ scramble = (function() {
 		var pages = document.getElementById("scramble_sets");
 
 		if (!events[eventID]) {
-			var newPage = createNewElement(pages, "div", "unupported", "Sorry, but \"" + eventID + "\" scrambles are not currently supported.");
+			var newPage = createNewElement(pages, "div", "unupported", null, "Sorry, but \"" + eventID + "\" scrambles are not currently supported.");
 			return;
 		}
 
@@ -449,7 +431,7 @@ scramble = (function() {
 
 		// Create a new Page.
 		
-		var newPage = createNewElement(pages, "div", "scramble_set");
+		var newPage = createNewElement(pages, "div", null, "scramble_set");
 
 			// Header Table
 
@@ -457,9 +439,9 @@ scramble = (function() {
 				var newInfoTHead = createNewElement(newInfoTable, "thead");
 					var newInfoTR = createNewElement(newInfoTHead, "tr");
 						
-						createNewElement(newInfoTR, "td", "puzzle_name", events[eventID].name);
-						createNewElement(newInfoTR, "td", "competition_name", competitionName);
-						createNewElement(newInfoTR, "td", "round_name", roundName);
+						createNewElement(newInfoTR, "td", "puzzle_name", null, events[eventID].name);
+						createNewElement(newInfoTR, "td", "competition_name", null, competitionName);
+						createNewElement(newInfoTR, "td", "round_name", null, roundName);
 
 			// Scrambles Table
 
@@ -472,9 +454,9 @@ scramble = (function() {
 				var newFooterTHead = createNewElement(newFooterTable, "thead");
 					var newFooterTR = createNewElement(newFooterTHead, "tr");
 
-						createNewElement(newFooterTR, "td", "", '<u>Scrambles generated at:</u><br>' + (new Date().toString()));
-						createNewElement(newFooterTR, "td", "", '<div style="text-align: right;"><u>' + events[eventID].name + ' Scrambler Version</u><br>' + scrambler.version + '</div>');
-						createNewElement(newFooterTR, "td", "", '<img src="inc/wca_logo.svg" class="wca_logo">');
+						createNewElement(newFooterTR, "td", null, null, '<u>Scrambles generated at:</u><br>' + (new Date().toString()));
+						createNewElement(newFooterTR, "td", null, null, '<div style="text-align: right;"><u>' + events[eventID].name + ' Scrambler Version</u><br>' + scrambler.version + '</div>');
+						createNewElement(newFooterTR, "td", null, null, '<img src="inc/wca_logo.svg" class="wca_logo">');
 		
 		// Generate those scrambles!
 		
@@ -579,7 +561,7 @@ scramble = (function() {
 
 		var updatesGeneralDiv = document.getElementById("updates_general");
 		updatesGeneralDiv.innerHTML = "";
-		createNewElement(updatesGeneralDiv, "h2", "", "Updates");
+		createNewElement(updatesGeneralDiv, "h2", null, null, "Updates");
 
 		showUpdates();
 
@@ -592,7 +574,7 @@ scramble = (function() {
 
 		var updatesSpecificDiv = document.getElementById("updates_specific");
 		updatesSpecificDiv.innerHTML = "";
-		createNewElement(updatesSpecificDiv, "h2", "", str);
+		createNewElement(updatesSpecificDiv, "h2", null, null, str);
 
 		showUpdatesSpecific();
 
@@ -604,7 +586,7 @@ scramble = (function() {
 		console.log(str);
 		var updatesGeneralDiv = document.getElementById("updates_general");
 
-		createNewElement(updatesGeneralDiv, "li", "", str);
+		createNewElement(updatesGeneralDiv, "li", null, null, str);
 
 		if (benchmarkMode) {
 			var cur = currentTime();
@@ -619,7 +601,7 @@ scramble = (function() {
 		console.log(str);
 		var updatesSpecificDiv = document.getElementById("updates_specific");
 
-		createNewElement(updatesSpecificDiv, "li", "", str);
+		createNewElement(updatesSpecificDiv, "li", null, null, str);
 
 		if (benchmarkMode) {
 			var cur = currentTime();
