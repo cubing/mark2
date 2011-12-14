@@ -282,7 +282,9 @@ scramble = (function() {
 		var eventTBody = document.getElementById("events_tbody");
 
 
+		var newEventTR_ID = nextID();
 		var newEventTR = createNewElement(eventTBody, "tr", "event_tr_" + eventID);
+			newEventTR.setAttribute("id", newEventTR_ID);
 			newEventTR.setAttribute("data-event-id", eventID);
 
 		var nameTD = createNewElement(newEventTR, "td", "event_name", events[eventID].name);
@@ -305,14 +307,9 @@ scramble = (function() {
 			numSolvesInput.setAttribute("value", events[eventID].default_round[1]);
 			numSolvesInput.setAttribute("min", "0");
 
-		var removeTD = createNewElement(newEventTR, "td");
-		var removeButton = createNewElement(removeTD, "button", "", "X");
-			removeButton.setAttribute("onclick", "this.parentElement.parentElement.parentElement.removeChild(this.parentElement.parentElement); scramble.updateSetCount(\"" + eventID + "\");");
-	}
-
-	var updateSetCount = function(eventID) {
-		var eventTBody = document.getElementById("tbody_" + eventID);
-		document.getElementById("amount_value_"+eventID).value = eventTBody.children.length;
+		var removeTD = createNewElement(newEventTR, "td", "round_remove");
+		var removeButton = createNewElement(removeTD, "button", "", "&nbsp;&nbsp;X&nbsp;&nbsp;");
+			removeButton.setAttribute("onclick", "document.getElementById(\"events_tbody\").removeChild(document.getElementById(\"" + (newEventTR_ID) + "\"));");
 	}
 
 	var randomSource = undefined;
@@ -721,7 +718,6 @@ scramble = (function() {
 		generate_scrambles: generate_scrambles,
 		go: go,
 		addRound: addRound,
-		benchmark: benchmark,
-		updateSetCount: updateSetCount
+		benchmark: benchmark
 	};
 })();

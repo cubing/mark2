@@ -276,12 +276,14 @@ h1 {
 }
 
 #select_sets td {
-  padding: 4px 8px;#000;
+  padding: 0px 4px;
+  height: 1.5em;
 }
 
 #select_sets td.event_name {
   font-weight: bold;
   text-align: right;
+  padding: 4px 8px;
 }
 
 #select_sets tr {
@@ -294,6 +296,10 @@ h1 {
 
 #select_sets td input.round_name {
   width: 10em;
+}
+
+#select_sets td.round_remove button {
+  height: 100%;
 }
 
 #select_sets td input.num_solves {
