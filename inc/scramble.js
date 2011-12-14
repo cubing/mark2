@@ -293,14 +293,6 @@ scramble = (function() {
 		var roundNameInput = createNewElement(roundNameTD, "input", "round_name");
 			roundNameInput.setAttribute("value", roundName);
 
-		var roundTypeTD = createNewElement(newEventTR, "td");
-		var roundTypeSelect = createNewElement(roundTypeTD, "select", "round_type");
-			for (typeID in roundNames) {
-				var roundTypeOption = createNewElement(roundTypeSelect, "option", "", roundNames[typeID]);
-					roundTypeOption.setAttribute("value", typeID);	
-			}
-			roundTypeSelect.value = events[eventID].default_round[0];
-
 		var numSolvesTD = createNewElement(newEventTR, "td");
 		var numSolvesInput = createNewElement(numSolvesTD, "input", "num_solves");
 			numSolvesInput.setAttribute("type", "number");
@@ -656,10 +648,9 @@ scramble = (function() {
 			var eventID = tr.getAttribute("data-event-id");
 
 			var roundName = tr.getElementsByClassName("round_name")[0].value;
-			var roundType = tr.getElementsByClassName("round_type")[0].value;
 			var numSolves = tr.getElementsByClassName("num_solves")[0].value;
 
-			pages.push([eventID, roundName + " (" + roundNames[roundType] + " " + numSolves + ")", numSolves]);
+			pages.push([eventID, roundName, numSolves]);
 		}
 
 		if (pages.length == 0) {
