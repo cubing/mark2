@@ -36,18 +36,22 @@
 
 <div class="interface" id="select_events_interface">
 	<center>
-		<img src="inc/wca_logo.svg" class="wca_logo_top"><br>
-		<h1><!--WCA Official Puzzle Scrambler: <span class="mark2_title"-->Mark 2</span></h1><br>
+		<h1 id="title"><img src="inc/wca_logo.svg" class="wca_logo_top"> <!--WCA Official Puzzle Scrambler: <span class="mark2_title"-->Mark 2</span></h1><br>
 
 		<input id="competitionName" value="" placeholder="Competition Name"/>
-
-	<table id="event_amounts">
-	</table>
+	<br><br>
 	<button onclick="scramble.go();" id="goButton">Scramble!</button>
 	</center>
 </div>
 
-<div class="interface" id="select_sets_interface">
+
+<div class="interface">
+	<center>
+	<h1>Add Rounds:</h1>
+	<table id="event_amounts">
+	</table>
+	</center>
+
 	<h1>Adjust Individual Rounds:</h1>
 	<center>
 	<table id="select_sets">
