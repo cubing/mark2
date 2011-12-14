@@ -284,6 +284,7 @@ h1#title {
 
 #select_sets thead td {
   height: 2em;
+  padding: 0px 8px;
   font-weight: bold;
 }
 
