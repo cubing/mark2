@@ -383,15 +383,15 @@ scramble = (function() {
 
 		if (usingWebWorkers) {
 
-			var stillRemainingString = "";
-			if (doneCreatingRounds) {
-				stillRemainingString = " " + scramblesStillAwaiting.length + " scrambles still remaining overall."
+			var index = scramblesStillAwaiting.indexOf(trID);
+			scramblesStillAwaiting.splice(index, 1)
+
+			var stillRemainingString = " " + scramblesStillAwaiting.length + " scramble" + (scramblesStillAwaiting.length == 1 ? "" : "s") + " still remaining overall."
+			if (!doneCreatingRounds) {
+				stillRemainingString = " At least" + stillRemainingString;
 			}
 
 			addUpdateSpecific("Generated " + eventID + " scramble #" + num + " for some round." + stillRemainingString);
-
-			var index = scramblesStillAwaiting.indexOf(trID);
-			scramblesStillAwaiting.splice(index, 1)
 
 			if (scramblesStillAwaiting.length == 0 && doneCreatingRounds) {
 				addUpdateGeneral("\n\nDone generating all scrambles for all rounds.\n");
@@ -683,7 +683,7 @@ scramble = (function() {
 
 		benchmarkString = "\nBenchmark Settings:\n" + 
 			"- Web Workers: " + (usingWebWorkers? "yes" : "no") + "\n" +
-			"- Benchmark version: 4 (November 29, 2011)";
+			"- Benchmark version: 5 (December 13, 2011)";
 
 		hideInterface();
 		document.getElementById("benchmark").style.display="block";
