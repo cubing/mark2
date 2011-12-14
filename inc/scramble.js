@@ -110,7 +110,7 @@ scramble = (function() {
 		initializeRandomSource();
 		document.getElementById("goButton").focus();
 
-		initializeEventIDSelect("333");
+		initializeEventIDSelect();
 
 		initializeWorkers();
 	};
@@ -212,7 +212,7 @@ scramble = (function() {
 
 	}
 
-	var initializeEventIDSelect = function(defaultSelectedEvent) {
+	var initializeEventIDSelect = function() {
 
 		//var eventIDSelect = document.getElementById("eventID");
 		var selectSetsTable = document.getElementById("select_sets");
@@ -224,14 +224,6 @@ scramble = (function() {
 			eventID = eventOrder[i]
 
 			events[eventID].initialized = false;
-
-			/*
-			var newOption = createNewElement(eventIDSelect, "option", "", events[eventID].name);
-			newOption.setAttribute("value", eventID);
-			if (eventID == defaultSelectedEvent) {
-				newOption.setAttribute("selected", "true");
-			}
-			*/
 
 			var newTBody = createNewElement(selectSetsTable, "tbody");
 			newTBody.setAttribute("id", "tbody_" + eventID);
