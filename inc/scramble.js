@@ -36,6 +36,7 @@ scramble = (function() {
 	var version = "November 23, 2011";
 
 	var eventsPerRow = 8;
+	var defaultNumGroups = 1;
 
 	var usingWebWorkers = false;
 
@@ -293,11 +294,17 @@ scramble = (function() {
 		var roundNameInput = createNewElement(roundNameTD, "input", "round_name");
 			roundNameInput.setAttribute("value", roundName);
 
-		var numSolvesTD = createNewElement(newEventTR, "td");
+		var numSolvesTD = createNewElement(newEventTR, "td", null);
+		var numSolvesInput = createNewElement(numSolvesTD, "input", "num_groups");
+			numSolvesInput.setAttribute("type", "number");
+			numSolvesInput.setAttribute("value", defaultNumGroups);
+			numSolvesInput.setAttribute("min", "1");
+
+		var numSolvesTD = createNewElement(newEventTR, "td", null);
 		var numSolvesInput = createNewElement(numSolvesTD, "input", "num_solves");
 			numSolvesInput.setAttribute("type", "number");
 			numSolvesInput.setAttribute("value", events[eventID].default_round[1]);
-			numSolvesInput.setAttribute("min", "0");
+			numSolvesInput.setAttribute("min", "1");
 
 		var removeTD = createNewElement(newEventTR, "td", "round_remove");
 		var removeButton = createNewElement(removeTD, "button", "", "&nbsp;&nbsp;X&nbsp;&nbsp;");
@@ -630,6 +637,30 @@ scramble = (function() {
 		}
 	}
 
+    // Converts 1, 2, ... to A, B, ..., Z, AA, AB, ..., ZZ, AAA, AAB, ...
+    // A bit complicated right now, but should work fine.
+	function intToLetters(int) {
+
+      var numDigits;
+      var maxForDigits = 1;
+      var numWithThisManyDigits = 1;
+    
+      for (numDigits = 0; maxForDigits <= int; numDigits++) {
+        numWithThisManyDigits *= 26;
+        maxForDigits += numWithThisManyDigits;
+      }
+    
+      var adjustedInt = int - (maxForDigits - numWithThisManyDigits);
+    
+      var out = "";
+      for (var i = 0; i < numDigits; i++) {
+        out = String.fromCharCode(65 + (adjustedInt % 26)) + out;
+        adjustedInt = Math.floor(adjustedInt / 26);
+      }
+      return out;
+    };
+
+
 	var go = function() {
 
 		resetUpdatesGeneral();
@@ -650,7 +681,12 @@ scramble = (function() {
 			var roundName = tr.getElementsByClassName("round_name")[0].value;
 			var numSolves = tr.getElementsByClassName("num_solves")[0].value;
 
-			pages.push([eventID, roundName, numSolves]);
+			var numGroups = tr.getElementsByClassName("num_groups")[0].value;
+
+			for (var j = 1; j <= numGroups; j++) {
+				var groupString = ((numGroups == 1) ? ("") : ("<br>Group " + intToLetters(j)));
+				pages.push([eventID, roundName + groupString, numSolves]); // TODO FInd a better way to handle multi-line round names.
+			}
 		}
 
 		if (pages.length == 0) {
@@ -698,7 +734,7 @@ scramble = (function() {
 			["pyram", "Round Pyraminx", 5],
 			["minx", "Round Megaminx", 5],
 			["sq1", "Round Square-1", 5],
-			["333", "Round 3x3x3 Again", 5]
+			["333", "Round 3x3x3 Again",  5]
 		]);
 	}
 

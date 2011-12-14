@@ -275,9 +275,19 @@ h1 {
   margin: 12px;
 }
 
+#select_sets thead td {
+  height: 2em;
+  font-weight: bold;
+}
+
+#select_sets td:nth-child(even) {
+  background: #DDD;
+}
+
 #select_sets td {
   padding: 0px 4px;
   height: 1.5em;
+  text-align: center;
 }
 
 #select_sets td.event_name {
@@ -300,6 +310,10 @@ h1 {
 
 #select_sets td.round_remove button {
   height: 100%;
+}
+
+#select_sets td input.num_groups {
+  width: 3em;
 }
 
 #select_sets td input.num_solves {
