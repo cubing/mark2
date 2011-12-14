@@ -513,8 +513,6 @@ scramble = (function() {
 			};
 		}
 
-		document.title = "Scrambles for " + competitionName;
-
 		add_page(nextContinuation, competitionName, rounds[0][0], rounds[0][1], rounds[0][2]);
 	}
 
@@ -643,6 +641,14 @@ scramble = (function() {
 		var pages = [];
 		var competitionName = document.getElementById('competitionName').value;
 
+		if (competitionName == "") {
+			document.title = "Scrambles from Mark 2";
+			competitionName = "Mark 2";
+		}
+		else {
+			document.title = "Scrambles for " + competitionName;
+		}
+
 
 		var eventsTBody = document.getElementById("events_tbody").children;
 
@@ -698,6 +704,8 @@ scramble = (function() {
 		hideInterface();
 		document.getElementById("benchmark").style.display="block";
 		document.getElementById("updates").style.display="none";
+
+		document.title = "Mark 2 Benchmark";
 
 		// Give everyone the same benchmark.
 		randomSource = new MersenneTwisterObject(12345);
