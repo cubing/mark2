@@ -431,7 +431,7 @@ scramble = (function() {
 
 		// Create a new Page.
 		
-		var newPage = createNewElement(pages, "div", null, "scramble_set");
+		var newPage = createNewElement(pages, "div", "scramble_set");
 
 			// Header Table
 
