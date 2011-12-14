@@ -187,7 +187,7 @@ li {
  * Tweaks for individual scramblers.
  */
 
-.scramble_table td.scramble_333 {
+.scramble_table td.scramble_333, .scramble_table td.scramble_333bf, .scramble_table td.scramble_333oh, .scramble_table td.scramble_333fm, .scramble_table td.scramble_333ft {
   font-size: 150%;
 }
 
