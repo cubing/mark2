@@ -691,7 +691,19 @@ scramble = (function() {
 		generate_scrambles(hideUpdates, competitionName, pages);
 	};
 
+	var resetWebWorkers = function() {
+
+		for (var i in workers) {
+			workers[i].terminate();
+		}
+		workers = {};
+
+		initializeWorkers();
+	}
+
 	var benchmark = function() {
+
+		resetWebWorkers();
 
 		resetUpdatesGeneral();
 		resetUpdatesSpecific();
