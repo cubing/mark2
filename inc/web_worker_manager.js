@@ -1,3 +1,6 @@
+
+Math.random = undefined; // So we won't use it by accident.
+
 var web_worker_manager = (function() {
 
 	importScripts("mersennetwister.js");
@@ -35,7 +38,6 @@ var web_worker_manager = (function() {
 		workerID = iniWorkerID;
 
 		randomSource = new MersenneTwisterObject(randomSeed);
-		Math.random = undefined; // So we won't use it by accident.
 
 		for (i in eventIDs) {
 			var eventID = eventIDs[i];
