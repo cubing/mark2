@@ -148,6 +148,10 @@ li {
   background: #00c0c0;
 }
 
+#about {
+  display: none; /* To simplify the interface when it loads. */
+}
+
 @media print  
 {
     #updates, .interface, #about, .unsupported {

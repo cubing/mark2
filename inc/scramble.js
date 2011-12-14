@@ -732,6 +732,31 @@ scramble = (function() {
 		]);
 	}
 
+
+	var printKeyCodes = false;
+
+	var keyDownHandler = function(e) {
+
+		if (printKeyCodes) {
+			console.log("Key pressed: " + e.keyCode);
+		}
+
+	 	switch (e.keyCode) {
+
+			case 98: // "B" for ">B<enchmark". (And "A>b<out?)	  
+				document.getElementById("about").style.display = "block";
+				return true;
+				break;
+
+			case 107: // "K" for "Show >K<eycodes"
+				printKeyCodes = true;
+				break;
+		}
+	}
+
+	document.onkeypress = keyDownHandler;
+	document.onkeydown = keyDownHandler;
+
 	return {
 		version: version,
 		events: events,
