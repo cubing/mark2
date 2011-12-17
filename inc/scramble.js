@@ -106,12 +106,8 @@ scramble = (function() {
 	}
 
 	var initialize = function() {
-
 		initializeRandomSource();
-		document.getElementById("goButton").focus();
-
 		initializeEventIDSelect();
-
 		initializeWorkers();
 	};
 
