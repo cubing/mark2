@@ -739,7 +739,12 @@ scramble = (function() {
 
 	 	switch (e.keyCode) {
 
-			case 98: // "B" for ">B<enchmark". (And "A>b<out?)	  
+			case 85: // "U" for ">U<pdates".
+				document.getElementById("updates").style.display = "block";
+				return true;
+				break;
+
+			case 98: // "B" for ">B<enchmark". (And "A>b<out?)
 				document.getElementById("about").style.display = "block";
 				return true;
 				break;
