@@ -227,7 +227,7 @@ scramble = (function() {
 
 			var newTBody = createNewElement(selectSetsTable, "tbody", null, "tbody_" + eventID);
 
-			if (numEvents % eventsPerRow == 0) {
+			if (numEvents % eventsPerRow === 0) {
 				currentEventAmountsTR = createNewElement(eventAmountsTable, "tr");
 			}
 
@@ -359,14 +359,14 @@ scramble = (function() {
 			var index = scramblesStillAwaiting.indexOf(trID);
 			scramblesStillAwaiting.splice(index, 1)
 
-			var stillRemainingString = " " + scramblesStillAwaiting.length + " scramble" + (scramblesStillAwaiting.length == 1 ? "" : "s") + " still remaining overall."
+			var stillRemainingString = " " + scramblesStillAwaiting.length + " scramble" + (scramblesStillAwaiting.length === 1 ? "" : "s") + " still remaining overall."
 			if (!doneCreatingRounds) {
 				stillRemainingString = " At least" + stillRemainingString;
 			}
 
 			addUpdateSpecific("Generated " + eventID + " scramble #" + num + " for some round." + stillRemainingString);
 
-			if (scramblesStillAwaiting.length == 0 && doneCreatingRounds) {
+			if (scramblesStillAwaiting.length === 0 && doneCreatingRounds) {
 				addUpdateGeneral("\n\nDone generating all scrambles for all rounds.\n");
 			}
 		}
@@ -460,7 +460,7 @@ scramble = (function() {
 		
 		// Generate those scrambles!
 		
-		addUpdateGeneral("Generating " + numScrambles + " scramble" + ((numScrambles == 1) ? "" : "s") + " for " + events[eventID].name + ": " + roundName + "");
+		addUpdateGeneral("Generating " + numScrambles + " scramble" + ((numScrambles === 1) ? "" : "s") + " for " + events[eventID].name + ": " + roundName + "");
 		resetUpdatesSpecific("Details for " + events[eventID].name + ": " + roundName);
 		
 		var nextContinuation = generate_scramble_set.bind(null, continuation, competitionName, newScramblesTBody, eventID, scrambler, 1, numScrambles, {});
@@ -641,7 +641,7 @@ scramble = (function() {
 		var pages = [];
 		var competitionName = document.getElementById('competitionName').value;
 
-		if (competitionName == "") {
+		if (competitionName === "") {
 			document.title = "Scrambles from Mark 2";
 			competitionName = "Mark 2";
 		}
@@ -664,17 +664,17 @@ scramble = (function() {
 			var numGroups = tr.getElementsByClassName("num_groups")[0].value;
 
 			for (var j = 1; j <= numGroups; j++) {
-				var groupString = ((numGroups == 1) ? ("") : ("<br>Group " + intToLetters(j)));
+				var groupString = ((numGroups === 1) ? ("") : ("<br>Group " + intToLetters(j)));
 				pages.push([eventID, roundName + groupString, numSolves]); // TODO FInd a better way to handle multi-line round names.
 			}
 		}
 
-		if (pages.length == 0) {
+		if (pages.length === 0) {
 			addUpdateGeneral("Nothing to do, because there are no rounds to scramble.");
 			return;
 		}
 
-		addUpdateGeneral("Generating " + pages.length + " round" + ((pages.length == 1) ? "" : "s") + " of scrambles.");
+		addUpdateGeneral("Generating " + pages.length + " round" + ((pages.length === 1) ? "" : "s") + " of scrambles.");
 
 		generate_scrambles(hideUpdates, competitionName, pages);
 	};
