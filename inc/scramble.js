@@ -659,13 +659,13 @@ scramble = (function() {
 			var eventID = tr.getAttribute("data-event-id");
 
 			var roundName = tr.getElementsByClassName("round_name")[0].value;
-			var numSolves = tr.getElementsByClassName("num_solves")[0].value;
+			var numSolves = parseInt(tr.getElementsByClassName("num_solves")[0].value);
 
-			var numGroups = tr.getElementsByClassName("num_groups")[0].value;
+			var numGroups = parseInt(tr.getElementsByClassName("num_groups")[0].value);
 
 			for (var j = 1; j <= numGroups; j++) {
 				var groupString = ((numGroups === 1) ? ("") : ("<br>Group " + intToLetters(j)));
-				pages.push([eventID, roundName + groupString, numSolves]); // TODO FInd a better way to handle multi-line round names.
+				pages.push([eventID, roundName + groupString, numSolves]); // TODO Find a better way to handle multi-line round names.
 			}
 		}
 
