@@ -63,10 +63,10 @@ var benchmark = function(thunk, num) {
 
 	for (var i = 0; i < num; i++) {
 		preTime = currentTime();
-		thunk();
+		var scr = thunk();
 		postTime = currentTime();
 		runs.push(postTime - preTime);
-		console.log("[" + elapsedTime() + "ms] " + (i + 1) + "/" + num + ": " + (postTime - preTime) + "ms");
+		console.log("[" + elapsedTime() + "ms] " + (i + 1) + "/" + num + ": " + (postTime - preTime) + "ms: " + scr.scramble);
 	}
 
 	console.log("");
