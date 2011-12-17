@@ -1,0 +1,39 @@
+<html>
+<head>
+	<link href="../inc/scramble.css" rel="stylesheet" type="text/css" />
+
+	<script type="text/javascript" src="../inc/scramblers/scramble_222.js"></script>
+	<script type="text/javascript" src="../inc/scramblers/scramble_333.js"></script>
+	<script type="text/javascript" src="../inc/scramblers/scramble_clock.js"></script>
+	<script type="text/javascript" src="../inc/scramblers/scramble_minx.js"></script>
+	<script type="text/javascript" src="../inc/scramblers/scramble_NNN.js"></script>
+	<script type="text/javascript" src="../inc/scramblers/scramble_pyram.js"></script>
+	<script type="text/javascript" src="../inc/scramblers/scramble_sq1.js"></script>
+	<script type="text/javascript" src="../inc/mersennetwister.js"></script>
+	<script>
+		IN_BROWSER = true;
+	</script>
+	<script src="benchmark_scramblers.js"></script>
+	<script>
+		var go = function() {
+			benchmark([document.getElementById("event_id").value], parseInt(document.getElementById("num_trials").value));
+		};
+	</script>
+
+</head>
+<body>
+
+<div class="interface">
+<center>
+	<h1>Get out your Javascript console.</h1>
+	<br><br>
+	<input id="event_id" type="text" placeholder="Event ID" value="333"></input>
+	<br>
+	<input id="num_trials" type="number" placeholder="Number of trials" value="100"></input>
+	<br><br>
+	<button id="goButton" autofocus onclick="go();">Run!</button>
+</center>
+</div>
+
+</body>
+</html>
