@@ -43,7 +43,7 @@ var web_worker_manager = (function() {
 			var eventID = eventIDs[i];
 
 			// Import script if not already done. (Allows multiple scramblers to use the same scrambler, like 3x3x3 events.)
-			if (importedFiles.indexOf(scramblerFiles[eventID]) == -1) {
+			if (importedFiles.indexOf(scramblerFiles[eventID]) === -1) {
 				importScripts(scramblerFiles[eventID]);
 				importedFiles.push(scramblerFiles[eventID]);
 			}
