@@ -348,6 +348,33 @@ scramble = (function() {
 			tempTD.setAttribute("colspan", 3);
 	}
 
+	// Specific to alg.garron.us right now.
+	var scrambleLink = function(eventID, scramble) {
+
+		eventIDToAlgPuzzleID = {
+			"333": "3x3x3",
+			"444": "4x4x4",
+			"555": "5x5x5",
+			"222": "2x2x2",
+			"333bf": "3x3x3",
+			"333oh": "3x3x3",
+			"333fm": "3x3x3",
+			"333ft": "3x3x3",
+			"666": "6x6x6",
+			"777": "7x7x7",
+			"444bf": "4x4x4",
+			"555bf": "5x5x5",
+		}
+
+		var puzzleID = eventIDToAlgPuzzleID[eventID];
+
+		if (typeof puzzleID === "undefined") {
+			return scramble;
+		}
+
+		return "<a href=\"http://alg.garron.us/?ini=" + encodeURIComponent(scramble) + "&cube=" + puzzleID + "&name=" + encodeURIComponent(events[eventID].name + " Scramble") + "&notation=WCA\" target=\"_blank\" class=\"scramble_link\">" + scramble + "</a>";
+	}
+
 	var insertScramble = function(trID, eventID, num, scramble, state) {
 
 		if (usingWebWorkers) {
@@ -370,7 +397,9 @@ scramble = (function() {
 		var scrambleTR = document.getElementById(trID);
 		scrambleTR.innerHTML = "";
 		createNewElement(scrambleTR, "td", null, null, "" + num + ".");
-		createNewElement(scrambleTR, "td", "scramble_" + eventID, null,  scramble);
+		var scrambleHTML = scrambleLink(eventID, scramble);
+
+		createNewElement(scrambleTR, "td", "scramble_" + eventID, null,  scrambleHTML);
 		var drawingTD = createNewElement(scrambleTR, "td", "drawing");
 
 		scramblers[eventID].drawScramble(drawingTD, state);
