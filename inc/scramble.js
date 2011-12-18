@@ -695,16 +695,16 @@ scramble = (function() {
 
 		benchmarkString = "\nBenchmark Settings:\n" + 
 			"- Web Workers: " + (usingWebWorkers? "yes" : "no") + "\n" +
-			"- Benchmark version: 5 (December 13, 2011)";
+			"- Benchmark version: 6 (December 18, 2011)";
 
 		hideInterface();
 		document.getElementById("benchmark").style.display="block";
 		document.getElementById("updates").style.display="none";
 
-		document.title = "Mark 2 Benchmark";
+		document.title = "Mark 2 Benchmark v6";
 
 		// Give everyone the same benchmark.
-		randomSource = new MersenneTwisterObject(12345);
+		randomSource = new MersenneTwisterObject(333);
 
 		for (i in workers) {
 			workers[i].postMessage({action: "initialize_benchmark", random_seed: Math.floor(randomSource.random()*0xffffffff)});
