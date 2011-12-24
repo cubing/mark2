@@ -39,7 +39,7 @@ if (!Function.prototype.bind) {
 
 scramble = (function() {
 
-	var version = "November 23, 2011";
+	var version = "December 23, 2011";
 
 	var eventsPerRow = 8;
 	var defaultNumGroups = 1;
