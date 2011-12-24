@@ -714,7 +714,7 @@ scramble = (function() {
 		initializeWorkers();
 	}
 
-	var benchmark = function() {
+	var benchmark = function(rounds) {
 
 		resetWebWorkers();
 
@@ -742,7 +742,8 @@ scramble = (function() {
 		var callback = function (){
 			//document.getElementById("benchmark_details").innerHTML = "Benchmark Results:\n\nDone!\n\n" + benchmarkString;
 		};
-		generate_scrambles(callback, "Benchmark", [
+
+		var actualRounds = [
 			["222", "Round 2x2x2", 5],
 			["333", "Round 3x3x3", 5],
 			["444", "Round 4x4x4", 5],
@@ -754,7 +755,12 @@ scramble = (function() {
 			["minx", "Round Megaminx", 5],
 			["sq1", "Round Square-1", 5],
 			["333", "Round 3x3x3 Again",  5]
-		]);
+		];
+		if (typeof rounds !== "undefined") {
+			actualRounds = rounds;
+		}
+
+		generate_scrambles(callback, "Benchmark", actualRounds);
 	}
 
 
