@@ -46,6 +46,9 @@ scramble = (function() {
 
 	var usingWebWorkers = false;
 
+	var defaultDrawingWidth = 200;
+	var defaultDrawingHeight = 120;
+
 	var events = {
 		// Official WCA events as of November 24, 2011
 		"333": {name: "Rubik's Cube", scrambler_file: "scramble_333.js", default_round: ["avg", 5], default_num_rounds: 1},
@@ -408,7 +411,10 @@ scramble = (function() {
 		createNewElement(scrambleTR, "td", "scramble_" + eventID, null,  scrambleHTML);
 		var drawingTD = createNewElement(scrambleTR, "td", "drawing");
 
-		scramblers[eventID].drawScramble(drawingTD, state);
+		var drawingWidth = defaultDrawingWidth;
+		var drawingHeight = defaultDrawingHeight;
+
+		scramblers[eventID].drawScramble(drawingTD, state, drawingWidth, drawingHeight);
 	}
 
 	var generate_scramble_set = function(continuation, competitionName, tBody, eventID, scrambler, num, numTotal, options) {
