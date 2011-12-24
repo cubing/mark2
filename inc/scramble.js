@@ -1,10 +1,16 @@
 
-// Offline caching.
-var cache = window.applicationCache;
-function updateReadyCache() {
-  window.applicationCache.swapCache();
-  location.reload(true); // For now
-}
+// Offline Caching
+window.applicationCache.addEventListener('updateready', function() {
+	window.applicationCache.swapCache();
+	setTimeout(function() {location.reload(true)}, 1000); // Function.prototype.bind doesn't work for this, anyhow... :-(
+}, false);
+
+window.applicationCache.addEventListener('downloading', function() {
+	document.body.innerHTML="<br><br><h1>Updating cache...<br><br>Page will reload in a moment.</h1>";
+	document.body.style.setProperty("background", "#00C0C0");
+	scramble.terminateWebWorkers(); // Call this last in case it's not defined yet.
+}, false);
+
 
 // Implementation of bind() for Safari.
 if (!Function.prototype.bind) {
@@ -704,19 +710,22 @@ scramble = (function() {
 		generate_scrambles(hideUpdates, competitionName, pages);
 	};
 
-	var resetWebWorkers = function() {
-
+	var terminateWebWorkers = function() {
 		for (var i in workers) {
 			workers[i].terminate();
 		}
 		workers = {};
+		console.log("Terminated all web workers.")
+	}
 
+	var restartWebWorkers = function() {
+		terminateWebWorkers();
 		initializeWorkers();
 	}
 
 	var benchmark = function(rounds) {
 
-		resetWebWorkers();
+		restartWebWorkers();
 
 		resetUpdatesGeneral();
 		resetUpdatesSpecific();
@@ -800,6 +809,7 @@ scramble = (function() {
 		generate_scrambles: generate_scrambles,
 		go: go,
 		addRound: addRound,
-		benchmark: benchmark
+		benchmark: benchmark,
+		terminateWebWorkers: terminateWebWorkers
 	};
 })();
