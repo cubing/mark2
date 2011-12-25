@@ -7,10 +7,10 @@ body {
   font-family: Helvetica, Tahoma, Arial;
 
   background-color: #EEE;
-  background-image: -webkit-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
-  background-image: -moz-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
-  background-image: -o-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
-  background-image: repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
+  background-image: -webkit-repeating-linear-gradient(0deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
+  background-image: -moz-repeating-linear-gradient(0deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
+  background-image: -o-repeating-linear-gradient(0deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
   max-width: 800px;
 }
 
@@ -91,6 +91,15 @@ body {
   line-height: 150%;
 }
 
+a.scramble_link {
+  text-decoration: none;
+  color: #000;
+}
+
+a.scramble_link:hover {
+  text-decoration: underline;
+}
+
 .wca_logo {
   width: 40px;
   height: 40px;
@@ -143,7 +152,6 @@ li {
   padding: 1em;
   margin: 1em;
   font-family: Helvetica;
-  border: 1px solid #00c0c0;
   border-radius: 1em;
   background: #00c0c0;
 }
@@ -271,6 +279,13 @@ h1 {
 
 h1#title {
   font-size: 400%;
+}
+
+span.beta {
+  vertical-align: top;
+  font-size: 30%;
+  color: #00c0c0;
+  text-shadow: 0px 0px 5px #FFF, 0px 0px 10px #FFF, 0px 0px 15px #FFF, 0px 0px 20px #FFF;
 }
 
 #select_sets {
