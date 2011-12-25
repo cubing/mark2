@@ -1,6 +1,6 @@
-# WCA-Style Puzzle Scrambler: Mark 2
+# WCA-Style Puzzle Scrambler: Mark 2 [BETA]
 
-NOTE: This is not the official WCA scrambler yet. It is a proposed replacement under development by Lucas Garron.
+This is not the official WCA scrambler, although it may proposed as one.
 
 The name "Mark 2" represents that this is an entirely rewritten second-generation system for the WCA, and is also a reference to the attempt to convert all scramblers into Markov Random State Scramblers.
 
