@@ -146,7 +146,7 @@ scramble = (function() {
 			break;
 
 			case "message_exception":
-				console.log("[Web worker exception]", e.data.data);
+				console.error("[Web worker exception]", e.data.data);
 			break;
 
 			case "initialize_benchmark_response":
