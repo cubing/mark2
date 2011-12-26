@@ -136,6 +136,7 @@ scramble = (function() {
 
 	var initialize = function() {
 		initializeRandomSource();
+		initializeData();
 		initializeEventIDSelect();
 		initializeWorkers();
 	};
@@ -244,15 +245,14 @@ scramble = (function() {
 		var eventAmountsTable = document.getElementById("event_amounts");
 		var currentEventAmountsTR;
 
-		var numEvents = 0;
-		for (i in eventOrder) {
+		for (var i =0; i < eventOrder.length; i++) {
 			eventID = eventOrder[i]
 
 			events[eventID].initialized = false;
 
 			var newTBody = createNewElement(selectSetsTable, "tbody", null, "tbody_" + eventID);
 
-			if (numEvents % eventsPerRow === 0) {
+			if (i % eventsPerRow === 0) {
 				currentEventAmountsTR = createNewElement(eventAmountsTable, "tr");
 			}
 
@@ -260,7 +260,7 @@ scramble = (function() {
 
 			var val = createNewElement(currentEventAmountsTR, "td", "event_amount_value_td", "");
 			var valInput = createNewElement(val, "input", "event_amount_value");
-			valInput.setAttribute("value", events[eventID].default_num_rounds);
+			valInput.setAttribute("value", numCurrentRounds(eventID));
 			valInput.setAttribute("id", "amount_value_" + eventID);
 			valInput.setAttribute("type", "number");
 			valInput.setAttribute("min", "0");
@@ -268,14 +268,109 @@ scramble = (function() {
 			valInput.setAttribute("onmouseup", "scramble.changeNumRounds(\"" + eventID + "\", parseInt(this.value));");
 			valInput.setAttribute("onkeyup", "scramble.changeNumRounds(\"" + eventID + "\", parseInt(this.value));");
 			valInput.setAttribute("oninput", "scramble.changeNumRounds(\"" + eventID + "\", parseInt(this.value));");
-
-			for (var i = numCurrentRounds(eventID); i < events[eventID].default_num_rounds; i++) {
-				addRound(eventID);
-			}
-
-			numEvents++;
 		}
 	}
+
+
+	function getHashParameter(name, alt) {
+		var results = RegExp( "[#&]"+name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]")+"=([^&#<]*)" ).exec( window.location.href );
+		if (results == null) {
+			return alt;
+		}
+		else {
+			return results[1];
+		}
+	};
+
+
+	var initializeData = function() {
+
+		var competitionNameHash = getHashParameter("competition_name", null);
+
+		if (competitionNameHash !== null) {
+			var competitionName = decodeURIComponent(competitionNameHash);
+			document.getElementById("competitionName").value = competitionName;
+		}
+
+		var roundsHash = getHashParameter("rounds", null);
+
+		if (roundsHash === null) {
+			for (i in eventOrder) {
+				eventID = eventOrder[i]
+				for (var i = numCurrentRounds(eventID); i < events[eventID].default_num_rounds; i++) {
+					addRound(eventID);
+				}
+			}
+		}
+		else {
+			var rounds = JSON.parse(decodeURIComponent(roundsHash));
+			resetRounds();
+			addRounds(rounds);
+		}
+
+		updateHash();
+	}
+
+	var updateHash = function() {
+
+		var competitionName = encodeURIComponent(document.getElementById('competitionName').value);
+		var roundsHash = encodeURIComponent(JSON.stringify(getRounds()));
+		location.hash = "#competition_name=" + competitionName + "&rounds=" + roundsHash;
+	}
+
+	var resetRounds = function() {
+		document.getElementById("events_tbody").innerHTML = "";
+	}
+
+    var addRounds = function(rounds) {
+    	for (var i in rounds) {
+	    	addRound(rounds[i][0], rounds[i][1], rounds[i][2], rounds[i][3]);
+	    }
+    }
+
+    var getRounds = function() {
+    	
+		var rounds = [];
+
+		var eventsTBody = document.getElementById("events_tbody").children;
+
+		for (var i = 0; i < eventsTBody.length; i++) {
+
+			var tr = eventsTBody[i];
+
+			var eventID = tr.getAttribute("data-event-id");
+
+			var roundName = tr.getElementsByClassName("round_name")[0].value;
+			var numSolves = parseInt(tr.getElementsByClassName("num_solves")[0].value);
+
+			var numGroups = parseInt(tr.getElementsByClassName("num_groups")[0].value);
+
+			rounds.push([eventID, roundName, numGroups, numSolves]); // TODO Find a better way to handle multi-line round names.
+		}
+
+		return rounds;
+    }
+
+    var getPages = function() {
+
+    	var rounds = getRounds();
+    	pages = [];
+
+		for (var i = 0; i < rounds.length; i++) {
+
+			var eventID = rounds[i][0];
+			var roundName = rounds[i][1];
+			var numGroups = rounds[i][2];
+			var numSolves = rounds[i][3];
+
+			for (var j = 1; j <= numGroups; j++) {
+				var groupString = ((numGroups === 1) ? ("") : ("<br>Group " + intToLetters(j)));
+				pages.push([eventID, roundName + groupString, numSolves]); // TODO Find a better way to handle multi-line round names.
+			}
+		}
+
+		return pages;
+    }
 
 	var numCurrentRounds = function(eventID) {
 		return document.getElementsByClassName("event_tr_" + eventID).length;
@@ -298,13 +393,38 @@ scramble = (function() {
 		if (parseInt(document.getElementById("amount_value_" + eventID).value) !== newNum) {
 			document.getElementById("amount_value_" + eventID).value = newNum;
 		}
+
+		updateHash();
 	}
 
-	var addRound = function(eventID, roundNameOpt) {
+	var removeRound = function(eventID, trID) {
+		document.getElementById("events_tbody").removeChild(document.getElementById(trID));
+		document.getElementById("amount_value_" + eventID).value = numCurrentRounds(eventID);
+
+		updateHash();
+	}
+
+	var removeLastRound = function(eventID) {
+		var rounds = document.getElementsByClassName("event_tr_" + eventID);
+		var lastRound = rounds[rounds.length - 1];
+		document.getElementById("events_tbody").removeChild(lastRound);
+	}
+
+	var addRound = function(eventID, roundNameOpt, numGroupsOpt, numSolvesOpt) {
 
 		var roundName = roundNameOpt;
 		if (roundNameOpt === undefined) {
 			roundName = "Round " + (numCurrentRounds(eventID)+1);
+		}
+
+		var numGroups = numGroupsOpt;
+		if (numGroupsOpt === undefined) {
+			numGroups = defaultNumGroups;
+		}
+
+		var numSolves = numSolvesOpt;
+		if (numSolvesOpt === undefined) {
+			numSolves = events[eventID].default_round[1];
 		}
 
 		var eventTBody = document.getElementById("events_tbody");
@@ -323,29 +443,18 @@ scramble = (function() {
 		var numSolvesTD = createNewElement(newEventTR, "td", null);
 		var numSolvesInput = createNewElement(numSolvesTD, "input", "num_groups");
 			numSolvesInput.setAttribute("type", "number");
-			numSolvesInput.setAttribute("value", defaultNumGroups);
+			numSolvesInput.setAttribute("value", numGroups);
 			numSolvesInput.setAttribute("min", "1");
 
 		var numSolvesTD = createNewElement(newEventTR, "td", null);
 		var numSolvesInput = createNewElement(numSolvesTD, "input", "num_solves");
 			numSolvesInput.setAttribute("type", "number");
-			numSolvesInput.setAttribute("value", events[eventID].default_round[1]);
+			numSolvesInput.setAttribute("value", numSolves);
 			numSolvesInput.setAttribute("min", "1");
 
 		var removeTD = createNewElement(newEventTR, "td", "round_remove");
 		var removeButton = createNewElement(removeTD, "button", null, null, "&nbsp;&nbsp;X&nbsp;&nbsp;");
 			removeButton.setAttribute("onclick", "scramble.removeRound(\"" + eventID + "\", \"" + newEventTR_ID + "\")");
-	}
-
-	var removeRound = function(eventID, trID) {
-		document.getElementById("events_tbody").removeChild(document.getElementById(trID));
-		document.getElementById("amount_value_" + eventID).value = numCurrentRounds(eventID);
-	}
-
-	var removeLastRound = function(eventID) {
-		var rounds = document.getElementsByClassName("event_tr_" + eventID);
-		var lastRound = rounds[rounds.length - 1];
-		document.getElementById("events_tbody").removeChild(lastRound);
 	}
 
 	var randomSource = undefined;
@@ -712,32 +821,6 @@ scramble = (function() {
       return out;
     };
 
-    var getPages = function() {
-    	
-		var pages = [];
-
-		var eventsTBody = document.getElementById("events_tbody").children;
-
-		for (var i = 0; i < eventsTBody.length; i++) {
-
-			var tr = eventsTBody[i];
-
-			var eventID = tr.getAttribute("data-event-id");
-
-			var roundName = tr.getElementsByClassName("round_name")[0].value;
-			var numSolves = parseInt(tr.getElementsByClassName("num_solves")[0].value);
-
-			var numGroups = parseInt(tr.getElementsByClassName("num_groups")[0].value);
-
-			for (var j = 1; j <= numGroups; j++) {
-				var groupString = ((numGroups === 1) ? ("") : ("<br>Group " + intToLetters(j)));
-				pages.push([eventID, roundName + groupString, numSolves]); // TODO Find a better way to handle multi-line round names.
-			}
-		}
-
-		return pages;
-    }
-
 	var go = function() {
 
 		resetUpdatesGeneral();
@@ -867,6 +950,7 @@ scramble = (function() {
 		benchmark: benchmark,
 		terminateWebWorkers: terminateWebWorkers,
 		removeRound: removeRound,
-		changeNumRounds: changeNumRounds
+		changeNumRounds: changeNumRounds,
+		updateHash: updateHash
 	};
 })();
