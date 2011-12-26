@@ -1,3 +1,6 @@
+//TODO: color animation
+// Rename trID variable to scramle_ID
+
 
 // Offline Caching
 window.applicationCache.addEventListener('updateready', function() {
@@ -41,7 +44,7 @@ scramble = (function() {
 
 	var version = "December 23, 2011";
 
-	var eventsPerRow = 8;
+	var eventsPerRow = 6;
 	var defaultNumGroups = 1;
 
 	var usingWebWorkers = false;
@@ -51,25 +54,25 @@ scramble = (function() {
 
 	var events = {
 		// Official WCA events as of November 24, 2011
-		"333": {name: "Rubik's Cube", scrambler_file: "scramble_333.js", default_round: ["avg", 5], default_num_rounds: 1},
-		"444": {name: "4x4 Cube", scrambler_file: "scramble_NNN.js", default_round: ["avg", 5], default_num_rounds: 0},
-		"555": {name: "5x5 Cube", scrambler_file: "scramble_NNN.js", default_round: ["avg", 5], default_num_rounds: 0},
-		"222": {name: "2x2 Cube", scrambler_file: "scramble_222.js", default_round: ["avg", 5], default_num_rounds: 0},
-		"333bf": {name: "3x3 blindfolded", scrambler_file: "scramble_333.js", default_round: ["best", 3], default_num_rounds: 0},
-		"333oh": {name: "3x3 one-handed", scrambler_file: "scramble_333.js", default_round: ["avg", 5], default_num_rounds: 0},
-		"333fm": {name: "3x3 fewest moves", scrambler_file: "scramble_333.js", default_round: ["best", 2], default_num_rounds: 0}, //TODO: FCF support
-		"333ft": {name: "3x3 with feet", scrambler_file: "scramble_333.js", default_round: ["avg", 5], default_num_rounds: 0},
-		"minx": {name: "Megaminx", scrambler_file: "scramble_minx.js", default_round: ["avg", 5], default_num_rounds: 0},
-		"pyram": {name: "Pyraminx", scrambler_file: "scramble_pyram.js", default_round: ["avg", 5], default_num_rounds: 0},
-		"sq1": {name: "Square-1", scrambler_file: "scramble_sq1.js", default_round: ["avg", 5], default_num_rounds: 0},
-		"clock": {name: "Rubik's Clock", scrambler_file: "scramble_clock.js", default_round: ["avg", 5], default_num_rounds: 0},
-		"666": {name: "6x6 Cube", scrambler_file: "scramble_NNN.js", default_round: ["mean", 3], default_num_rounds: 0},
-		"777": {name: "7x7 Cube", scrambler_file: "scramble_NNN.js", default_round: ["mean", 3], default_num_rounds: 0},
+		"333": {name: "Rubik's Cube", scrambler_file: "scramble_333.js", default_round: ["avg", 5], default_num_rounds: 1, drawing_dimensions: [200, 120], scrambles_per_row: 1},
+		"444": {name: "4x4 Cube", scrambler_file: "scramble_NNN.js", default_round: ["avg", 5], default_num_rounds: 0, drawing_dimensions: [200, 120], scrambles_per_row: 1},
+		"555": {name: "5x5 Cube", scrambler_file: "scramble_NNN.js", default_round: ["avg", 5], default_num_rounds: 0, drawing_dimensions: [200, 120], scrambles_per_row: 1},
+		"222": {name: "2x2 Cube", scrambler_file: "scramble_222.js", default_round: ["avg", 5], default_num_rounds: 0, drawing_dimensions: [200, 120], scrambles_per_row: 1},
+		"333bf": {name: "3x3 blindfolded", scrambler_file: "scramble_333.js", default_round: ["best", 3], default_num_rounds: 0, drawing_dimensions: [200, 120], scrambles_per_row: 1},
+		"333oh": {name: "3x3 one-handed", scrambler_file: "scramble_333.js", default_round: ["avg", 5], default_num_rounds: 0, drawing_dimensions: [200, 120], scrambles_per_row: 1},
+		"333fm": {name: "3x3 fewest moves", scrambler_file: "scramble_333.js", default_round: ["best", 2], default_num_rounds: 0, drawing_dimensions: [200, 120], scrambles_per_row: 1}, //TODO: FCF support
+		"333ft": {name: "3x3 with feet", scrambler_file: "scramble_333.js", default_round: ["avg", 5], default_num_rounds: 0, drawing_dimensions: [200, 120], scrambles_per_row: 1},
+		"minx": {name: "Megaminx", scrambler_file: "scramble_minx.js", default_round: ["avg", 5], default_num_rounds: 0, drawing_dimensions: [200, 120], scrambles_per_row: 1},
+		"pyram": {name: "Pyraminx", scrambler_file: "scramble_pyram.js", default_round: ["avg", 5], default_num_rounds: 0, drawing_dimensions: [200, 120], scrambles_per_row: 1},
+		"sq1": {name: "Square-1", scrambler_file: "scramble_sq1.js", default_round: ["avg", 5], default_num_rounds: 0, drawing_dimensions: [200, 120], scrambles_per_row: 1},
+		"clock": {name: "Rubik's Clock", scrambler_file: "scramble_clock.js", default_round: ["avg", 5], default_num_rounds: 0, drawing_dimensions: [200, 120], scrambles_per_row: 1},
+		"666": {name: "6x6 Cube", scrambler_file: "scramble_NNN.js", default_round: ["mean", 3], default_num_rounds: 0, drawing_dimensions: [200, 150], scrambles_per_row: 1},
+		"777": {name: "7x7 Cube", scrambler_file: "scramble_NNN.js", default_round: ["mean", 3], default_num_rounds: 0, drawing_dimensions: [200, 150], scrambles_per_row: 1},
 		//"magic": {name: "Rubik's Magic", scrambler_file: "scramble_magic.js", default_round: ["avg", 5], default_num_rounds: 0},
 		//"mmagic": {name: "Master Magic", scrambler_file: "scramble_mmagic.js", default_round: ["avg", 5], default_num_rounds: 0},
-		"444bf": {name: "4x4 blindfolded", scrambler_file: "scramble_NNN.js", default_round: ["best", 3], default_num_rounds: 0},
-		"555bf": {name: "5x5 blindfolded", scrambler_file: "scramble_NNN.js", default_round: ["best", 3], default_num_rounds: 0},
-		//"333mbf": {name: "3x3 multi blind", scrambler_file: "scramble_333.js", default_round: ["mbf"], default_num_rounds: 0}, //TODO: 3x3x3 with smaller images?
+		"444bf": {name: "4x4 blindfolded", scrambler_file: "scramble_NNN.js", default_round: ["best", 3], default_num_rounds: 0, drawing_dimensions: [200, 120], scrambles_per_row: 1},
+		"555bf": {name: "5x5 blindfolded", scrambler_file: "scramble_NNN.js", default_round: ["best", 3], default_num_rounds: 0, drawing_dimensions: [200, 120], scrambles_per_row: 1},
+		"333mbf": {name: "3x3 multi blind", scrambler_file: "scramble_333.js", default_round: ["mbf", 20], default_num_rounds: 0, drawing_dimensions: [80, 60], scrambles_per_row: 2}, //TODO: 3x3x3 with smaller images?
 		
 		// Unofficial events
 		//"skewb": {name: "Skewb", scrambler_file: "scramble_skewb.js", default_round: ["avg", 5]},
@@ -95,12 +98,12 @@ scramble = (function() {
 		//"mmagic",
 		"444bf",
 		"555bf",
-		//"333mbf",
+		"333mbf",
 		//"skewb"
 	];
 
 	var workerGroups = [
-		{events: ["333", "333bf", "333oh", "333fm", "333ft"], auto_ini: true},
+		{events: ["333", "333bf", "333oh", "333fm", "333ft", "333mbf"], auto_ini: true},
 		{events: ["222", "444", "555", "666", "777", "444bf", "555bf", "minx", "pyram", "clock"], auto_ini: false},
 		{events: ["sq1"], auto_ini: false}
 	];
@@ -343,18 +346,17 @@ scramble = (function() {
 
 	var startScramble = function(trID, eventID, num) {
 					
-		var scrambleTR = document.getElementById(trID);
-		scrambleTR.innerHTML = "";
-		var tempTD = createNewElement(scrambleTR, "td", "loading_scramble", null, "Generating scramble #" + num + "...");
-			tempTD.setAttribute("colspan", 3);
+		var scrambleTD = document.getElementById(trID + "_scramble");
+		scrambleTD.innerHTML = "Generating scramble #" + num + "...";
+		scrambleTD.classList.remove("loading_scrambler");
+		scrambleTD.classList.add("loading_scramble");
 	}
 
 	var iniScramblerNotice = function(trID, eventID, num) {
 					
-		var scrambleTR = document.getElementById(trID);
-		scrambleTR.innerHTML = "";
-		var tempTD = createNewElement(scrambleTR, "td", "loading_scrambler", null, "Initializing scrambler...");
-			tempTD.setAttribute("colspan", 3);
+		var scrambleTD = document.getElementById(trID + "_scramble");
+		scrambleTD.innerHTML = "Initializing scrambler...";
+		scrambleTD.classList.add("loading_scrambler");
 	}
 
 	// Specific to alg.garron.us right now.
@@ -403,50 +405,55 @@ scramble = (function() {
 			}
 		}
 					
-		var scrambleTR = document.getElementById(trID);
-		scrambleTR.innerHTML = "";
-		createNewElement(scrambleTR, "td", null, null, "" + num + ".");
+		var scrambleTD = document.getElementById(trID + "_scramble");
+		scrambleTD.classList.remove("loading_scramble");
 		var scrambleHTML = scrambleLink(eventID, scramble);
+		scrambleTD.innerHTML = scrambleHTML;
 
-		createNewElement(scrambleTR, "td", "scramble_" + eventID, null,  scrambleHTML);
-		var drawingTD = createNewElement(scrambleTR, "td", "drawing");
-
-		var drawingWidth = defaultDrawingWidth;
-		var drawingHeight = defaultDrawingHeight;
-
+		var drawingTD = document.getElementById(trID + "_drawing");
+		var drawingWidth = events[eventID].drawing_dimensions[0];
+		var drawingHeight = events[eventID].drawing_dimensions[1];
 		scramblers[eventID].drawScramble(drawingTD, state, drawingWidth, drawingHeight);
 	}
 
 	var generate_scramble_set = function(continuation, competitionName, tBody, eventID, scrambler, num, numTotal, options) {
 		
 		var scrambleTR = createNewElement(tBody, "tr");
-		var trID = nextID();
-		scrambleTR.setAttribute("id", trID);
 
-		if (usingWebWorkers) {
+		var scramblesInThisRow = Math.min(events[eventID].scrambles_per_row, numTotal - num + 1);
 
-			var tempTD = createNewElement(scrambleTR, "td", null, null, "[Space for Scramble #" + num + "]");
-			tempTD.setAttribute("colspan", 3);
+		for (var i = 0; i < scramblesInThisRow; i++) {
 
-			scramblesStillAwaiting.push(trID);
+			var trID = nextID();
+		
+			createNewElement(scrambleTR, "td", "number_" + eventID, trID + "_number", "" + (num + i) + ".");
+			createNewElement(scrambleTR, "td", "scramble_" + eventID, trID + "_scramble",  "[Space for Scramble #" + num + "]");
+			createNewElement(scrambleTR, "td", "drawing drawing_" + eventID, trID + "_drawing");
 
-			events[eventID].worker.postMessage({
-				action: "get_random_scramble",
-				event_id: eventID,
-				return_data: {
-					trID: trID,
-					num: num
-				}
-			});
-		}
-		else {
-			var scramble = scrambler.getRandomScramble();
-			insertScramble(trID, eventID, num, scramble.scramble, scramble.state);
+			if (usingWebWorkers) {
+
+				scramblesStillAwaiting.push(trID);
+
+				console.log(events[eventID]);
+
+				events[eventID].worker.postMessage({
+					action: "get_random_scramble",
+					event_id: eventID,
+					return_data: {
+						trID: trID,
+						num: num
+					}
+				});
+			}
+			else {
+				var scramble = scrambler.getRandomScramble();
+				insertScramble(trID, eventID, num, scramble.scramble, scramble.state);
+			}
 		}
 
 		var call;
 		if (num < numTotal) {
-			call = generate_scramble_set.bind(null, continuation, competitionName, tBody, eventID, scrambler, num+1, numTotal, options);
+			call = generate_scramble_set.bind(null, continuation, competitionName, tBody, eventID, scrambler, num + scramblesInThisRow, numTotal, options);
 		}
 		else {
 			hideUpdatesSpecific();
@@ -765,6 +772,7 @@ scramble = (function() {
 			["pyram", "Round Pyraminx", 5],
 			["minx", "Round Megaminx", 5],
 			["sq1", "Round Square-1", 5],
+			["333mbf", "Round 3x3x3 Multi Blind",  20],
 			["333", "Round 3x3x3 Again",  5]
 		];
 		if (typeof rounds !== "undefined") {

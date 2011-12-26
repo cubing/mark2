@@ -200,6 +200,12 @@ li {
   font-size: 150%;
 }
 
+.scramble_table td.number_333mbf, .scramble_table td.scramble_333mbf, .scramble_table td.drawing_333mbf {
+  padding: 2px 4px 0px;
+  font-size: 16px;
+  line-height: 1em;
+}
+
 .scramble_table td.scramble_222 {
   font-size: 200%;
 }
