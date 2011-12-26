@@ -108,6 +108,23 @@ scramble = (function() {
 		{events: ["sq1"], auto_ini: false}
 	];
 
+	// alg.garron.us puzzle ID mapping.
+	eventIDToAlgPuzzleID = {
+		"333": "3x3x3",
+		"444": "4x4x4",
+		"555": "5x5x5",
+		"222": "2x2x2",
+		"333bf": "3x3x3",
+		"333oh": "3x3x3",
+		"333fm": "3x3x3",
+		"333ft": "3x3x3",
+		"333mbf": "3x3x3",
+		"666": "6x6x6",
+		"777": "7x7x7",
+		"444bf": "4x4x4",
+		"555bf": "5x5x5",
+	}
+
 	var workers = {};
 
 	var roundNames = {
@@ -361,21 +378,6 @@ scramble = (function() {
 
 	// Specific to alg.garron.us right now.
 	var scrambleLink = function(eventID, scramble) {
-
-		eventIDToAlgPuzzleID = {
-			"333": "3x3x3",
-			"444": "4x4x4",
-			"555": "5x5x5",
-			"222": "2x2x2",
-			"333bf": "3x3x3",
-			"333oh": "3x3x3",
-			"333fm": "3x3x3",
-			"333ft": "3x3x3",
-			"666": "6x6x6",
-			"777": "7x7x7",
-			"444bf": "4x4x4",
-			"555bf": "5x5x5",
-		}
 
 		var puzzleID = eventIDToAlgPuzzleID[eventID];
 
@@ -672,23 +674,9 @@ scramble = (function() {
       return out;
     };
 
-
-	var go = function() {
-
-		resetUpdatesGeneral();
-		hideInterface();
-
+    var getPages = function() {
+    	
 		var pages = [];
-		var competitionName = document.getElementById('competitionName').value;
-
-		if (competitionName === "") {
-			document.title = "Scrambles from Mark 2";
-			competitionName = "Mark 2";
-		}
-		else {
-			document.title = "Scrambles for " + competitionName;
-		}
-
 
 		var eventsTBody = document.getElementById("events_tbody").children;
 
@@ -708,6 +696,26 @@ scramble = (function() {
 				pages.push([eventID, roundName + groupString, numSolves]); // TODO Find a better way to handle multi-line round names.
 			}
 		}
+
+		return pages;
+    }
+
+	var go = function() {
+
+		resetUpdatesGeneral();
+		hideInterface();
+
+		var competitionName = document.getElementById('competitionName').value;
+
+		if (competitionName === "") {
+			document.title = "Scrambles from Mark 2";
+			competitionName = "Mark 2";
+		}
+		else {
+			document.title = "Scrambles for " + competitionName;
+		}
+
+		var pages = getPages();
 
 		if (pages.length === 0) {
 			addUpdateGeneral("Nothing to do, because there are no rounds to scramble.");
