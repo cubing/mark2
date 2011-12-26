@@ -516,10 +516,6 @@ scramble = (function() {
 		else {
 
 			if (usingWebWorkers) {
-			    if (scrambler.initializeDrawing) {
-			    	console.log("Initializing drawing code for " + events[eventID].name + ".");
-			    	scrambler.initializeDrawing();
-			    }
 			}
 			else if (events[eventID].initialized) {
 		    	addUpdateSpecific("" + events[eventID].name + " scrambler already initialized.");
