@@ -44,7 +44,7 @@ scramble = (function() {
 
 	var version = "December 23, 2011";
 
-	var eventsPerRow = 6;
+	var eventsPerRow = 5;
 	var defaultNumGroups = 1;
 
 	var usingWebWorkers = false;
@@ -256,10 +256,18 @@ scramble = (function() {
 				currentEventAmountsTR = createNewElement(eventAmountsTable, "tr");
 			}
 
+			var eventTD = createNewElement(currentEventAmountsTR, "td", "event_amount_label", null, "" + eventID + ":");
 
-			var eventTD = createNewElement(currentEventAmountsTR, "td");
-			var eventAddRoundButton = createNewElement(eventTD, "button", "addRoundButton", null, eventID);
-			eventAddRoundButton.setAttribute("onclick", "scramble.addRound(\"" + eventID + "\");");
+			var val = createNewElement(currentEventAmountsTR, "td", "event_amount_value_td", "");
+			var valInput = createNewElement(val, "input", "event_amount_value");
+			valInput.setAttribute("value", events[eventID].default_num_rounds);
+			valInput.setAttribute("id", "amount_value_" + eventID);
+			valInput.setAttribute("type", "number");
+			valInput.setAttribute("min", "0");
+			valInput.setAttribute("onchange", "scramble.changeNumRounds(\"" + eventID + "\", parseInt(this.value));");
+			valInput.setAttribute("onmouseup", "scramble.changeNumRounds(\"" + eventID + "\", parseInt(this.value));");
+			valInput.setAttribute("onkeyup", "scramble.changeNumRounds(\"" + eventID + "\", parseInt(this.value));");
+			valInput.setAttribute("oninput", "scramble.changeNumRounds(\"" + eventID + "\", parseInt(this.value));");
 
 			for (var i = numCurrentRounds(eventID); i < events[eventID].default_num_rounds; i++) {
 				addRound(eventID);
@@ -271,6 +279,25 @@ scramble = (function() {
 
 	var numCurrentRounds = function(eventID) {
 		return document.getElementsByClassName("event_tr_" + eventID).length;
+	}
+
+	var changeNumRounds = function(eventID, newNum) {
+		var currentNum = numCurrentRounds(eventID);
+
+		if (currentNum < newNum) {
+			for (var i = 0; i < newNum - currentNum; i++) {
+				addRound(eventID);
+			}
+		}
+		else if (newNum < currentNum) {
+			for (var i = 0; i < currentNum - newNum; i++) {
+				removeLastRound(eventID);
+			}
+		}
+
+		if (parseInt(document.getElementById("amount_value_" + eventID).value) !== newNum) {
+			document.getElementById("amount_value_" + eventID).value = newNum;
+		}
 	}
 
 	var addRound = function(eventID, roundNameOpt) {
@@ -307,7 +334,18 @@ scramble = (function() {
 
 		var removeTD = createNewElement(newEventTR, "td", "round_remove");
 		var removeButton = createNewElement(removeTD, "button", null, null, "&nbsp;&nbsp;X&nbsp;&nbsp;");
-			removeButton.setAttribute("onclick", "document.getElementById(\"events_tbody\").removeChild(document.getElementById(\"" + (newEventTR_ID) + "\"));");
+			removeButton.setAttribute("onclick", "scramble.removeRound(\"" + eventID + "\", \"" + newEventTR_ID + "\")");
+	}
+
+	var removeRound = function(eventID, trID) {
+		document.getElementById("events_tbody").removeChild(document.getElementById(trID));
+		document.getElementById("amount_value_" + eventID).value = numCurrentRounds(eventID);
+	}
+
+	var removeLastRound = function(eventID) {
+		var rounds = document.getElementsByClassName("event_tr_" + eventID);
+		var lastRound = rounds[rounds.length - 1];
+		document.getElementById("events_tbody").removeChild(lastRound);
 	}
 
 	var randomSource = undefined;
@@ -790,7 +828,6 @@ scramble = (function() {
 		generate_scrambles(callback, "Benchmark", actualRounds);
 	}
 
-
 	var printKeyCodes = false;
 
 	var keyDownHandler = function(e) {
@@ -828,6 +865,8 @@ scramble = (function() {
 		go: go,
 		addRound: addRound,
 		benchmark: benchmark,
-		terminateWebWorkers: terminateWebWorkers
+		terminateWebWorkers: terminateWebWorkers,
+		removeRound: removeRound,
+		changeNumRounds: changeNumRounds
 	};
 })();

@@ -371,6 +371,28 @@ span.beta {
   margin: 0px;
 }
 
+#event_amounts td {
+  border-top: 1px solid #888;w
+  border-bottom: 1px solid #888;
+}
+
+#event_amounts td.event_amount_label {
+  border-left: 1px solid #888;
+  text-align: right;
+  padding: 4px;
+  padding-left: 8px;
+}
+
+#event_amounts td.event_amount_value_td {
+  border-right: 1px solid #888;
+  padding-right: 4px;
+}
+
+#event_amounts input.event_amount_value {
+  font-size: 20px;
+  width: 50px;
+}
+
 .addRoundButton {
   font-size: 100%;
   width: 100%;
