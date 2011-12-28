@@ -250,8 +250,6 @@ scramble = (function() {
 
 			events[eventID].initialized = false;
 
-			var newTBody = createNewElement(selectSetsTable, "tbody", null, "tbody_" + eventID);
-
 			if (i % eventsPerRow === 0) {
 				currentEventAmountsTR = createNewElement(eventAmountsTable, "tr");
 			}
