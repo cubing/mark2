@@ -461,12 +461,38 @@ scramble = (function() {
 
 	var initializeRandomSource = function() {
 		
-		// We use the date the the native PRNG to get some entropy.
-		var seed = new Date().getTime() + Math.floor(Math.random()*0xffffffff);
+		var numEntropyValuesPerSource = 32;
+		var entropy = [];
+
+		// Get some pseudo-random numbers for entropy.
+		for (var i = 0; i < numEntropyValuesPerSource; i++) {
+			entropy.push(Math.floor(Math.random()*0xffffffff));
+		}
+
+		// Get some even better pseudo-random numbers for entropy if we can.
+		try {
+			var cryptoEntropy = new Uint8Array(numEntropyValuesPerSource);
+
+			window.crypto.getRandomValues(cryptoEntropy);
+			
+			// Uint8Array doesn't haave a .map(...) method.
+			for (var i = 0; i < numEntropyValuesPerSource; i++) {
+				entropy.push(cryptoEntropy[i]);
+			}
+
+			console.log("Successfully used crypto for additional randomness.");	
+		}
+		catch (e) {
+			console.log("Unable to use crpyto for additional randomness (that's okay, though).", e);
+		}
+
+		// We use the date to get the main entropy.
+		var seed = new Date().getTime();
 		
-		// Make sure we don't actually use deterministic initialization.
+
+		// Make sure we don't accidentally use deterministic initialization.
 		if (isFinite(seed)) {
-			randomSource = new MersenneTwisterObject(seed);
+			randomSource = new MersenneTwisterObject(seed, entropy);
 			console.log("scramble.js: Seeded Mersenne Twister.");
 			Math.random = undefined; // So we won't use it by accident.
 
