@@ -729,33 +729,41 @@ scramble = (function() {
 		add_page(nextContinuation, competitionName, rounds[0][0], rounds[0][1], rounds[0][2]);
 	}
 
+	var hideElement = function(el) {
+		el.style.display = "none";
+	}
+
+	var showElement = function(el) {
+		el.style.display = "block";
+	}
+
 	var showUpdates = function() {
-		document.getElementById("updates").style.display = "block";
+		showElement(document.getElementById("updates"));
 	}
 
 	var hideUpdates = function() {
-		document.getElementById("updates").style.display = "none";
+		hideElement(document.getElementById("updates"));
 	}
 
 	var showUpdatesSpecific = function() {
-		document.getElementById("updates_specific").style.display = "block";
+		showElement(document.getElementById("updates_specific"));
 	}
 
 	var hideUpdatesSpecific = function() {
-		document.getElementById("updates_specific").style.display = "none";
+		hideElement(document.getElementById("updates_specific"));
 	}
 
 	var hideInterface = function() {
 		var interfaceElements = document.getElementsByClassName("interface");
 		for (var i=0; i < interfaceElements.length; i++) {
-			interfaceElements[i].style.display = "none";
+			hideElement(interfaceElements[i]);
 		}
 	}
 
 	var showInterface = function() {
 		var interfaceElements = document.getElementsByClassName("interface");
 		for (var i=0; i < interfaceElements.length; i++) {
-			interfaceElements[i].style.display = "none";
+			hideElement(interfaceElements[i]);
 		}
 	}
 
@@ -946,12 +954,12 @@ scramble = (function() {
 	 	switch (e.keyCode) {
 
 			case 85: // "U" for ">U<pdates".
-				document.getElementById("updates").style.display = "block";
+				showElement(document.getElementById("updates"));
 				return true;
 				break;
 
 			case 98: // "B" for ">B<enchmark". (And "A>b<out?)
-				document.getElementById("about").style.display = "block";
+				showElement(document.getElementById("about"));
 				return true;
 				break;
 
