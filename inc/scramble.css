@@ -256,8 +256,8 @@ h1 {
 .scramble_set .info_table td:last-child { text-align: right; }
 
 .scramble_set .scramble_table td { text-align: left;}
-.scramble_set .scramble_table td:first-child { text-align: center; font-size: 200%; }
-.scramble_set .scramble_table td:last-child { text-align: center; }
+.scramble_set .scramble_table td.number { text-align: center; font-size: 32px; }
+.scramble_set .scramble_table td.drawing { text-align: center; }
 
 .scramble_set .footer_table td { text-align: center; }
 .scramble_set .footer_table td:first-child { text-align: left; }
@@ -385,7 +385,7 @@ h1 {
   font-size: 150%;
 }
 
-.scramble_table td.number_333mbf, .scramble_table td.scramble_333mbf, .scramble_table td.drawing_333mbf {
+.scramble_set .scramble_table td.number_333mbf, .scramble_set .scramble_table td.scramble_333mbf, .scramble_set .scramble_table td.drawing_333mbf {
   padding: 2px 4px 0px;
   font-size: 16px;
   line-height: 1em;

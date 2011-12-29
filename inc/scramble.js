@@ -599,8 +599,8 @@ scramble = (function() {
 
 			var trID = nextID();
 		
-			createNewElement(scrambleTR, "td", "number_" + eventID, trID + "_number", "" + (num + i) + ".");
-			createNewElement(scrambleTR, "td", "scramble_" + eventID, trID + "_scramble",  "[Space for Scramble #" + num + "]");
+			createNewElement(scrambleTR, "td", "number number_" + eventID, trID + "_number", "" + (num + i) + ".");
+			createNewElement(scrambleTR, "td", "scramble scramble_" + eventID, trID + "_scramble",  "[Space for Scramble #" + num + "]");
 			createNewElement(scrambleTR, "td", "drawing drawing_" + eventID, trID + "_drawing");
 
 			if (usingWebWorkers) {
