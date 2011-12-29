@@ -122,7 +122,7 @@ var benchmark = function(eventID, num) {
 	  log_node(".");
 	  log_file("" + parseInt(time) +", ");
 	  
-	  logln_browser("[" + elapsedTime() + "ms] " + (i + 1) + "/" + num + ": " + (time) + "ms: " + scr.scramble);
+	  logln_browser("[" + elapsedTime() + "ms] " + (i + 1) + "/" + num + ": " + (time) + "ms: " + scr.scramble_string);
 	}
 
 	log_node("\n");

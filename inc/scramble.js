@@ -180,12 +180,12 @@ scramble = (function() {
 			break;
 
 			case "get_random_scramble_response":
-				//console.log("Received a " + events[e.data.event_id].name +	 " scramble: " + e.data.scramble.scramble);
+				//console.log("Received a " + events[e.data.event_id].name +	 " scramble: " + e.data.scramble.scramble_string);
 				insertScramble(
 					e.data.return_data.trID,
 					e.data.event_id,
 					e.data.return_data.num,
-					e.data.scramble.scramble,
+					e.data.scramble.scramble_string,
 					e.data.scramble.state
 				);
 			break;
@@ -620,7 +620,7 @@ scramble = (function() {
 			}
 			else {
 				var scramble = scrambler.getRandomScramble();
-				insertScramble(trID, eventID, num, scramble.scramble, scramble.state);
+				insertScramble(trID, eventID, num, scramble.scramble_string, scramble.state);
 			}
 		}
 
