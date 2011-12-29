@@ -414,36 +414,6 @@ h1 {
 
 .scramble_table td.scramble_clock {
   font-family: monospace;
-  padding: 4px 4px;
-}
-
-.scramble_table td.scramble_clock div.clock_inner {
-  display: block;
-  width: 3.5em;
-  padding: 0.2em;
-  font-weight: normal;
-  border-left: 1px solid #EEE;
-  border-right: 1px solid #EEE;
-  border-top: 1px solid #444;
-  border-bottom: 1px solid #444;
-}
-
-.scramble_table td.scramble_clock div.clock_outer {
-  float: left;
-  width: 3.9em;
-}
-
-.scramble_table td.scramble_clock span.clock_pegs {
-  font-weight: bold;
-}
-
-.scramble_table td.scramble_clock span.peg_changed {
-  font-weight: bold;
-  /*text-decoration: underline;*/
-}
-
-.scramble_table td.scramble_clock span.clock_turns {
-  font-weight: bold;
 }
 
 
