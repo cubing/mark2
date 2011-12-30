@@ -39,6 +39,15 @@ if (!Function.prototype.bind) {
   };
 }
 
+// Prevent errors if console.log doesn't exist (e.g. in IE when the console is not open).
+if (typeof console === "undefined") {
+	console = {};
+}
+if (typeof console.log === "undefined") {
+	console.log = function() {};
+}
+
+
 scramble = (function() {
 
 	var version = "December 30, 2011";
