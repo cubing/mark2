@@ -607,8 +607,6 @@ scramble = (function() {
 
 				scramblesStillAwaiting.push(trID);
 
-				console.log(events[eventID]);
-
 				events[eventID].worker.postMessage({
 					action: "get_random_scramble",
 					event_id: eventID,
