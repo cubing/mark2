@@ -46,9 +46,6 @@ scramble = (function() {
 
 	var usingWebWorkers = false;
 
-	var defaultDrawingWidth = 200;
-	var defaultDrawingHeight = 120;
-
 	var events = {
 		// Official WCA events as of November 24, 2011
 		"333": {name: "Rubik's Cube", scrambler_file: "scramble_333.js", default_round: ["avg", 5], default_num_rounds: 1, drawing_dimensions: [200, 120], scrambles_per_row: 1},
@@ -580,6 +577,7 @@ scramble = (function() {
 		scrambleTD.innerHTML = scrambleHTML;
 
 		var drawingTD = document.getElementById(scrambleID + "_drawing");
+		drawingTD.width = events[eventID].drawing_dimensions[0]; // Sadly, this is more robust than setProperty(...).
 		var drawingWidth = events[eventID].drawing_dimensions[0];
 		var drawingHeight = events[eventID].drawing_dimensions[1];
 		scramblers[eventID].drawScramble(drawingTD, state, drawingWidth, drawingHeight);
