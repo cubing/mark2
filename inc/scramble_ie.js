@@ -1,7 +1,7 @@
 //TODO: color animation
 // Rename trID variable to scramle_ID
 
-console.log('IE mode activated');
+log('IE mode activated');
 // Offline Caching
 if (typeof window.applicationCache !== "undefined") {
 	window.applicationCache.addEventListener('updateready', function() {
@@ -145,7 +145,7 @@ scramble = (function() {
 	var handleWorkerMessage = function(e) {
 		switch(e.data.action) {
 			case "initialized":
-				console.log("Web worker initialized successfully: " + e.data.info);
+				log("Web worker initialized successfully: " + e.data.info);
 			break;
 
 			case "get_random_scramble_starting":
@@ -157,11 +157,11 @@ scramble = (function() {
 			break;
 
 			case "console_log":
-				console.log("[Web worker log]", e.data.data);
+				log("[Web worker log]", e.data.data);
 			break;
 
 			case "console_error":
-				console.log("[Web worker error]", e.data.data);
+				log("[Web worker error]", e.data.data);
 			break;
 
 			case "message_exception":
@@ -169,7 +169,7 @@ scramble = (function() {
 			break;
 
 			case "initialize_benchmark_response":
-				console.log("Benchmark initialized for worker " + e.data.worker_id + ".");
+				log("Benchmark initialized for worker " + e.data.worker_id + ".");
 			break;
 
 			case "get_random_scramble_initializing_scrambler":
@@ -181,7 +181,7 @@ scramble = (function() {
 			break;
 
 			case "get_random_scramble_response":
-				//console.log("Received a " + events[e.data.event_id].name +	 " scramble: " + e.data.scramble.scramble_string);
+				//log("Received a " + events[e.data.event_id].name +	 " scramble: " + e.data.scramble.scramble_string);
 				insertScramble(
 					e.data.return_data.trID,
 					e.data.event_id,
@@ -192,8 +192,8 @@ scramble = (function() {
 			break;
 
 			case "echo_response":
-				console.log("Echo response:");
-				console.log(e.data);
+				log("Echo response:");
+				log(e.data);
 			break;
 
 			default:
@@ -207,7 +207,7 @@ scramble = (function() {
 		// From http://www.html5rocks.com/en/tutorials/workers/basics/#toc-inlineworkers
 
 		if (typeof Worker === "undefined") {
-			console.log("No web worker support. :-(");
+			log("No web worker support. :-(");
 			return;
 		}
 
@@ -233,8 +233,8 @@ scramble = (function() {
 
 		}
 		catch (e) {
-			console.log("Starting the web workers failed. This happens with Chrome when run from file://");
-			console.log("This was the web worker error:", e);
+			log("Starting the web workers failed. This happens with Chrome when run from file://");
+			log("This was the web worker error:", e);
 		}
 
 	}
@@ -479,10 +479,10 @@ scramble = (function() {
 				entropy.push(cryptoEntropy[i]);
 			}
 
-			console.log("Successfully used crypto for additional randomness.");	
+			log("Successfully used crypto for additional randomness.");	
 		}
 		catch (e) {
-			console.log("Unable to use crpyto for additional randomness (that's okay, though).", e);
+			log("Unable to use crpyto for additional randomness (that's okay, though).", e);
 		}
 
 		// We use the date to get the main entropy.
@@ -492,13 +492,13 @@ scramble = (function() {
 		// Make sure we don't accidentally use deterministic initialization.
 		if (isFinite(seed)) {
 			randomSource = new MersenneTwisterObject(seed, entropy);
-			console.log("scramble.js: Seeded Mersenne Twister.");
+			log("scramble.js: Seeded Mersenne Twister.");
 			Math.random = undefined; // So we won't use it by accident.
 
 		}
 		else {
 			randomSource = Math;
-  			console.log("WARNING: Seeding Mersenne Twister did not work. Falling back to Math.random().");
+  			log("WARNING: Seeding Mersenne Twister did not work. Falling back to Math.random().");
   		}
 	}
 
@@ -580,7 +580,6 @@ scramble = (function() {
 		}
 					
 		var scrambleTD = document.getElementById(trID + "_scramble");
-		//scrambleTD.classList.remove("loading_scramble");
 		var scrambleHTML = scrambleLink(eventID, scramble);
 		scrambleTD.innerHTML = scrambleHTML;
 
@@ -608,7 +607,7 @@ scramble = (function() {
 
 				scramblesStillAwaiting.push(trID);
 
-				console.log(events[eventID]);
+				log(events[eventID]);
 
 				events[eventID].worker.postMessage({
 					action: "get_random_scramble",
@@ -803,7 +802,7 @@ scramble = (function() {
 
 	var addUpdateGeneral = function(str) {
 
-		console.log(str);
+		log(str);
 		var updatesGeneralDiv = document.getElementById("updates_general");
 
 		createNewElement(updatesGeneralDiv, "li", null, null, str);
@@ -818,7 +817,7 @@ scramble = (function() {
 
 	var addUpdateSpecific = function(str) {
 
-		console.log(str);
+		log(str);
 		var updatesSpecificDiv = document.getElementById("updates_specific");
 
 		createNewElement(updatesSpecificDiv, "li", null, null, str);
@@ -886,7 +885,7 @@ scramble = (function() {
 			workers[i].terminate();
 		}
 		workers = {};
-		console.log("Terminated all web workers.")
+		log("Terminated all web workers.")
 	}
 
 	var restartWebWorkers = function() {
@@ -949,7 +948,7 @@ scramble = (function() {
 	var keyDownHandler = function(e) {
 
 		if (printKeyCodes) {
-			console.log("Key pressed: " + e.keyCode);
+			log("Key pressed: " + e.keyCode);
 		}
 
 	 	switch (e.keyCode) {
