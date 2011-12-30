@@ -527,19 +527,32 @@ scramble = (function() {
 		return "auto_id_" + (currentID++);
 	}
 
+	var addClass = function(el, className) {
+		if (typeof scrambleTD.classList !== "undefined") {
+			el.classList.add(className);
+		}
+	}
+
+	var removeClass = function(el, className) {
+		if (typeof scrambleTD.classList !== "undefined") {
+			el.classList.add(className);
+		}
+		
+	}
+
 	var startScramble = function(scrambleID, eventID, num) {
 					
 		var scrambleTD = document.getElementById(scrambleID + "_scramble");
 		scrambleTD.innerHTML = "Generating scramble #" + num + "...";
-		scrambleTD.classList.remove("loading_scrambler");
-		scrambleTD.classList.add("loading_scramble");
+		removeClass(scrambleTD, "loading_scrambler");
+		addClass(scrambleTD, "loading_scramble");
 	}
 
 	var iniScramblerNotice = function(scrambleID, eventID, num) {
 					
 		var scrambleTD = document.getElementById(scrambleID + "_scramble");
 		scrambleTD.innerHTML = "Initializing scrambler...";
-		scrambleTD.classList.add("loading_scrambler");
+		addClass(scrambleTD, "loading_scrambler");
 	}
 
 	// Specific to alg.garron.us right now.
@@ -574,7 +587,7 @@ scramble = (function() {
 		}
 					
 		var scrambleTD = document.getElementById(scrambleID + "_scramble");
-		scrambleTD.classList.remove("loading_scramble");
+		removeClass(scrambleTD, "loading_scramble");
 		var scrambleHTML = scrambleLink(eventID, scramble);
 		scrambleTD.innerHTML = scrambleHTML;
 
