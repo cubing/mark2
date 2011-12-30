@@ -1,19 +1,23 @@
-//TODO: color animation
-// Rename trID variable to scramle_ID
-
-
 // Offline Caching
-window.applicationCache.addEventListener('updateready', function() {
-	window.applicationCache.swapCache();
-	setTimeout(function() {location.reload(true)}, 1000); // Function.prototype.bind doesn't work for this, anyhow... :-(
-}, false);
+if (typeof window.applicationCache !== "undefined") {
+	window.applicationCache.addEventListener('updateready', function() {
+		window.applicationCache.swapCache();
+		setTimeout(function() {location.reload(true)}, 1000); // Function.prototype.bind doesn't work for this, anyhow... :-(
+	}, false);
 
-window.applicationCache.addEventListener('downloading', function() {
-	document.body.innerHTML="<br><br><h1>Updating cache...<br><br>Page will reload in a moment.</h1>";
-	document.body.style.setProperty("background", "#00C0C0");
-	scramble.terminateWebWorkers(); // Call this last in case it's not defined yet.
-}, false);
+	window.applicationCache.addEventListener('downloading', function() {
+		document.body.innerHTML="<br><br><h1>Updating cache...<br><br>Page will reload in a moment.</h1>";
+		document.body.style.setProperty("background", "#00C0C0");
+		scramble.terminateWebWorkers(); // Call this last in case it's not defined yet.
+	}, false);
+}
 
+if (typeof console === "undefined") {
+	console = {};
+}
+if (typeof console.log === "undefined") {
+	console.log = function() {};
+}
 
 // Implementation of bind() for Safari.
 if (!Function.prototype.bind) {
@@ -42,15 +46,12 @@ if (!Function.prototype.bind) {
 
 scramble = (function() {
 
-	var version = "December 23, 2011";
+	var version = "December 29, 2011";
 
 	var eventsPerRow = 5;
 	var defaultNumGroups = 1;
 
 	var usingWebWorkers = false;
-
-	var defaultDrawingWidth = 200;
-	var defaultDrawingHeight = 120;
 
 	var events = {
 		// Official WCA events as of November 24, 2011
@@ -149,7 +150,7 @@ scramble = (function() {
 
 			case "get_random_scramble_starting":
 				startScramble(
-					e.data.return_data.trID,
+					e.data.return_data.scramble_id,
 					e.data.event_id,
 					e.data.return_data.num
 				);
@@ -173,7 +174,7 @@ scramble = (function() {
 
 			case "get_random_scramble_initializing_scrambler":
 				iniScramblerNotice(
-					e.data.return_data.trID,
+					e.data.return_data.scramble_id,
 					e.data.event_id,
 					e.data.return_data.num
 				);
@@ -182,7 +183,7 @@ scramble = (function() {
 			case "get_random_scramble_response":
 				//console.log("Received a " + events[e.data.event_id].name +	 " scramble: " + e.data.scramble.scramble_string);
 				insertScramble(
-					e.data.return_data.trID,
+					e.data.return_data.scramble_id,
 					e.data.event_id,
 					e.data.return_data.num,
 					e.data.scramble.scramble_string,
@@ -232,8 +233,7 @@ scramble = (function() {
 
 		}
 		catch (e) {
-			console.log("Starting the web workers failed. This happens with Chrome when run from file://");
-			console.log("This was the web worker error:", e);
+			console.log("Starting the web workers failed; Mark 2 will fall back to continuations. (This happens with Chrome when run from file://)", e);
 		}
 
 	}
@@ -395,8 +395,8 @@ scramble = (function() {
 		updateHash();
 	}
 
-	var removeRound = function(eventID, trID) {
-		document.getElementById("events_tbody").removeChild(document.getElementById(trID));
+	var removeRound = function(eventID, scrambleID) {
+		document.getElementById("events_tbody").removeChild(document.getElementById(scrambleID));
 		document.getElementById("amount_value_" + eventID).value = numCurrentRounds(eventID);
 
 		updateHash();
@@ -491,7 +491,7 @@ scramble = (function() {
 		// Make sure we don't accidentally use deterministic initialization.
 		if (isFinite(seed)) {
 			randomSource = new MersenneTwisterObject(seed, entropy);
-			console.log("scramble.js: Seeded Mersenne Twister.");
+			console.log("Seeded Mersenne Twister.");
 			Math.random = undefined; // So we won't use it by accident.
 
 		}
@@ -531,20 +531,33 @@ scramble = (function() {
 	var nextID = function() {
 		return "auto_id_" + (currentID++);
 	}
-
-	var startScramble = function(trID, eventID, num) {
-					
-		var scrambleTD = document.getElementById(trID + "_scramble");
-		scrambleTD.innerHTML = "Generating scramble #" + num + "...";
-		scrambleTD.classList.remove("loading_scrambler");
-		scrambleTD.classList.add("loading_scramble");
+//try with just el.classList instead of scrambleTD.Classlist
+	var addClass = function(el, className) {
+		if (typeof el.classList !== "undefined") {
+			el.classList.add(className);
+		}
 	}
 
-	var iniScramblerNotice = function(trID, eventID, num) {
+	var removeClass = function(el, className) {
+		if (typeof el.classList !== "undefined") {
+			el.classList.add(className);
+		}
+		
+	}
+
+	var startScramble = function(scrambleID, eventID, num) {
 					
-		var scrambleTD = document.getElementById(trID + "_scramble");
+		var scrambleTD = document.getElementById(scrambleID + "_scramble");
+		scrambleTD.innerHTML = "Generating scramble #" + num + "...";
+		removeClass(scrambleTD, "loading_scrambler");
+		addClass(scrambleTD, "loading_scramble");
+	}
+
+	var iniScramblerNotice = function(scrambleID, eventID, num) {
+					
+		var scrambleTD = document.getElementById(scrambleID + "_scramble");
 		scrambleTD.innerHTML = "Initializing scrambler...";
-		scrambleTD.classList.add("loading_scrambler");
+		addClass(scrambleTD, "loading_scrambler");
 	}
 
 	// Specific to alg.garron.us right now.
@@ -559,11 +572,11 @@ scramble = (function() {
 		return "<a href=\"http://alg.garron.us/?ini=" + encodeURIComponent(scramble) + "&cube=" + puzzleID + "&name=" + encodeURIComponent(events[eventID].name + " Scramble") + "&notation=WCA\" target=\"_blank\" class=\"scramble_link\">" + scramble + "</a>";
 	}
 
-	var insertScramble = function(trID, eventID, num, scramble, state) {
+	var insertScramble = function(scrambleID, eventID, num, scramble, state) {
 
 		if (usingWebWorkers) {
 
-			var index = scramblesStillAwaiting.indexOf(trID);
+			var index = scramblesStillAwaiting.indexOf(scrambleID);
 			scramblesStillAwaiting.splice(index, 1)
 
 			var stillRemainingString = " " + scramblesStillAwaiting.length + " scramble" + (scramblesStillAwaiting.length === 1 ? "" : "s") + " still remaining overall."
@@ -578,12 +591,13 @@ scramble = (function() {
 			}
 		}
 					
-		var scrambleTD = document.getElementById(trID + "_scramble");
-		scrambleTD.classList.remove("loading_scramble");
+		var scrambleTD = document.getElementById(scrambleID + "_scramble");
+		removeClass(scrambleTD, "loading_scramble");
 		var scrambleHTML = scrambleLink(eventID, scramble);
 		scrambleTD.innerHTML = scrambleHTML;
 
-		var drawingTD = document.getElementById(trID + "_drawing");
+		var drawingTD = document.getElementById(scrambleID + "_drawing");
+		drawingTD.width = events[eventID].drawing_dimensions[0]; // Sadly, this is more robust than setProperty(...).
 		var drawingWidth = events[eventID].drawing_dimensions[0];
 		var drawingHeight = events[eventID].drawing_dimensions[1];
 		scramblers[eventID].drawScramble(drawingTD, state, drawingWidth, drawingHeight);
@@ -597,30 +611,28 @@ scramble = (function() {
 
 		for (var i = 0; i < scramblesInThisRow; i++) {
 
-			var trID = nextID();
+			var scrambleID = nextID();
 		
-			createNewElement(scrambleTR, "td", "number number_" + eventID, trID + "_number", "" + (num + i) + ".");
-			createNewElement(scrambleTR, "td", "scramble scramble_" + eventID, trID + "_scramble",  "[Space for Scramble #" + num + "]");
-			createNewElement(scrambleTR, "td", "drawing drawing_" + eventID, trID + "_drawing");
+			createNewElement(scrambleTR, "td", "number number_" + eventID, scrambleID + "_number", "" + (num + i) + ".");
+			createNewElement(scrambleTR, "td", "scramble scramble_" + eventID, scrambleID + "_scramble",  "[Space for Scramble #" + num + "]");
+			createNewElement(scrambleTR, "td", "drawing drawing_" + eventID, scrambleID + "_drawing");
 
 			if (usingWebWorkers) {
 
-				scramblesStillAwaiting.push(trID);
-
-				console.log(events[eventID]);
+				scramblesStillAwaiting.push(scrambleID);
 
 				events[eventID].worker.postMessage({
 					action: "get_random_scramble",
 					event_id: eventID,
 					return_data: {
-						trID: trID,
+						scramble_id: scrambleID,
 						num: num
 					}
 				});
 			}
 			else {
 				var scramble = scrambler.getRandomScramble();
-				insertScramble(trID, eventID, num, scramble.scramble_string, scramble.state);
+				insertScramble(scrambleID, eventID, num, scramble.scramble_string, scramble.state);
 			}
 		}
 
@@ -951,25 +963,26 @@ scramble = (function() {
 			console.log("Key pressed: " + e.keyCode);
 		}
 
-	 	switch (e.keyCode) {
+		if (e.ctrlKey) {
+		 	switch (e.keyCode) {
 
-			case 85: // "U" for ">U<pdates".
-				showElement(document.getElementById("updates"));
-				return true;
-				break;
+				case 85: // "U" for ">U<pdates".
+					showElement(document.getElementById("updates"));
+					return true;
+					break;
 
-			case 98: // "B" for ">B<enchmark". (And "A>b<out?)
-				showElement(document.getElementById("about"));
-				return true;
-				break;
+				case 66: // "B" for ">B<enchmark". (And "A>b<out?)
+					showElement(document.getElementById("about"));
+					return true;
+					break;
 
-			case 107: // "K" for "Show >K<eycodes"
-				printKeyCodes = true;
-				break;
+				case 75: // "K" for "Show >K<eycodes"
+					printKeyCodes = true;
+					break;
+			}
 		}
 	}
 
-	document.onkeypress = keyDownHandler;
 	document.onkeydown = keyDownHandler;
 
 	return {
