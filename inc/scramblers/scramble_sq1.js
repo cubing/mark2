@@ -876,7 +876,7 @@ scramblers["sq1"] = (function() {
 
     return {
       state: randomState,
-      scramble: scrambleString
+      scramble_string: scrambleString
     };
   }
 
@@ -1174,7 +1174,7 @@ function drawSq(stickers, middleIsSolved, shapes, parentElement, width, height, 
     /* Other methods */
     getRandomPosition: square1SolverGetRandomPosition,
     solve: square1SolverSolve,
-    senerate: square1SolverGenerate,
+    generate: square1SolverGenerate,
   };
 
 })();
