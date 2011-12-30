@@ -12,6 +12,12 @@ if (typeof window.applicationCache !== "undefined") {
 	}, false);
 }
 
+if (typeof console === "undefined") {
+	console = {};
+}
+if (typeof console.log === "undefined") {
+	console.log = function() {};
+}
 
 // Implementation of bind() for Safari.
 if (!Function.prototype.bind) {
@@ -139,7 +145,7 @@ scramble = (function() {
 	var handleWorkerMessage = function(e) {
 		switch(e.data.action) {
 			case "initialized":
-				log("Web worker initialized successfully: " + e.data.info);
+				console.log("Web worker initialized successfully: " + e.data.info);
 			break;
 
 			case "get_random_scramble_starting":
@@ -151,11 +157,11 @@ scramble = (function() {
 			break;
 
 			case "console_log":
-				log("[Web worker log]", e.data.data);
+				console.log("[Web worker log]", e.data.data);
 			break;
 
 			case "console_error":
-				log("[Web worker error]", e.data.data);
+				console.log("[Web worker error]", e.data.data);
 			break;
 
 			case "message_exception":
@@ -163,7 +169,7 @@ scramble = (function() {
 			break;
 
 			case "initialize_benchmark_response":
-				log("Benchmark initialized for worker " + e.data.worker_id + ".");
+				console.log("Benchmark initialized for worker " + e.data.worker_id + ".");
 			break;
 
 			case "get_random_scramble_initializing_scrambler":
@@ -175,7 +181,7 @@ scramble = (function() {
 			break;
 
 			case "get_random_scramble_response":
-				//log("Received a " + events[e.data.event_id].name +	 " scramble: " + e.data.scramble.scramble_string);
+				//console.log("Received a " + events[e.data.event_id].name +	 " scramble: " + e.data.scramble.scramble_string);
 				insertScramble(
 					e.data.return_data.scramble_id,
 					e.data.event_id,
@@ -186,8 +192,8 @@ scramble = (function() {
 			break;
 
 			case "echo_response":
-				log("Echo response:");
-				log(e.data);
+				console.log("Echo response:");
+				console.log(e.data);
 			break;
 
 			default:
@@ -201,7 +207,7 @@ scramble = (function() {
 		// From http://www.html5rocks.com/en/tutorials/workers/basics/#toc-inlineworkers
 
 		if (typeof Worker === "undefined") {
-			log("No web worker support. :-(");
+			console.log("No web worker support. :-(");
 			return;
 		}
 
@@ -227,7 +233,7 @@ scramble = (function() {
 
 		}
 		catch (e) {
-			log("Starting the web workers failed; Mark 2 will fall back to continuations. (This happens with Chrome when run from file://)", e);
+			console.log("Starting the web workers failed; Mark 2 will fall back to continuations. (This happens with Chrome when run from file://)", e);
 		}
 
 	}
@@ -472,10 +478,10 @@ scramble = (function() {
 				entropy.push(cryptoEntropy[i]);
 			}
 
-			log("Successfully used crypto for additional randomness.");	
+			console.log("Successfully used crypto for additional randomness.");	
 		}
 		catch (e) {
-			log("Unable to use crpyto for additional randomness (that's okay, though).", e);
+			console.log("Unable to use crpyto for additional randomness (that's okay, though).", e);
 		}
 
 		// We use the date to get the main entropy.
@@ -485,13 +491,13 @@ scramble = (function() {
 		// Make sure we don't accidentally use deterministic initialization.
 		if (isFinite(seed)) {
 			randomSource = new MersenneTwisterObject(seed, entropy);
-			log("Seeded Mersenne Twister.");
+			console.log("Seeded Mersenne Twister.");
 			Math.random = undefined; // So we won't use it by accident.
 
 		}
 		else {
 			randomSource = Math;
-  			log("WARNING: Seeding Mersenne Twister did not work. Falling back to Math.random().");
+  			console.log("WARNING: Seeding Mersenne Twister did not work. Falling back to Math.random().");
   		}
 	}
 
@@ -808,7 +814,7 @@ scramble = (function() {
 
 	var addUpdateGeneral = function(str) {
 
-		log(str);
+		console.log(str);
 		var updatesGeneralDiv = document.getElementById("updates_general");
 
 		createNewElement(updatesGeneralDiv, "li", null, null, str);
@@ -823,7 +829,7 @@ scramble = (function() {
 
 	var addUpdateSpecific = function(str) {
 
-		log(str);
+		console.log(str);
 		var updatesSpecificDiv = document.getElementById("updates_specific");
 
 		createNewElement(updatesSpecificDiv, "li", null, null, str);
@@ -891,7 +897,7 @@ scramble = (function() {
 			workers[i].terminate();
 		}
 		workers = {};
-		log("Terminated all web workers.")
+		console.log("Terminated all web workers.")
 	}
 
 	var restartWebWorkers = function() {
@@ -954,7 +960,7 @@ scramble = (function() {
 	var keyDownHandler = function(e) {
 
 		if (printKeyCodes) {
-			log("Key pressed: " + e.keyCode);
+			console.log("Key pressed: " + e.keyCode);
 		}
 
 		if (e.ctrlKey) {
