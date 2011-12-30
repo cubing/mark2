@@ -528,14 +528,14 @@ scramble = (function() {
 	}
 
 	var addClass = function(el, className) {
-		if (typeof scrambleTD.classList !== "undefined") {
+		if (typeof el.classList !== "undefined") {
 			el.classList.add(className);
 		}
 	}
 
 	var removeClass = function(el, className) {
-		if (typeof scrambleTD.classList !== "undefined") {
-			el.classList.add(className);
+		if (typeof el.classList !== "undefined") {
+			el.classList.remove(className);
 		}
 		
 	}
