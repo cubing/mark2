@@ -1,6 +1,3 @@
-//TODO: color animation
-// Rename trID variable to scramle_ID
-
 
 // Offline Caching
 window.applicationCache.addEventListener('updateready', function() {
@@ -149,7 +146,7 @@ scramble = (function() {
 
 			case "get_random_scramble_starting":
 				startScramble(
-					e.data.return_data.trID,
+					e.data.return_data.scramble_id,
 					e.data.event_id,
 					e.data.return_data.num
 				);
@@ -173,7 +170,7 @@ scramble = (function() {
 
 			case "get_random_scramble_initializing_scrambler":
 				iniScramblerNotice(
-					e.data.return_data.trID,
+					e.data.return_data.scramble_id,
 					e.data.event_id,
 					e.data.return_data.num
 				);
@@ -182,7 +179,7 @@ scramble = (function() {
 			case "get_random_scramble_response":
 				//console.log("Received a " + events[e.data.event_id].name +	 " scramble: " + e.data.scramble.scramble_string);
 				insertScramble(
-					e.data.return_data.trID,
+					e.data.return_data.scramble_id,
 					e.data.event_id,
 					e.data.return_data.num,
 					e.data.scramble.scramble_string,
@@ -395,8 +392,8 @@ scramble = (function() {
 		updateHash();
 	}
 
-	var removeRound = function(eventID, trID) {
-		document.getElementById("events_tbody").removeChild(document.getElementById(trID));
+	var removeRound = function(eventID, scrambleID) {
+		document.getElementById("events_tbody").removeChild(document.getElementById(scrambleID));
 		document.getElementById("amount_value_" + eventID).value = numCurrentRounds(eventID);
 
 		updateHash();
@@ -532,17 +529,17 @@ scramble = (function() {
 		return "auto_id_" + (currentID++);
 	}
 
-	var startScramble = function(trID, eventID, num) {
+	var startScramble = function(scrambleID, eventID, num) {
 					
-		var scrambleTD = document.getElementById(trID + "_scramble");
+		var scrambleTD = document.getElementById(scrambleID + "_scramble");
 		scrambleTD.innerHTML = "Generating scramble #" + num + "...";
 		scrambleTD.classList.remove("loading_scrambler");
 		scrambleTD.classList.add("loading_scramble");
 	}
 
-	var iniScramblerNotice = function(trID, eventID, num) {
+	var iniScramblerNotice = function(scrambleID, eventID, num) {
 					
-		var scrambleTD = document.getElementById(trID + "_scramble");
+		var scrambleTD = document.getElementById(scrambleID + "_scramble");
 		scrambleTD.innerHTML = "Initializing scrambler...";
 		scrambleTD.classList.add("loading_scrambler");
 	}
@@ -559,11 +556,11 @@ scramble = (function() {
 		return "<a href=\"http://alg.garron.us/?ini=" + encodeURIComponent(scramble) + "&cube=" + puzzleID + "&name=" + encodeURIComponent(events[eventID].name + " Scramble") + "&notation=WCA\" target=\"_blank\" class=\"scramble_link\">" + scramble + "</a>";
 	}
 
-	var insertScramble = function(trID, eventID, num, scramble, state) {
+	var insertScramble = function(scrambleID, eventID, num, scramble, state) {
 
 		if (usingWebWorkers) {
 
-			var index = scramblesStillAwaiting.indexOf(trID);
+			var index = scramblesStillAwaiting.indexOf(scrambleID);
 			scramblesStillAwaiting.splice(index, 1)
 
 			var stillRemainingString = " " + scramblesStillAwaiting.length + " scramble" + (scramblesStillAwaiting.length === 1 ? "" : "s") + " still remaining overall."
@@ -578,12 +575,12 @@ scramble = (function() {
 			}
 		}
 					
-		var scrambleTD = document.getElementById(trID + "_scramble");
+		var scrambleTD = document.getElementById(scrambleID + "_scramble");
 		scrambleTD.classList.remove("loading_scramble");
 		var scrambleHTML = scrambleLink(eventID, scramble);
 		scrambleTD.innerHTML = scrambleHTML;
 
-		var drawingTD = document.getElementById(trID + "_drawing");
+		var drawingTD = document.getElementById(scrambleID + "_drawing");
 		var drawingWidth = events[eventID].drawing_dimensions[0];
 		var drawingHeight = events[eventID].drawing_dimensions[1];
 		scramblers[eventID].drawScramble(drawingTD, state, drawingWidth, drawingHeight);
@@ -597,28 +594,28 @@ scramble = (function() {
 
 		for (var i = 0; i < scramblesInThisRow; i++) {
 
-			var trID = nextID();
+			var scrambleID = nextID();
 		
-			createNewElement(scrambleTR, "td", "number number_" + eventID, trID + "_number", "" + (num + i) + ".");
-			createNewElement(scrambleTR, "td", "scramble scramble_" + eventID, trID + "_scramble",  "[Space for Scramble #" + num + "]");
-			createNewElement(scrambleTR, "td", "drawing drawing_" + eventID, trID + "_drawing");
+			createNewElement(scrambleTR, "td", "number number_" + eventID, scrambleID + "_number", "" + (num + i) + ".");
+			createNewElement(scrambleTR, "td", "scramble scramble_" + eventID, scrambleID + "_scramble",  "[Space for Scramble #" + num + "]");
+			createNewElement(scrambleTR, "td", "drawing drawing_" + eventID, scrambleID + "_drawing");
 
 			if (usingWebWorkers) {
 
-				scramblesStillAwaiting.push(trID);
+				scramblesStillAwaiting.push(scrambleID);
 
 				events[eventID].worker.postMessage({
 					action: "get_random_scramble",
 					event_id: eventID,
 					return_data: {
-						trID: trID,
+						scramble_id: scrambleID,
 						num: num
 					}
 				});
 			}
 			else {
 				var scramble = scrambler.getRandomScramble();
-				insertScramble(trID, eventID, num, scramble.scramble_string, scramble.state);
+				insertScramble(scrambleID, eventID, num, scramble.scramble_string, scramble.state);
 			}
 		}
 
