@@ -229,8 +229,7 @@ scramble = (function() {
 
 		}
 		catch (e) {
-			console.log("Starting the web workers failed. This happens with Chrome when run from file://");
-			console.log("This was the web worker error:", e);
+			console.log("Starting the web workers failed; Mark 2 will fall back to continuations. (This happens with Chrome when run from file://)", e);
 		}
 
 	}
@@ -488,7 +487,7 @@ scramble = (function() {
 		// Make sure we don't accidentally use deterministic initialization.
 		if (isFinite(seed)) {
 			randomSource = new MersenneTwisterObject(seed, entropy);
-			console.log("scramble.js: Seeded Mersenne Twister.");
+			console.log("Seeded Mersenne Twister.");
 			Math.random = undefined; // So we won't use it by accident.
 
 		}
@@ -946,25 +945,26 @@ scramble = (function() {
 			console.log("Key pressed: " + e.keyCode);
 		}
 
-	 	switch (e.keyCode) {
+		if (e.ctrlKey) {
+		 	switch (e.keyCode) {
 
-			case 85: // "U" for ">U<pdates".
-				showElement(document.getElementById("updates"));
-				return true;
-				break;
+				case 85: // "U" for ">U<pdates".
+					showElement(document.getElementById("updates"));
+					return true;
+					break;
 
-			case 98: // "B" for ">B<enchmark". (And "A>b<out?)
-				showElement(document.getElementById("about"));
-				return true;
-				break;
+				case 66: // "B" for ">B<enchmark". (And "A>b<out?)
+					showElement(document.getElementById("about"));
+					return true;
+					break;
 
-			case 107: // "K" for "Show >K<eycodes"
-				printKeyCodes = true;
-				break;
+				case 75: // "K" for "Show >K<eycodes"
+					printKeyCodes = true;
+					break;
+			}
 		}
 	}
 
-	document.onkeypress = keyDownHandler;
 	document.onkeydown = keyDownHandler;
 
 	return {
