@@ -144,6 +144,8 @@ scramble = (function() {
 		initializeData();
 		initializeEventIDSelect();
 		initializeWorkers();
+
+		window.onhashchange = initializeData;
 	};
 
 	var handleWorkerMessage = function(e) {
