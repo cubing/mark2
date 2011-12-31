@@ -59,28 +59,28 @@ scramble = (function() {
 
 	var events = {
 		// Official WCA events as of November 24, 2011
-		"333": {name: "Rubik's Cube", scrambler_file: "scramble_333.js", default_round: ["avg", 5], drawing_dimensions: [200, 120], scrambles_per_row: 1},
-		"444": {name: "4x4 Cube", scrambler_file: "scramble_NNN.js", default_round: ["avg", 5], drawing_dimensions: [200, 120], scrambles_per_row: 1},
-		"555": {name: "5x5 Cube", scrambler_file: "scramble_NNN.js", default_round: ["avg", 5], drawing_dimensions: [200, 120], scrambles_per_row: 1},
-		"222": {name: "2x2 Cube", scrambler_file: "scramble_222.js", default_round: ["avg", 5], drawing_dimensions: [200, 120], scrambles_per_row: 1},
-		"333bf": {name: "3x3 blindfolded", scrambler_file: "scramble_333.js", default_round: ["best", 3], drawing_dimensions: [200, 120], scrambles_per_row: 1},
-		"333oh": {name: "3x3 one-handed", scrambler_file: "scramble_333.js", default_round: ["avg", 5], drawing_dimensions: [200, 120], scrambles_per_row: 1},
-		"333fm": {name: "3x3 fewest moves", scrambler_file: "scramble_333.js", default_round: ["best", 2], drawing_dimensions: [200, 120], scrambles_per_row: 1}, //TODO: FCF support
-		"333ft": {name: "3x3 with feet", scrambler_file: "scramble_333.js", default_round: ["avg", 5], drawing_dimensions: [200, 120], scrambles_per_row: 1},
-		"minx": {name: "Megaminx", scrambler_file: "scramble_minx.js", default_round: ["avg", 5], drawing_dimensions: [200, 120], scrambles_per_row: 1},
-		"pyram": {name: "Pyraminx", scrambler_file: "scramble_pyram.js", default_round: ["avg", 5], drawing_dimensions: [200, 120], scrambles_per_row: 1},
-		"sq1": {name: "Square-1", scrambler_file: "scramble_sq1.js", default_round: ["avg", 5], drawing_dimensions: [200, 120], scrambles_per_row: 1},
-		"clock": {name: "Rubik's Clock", scrambler_file: "scramble_clock.js", default_round: ["avg", 5], drawing_dimensions: [200, 120], scrambles_per_row: 1},
-		"666": {name: "6x6 Cube", scrambler_file: "scramble_NNN.js", default_round: ["mean", 3], drawing_dimensions: [200, 150], scrambles_per_row: 1},
-		"777": {name: "7x7 Cube", scrambler_file: "scramble_NNN.js", default_round: ["mean", 3], drawing_dimensions: [200, 150], scrambles_per_row: 1},
-		//"magic": {name: "Rubik's Magic", scrambler_file: "scramble_magic.js", default_round: ["avg", 5]},
-		//"mmagic": {name: "Master Magic", scrambler_file: "scramble_mmagic.js", default_round: ["avg", 5]},
-		"444bf": {name: "4x4 blindfolded", scrambler_file: "scramble_NNN.js", default_round: ["best", 3] drawing_dimensions: [200, 120], scrambles_per_row: 1},
-		"555bf": {name: "5x5 blindfolded", scrambler_file: "scramble_NNN.js", default_round: ["best", 3], drawing_dimensions: [200, 120], scrambles_per_row: 1},
-		"333mbf": {name: "3x3 multi blind", scrambler_file: "scramble_333.js", default_round: ["mbf", 20], drawing_dimensions: [80, 60], scrambles_per_row: 2}, //TODO: 3x3x3 with smaller images?
+		"333":    {name: "Rubik's Cube",     scrambler_file: "scramble_333.js",   default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
+		"444":    {name: "4x4 Cube",         scrambler_file: "scramble_NNN.js",   default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
+		"555":    {name: "5x5 Cube",         scrambler_file: "scramble_NNN.js",   default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
+		"222":    {name: "2x2 Cube",         scrambler_file: "scramble_222.js",   default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
+		"333bf":  {name: "3x3 blindfolded",  scrambler_file: "scramble_333.js",   default_round: {type: "best", num_scrambles: 3 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
+		"333oh":  {name: "3x3 one-handed",   scrambler_file: "scramble_333.js",   default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
+		"333fm":  {name: "3x3 fewest moves", scrambler_file: "scramble_333.js",   default_round: {type: "best", num_scrambles: 2 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1}, //TODO: FCF support
+		"333ft":  {name: "3x3 with feet",    scrambler_file: "scramble_333.js",   default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
+		"minx":   {name: "Megaminx",         scrambler_file: "scramble_minx.js",  default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
+		"pyram":  {name: "Pyraminx",         scrambler_file: "scramble_pyram.js", default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
+		"sq1":    {name: "Square-1",         scrambler_file: "scramble_sq1.js",   default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
+		"clock":  {name: "Rubik's Clock",    scrambler_file: "scramble_clock.js", default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
+		"666":    {name: "6x6 Cube",         scrambler_file: "scramble_NNN.js",   default_round: {type: "mean", num_scrambles: 3 }, drawing_dimensions: {w: 200, h: 150}, scrambles_per_row: 1},
+		"777":    {name: "7x7 Cube",         scrambler_file: "scramble_NNN.js",   default_round: {type: "mean", num_scrambles: 3 }, drawing_dimensions: {w: 200, h: 150}, scrambles_per_row: 1},
+		//"magic" 
+		//"mmagic"
+		"444bf":  {name: "4x4 blindfolded",  scrambler_file: "scramble_NNN.js",   default_round: {type: "best", num_scrambles: 3 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
+		"555bf":  {name: "5x5 blindfolded",  scrambler_file: "scramble_NNN.js",   default_round: {type: "best", num_scrambles: 3 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
+		"333mbf": {name: "3x3 multi blind",  scrambler_file: "scramble_333.js",   default_round: {type: "mbf",  num_scrambles: 20}, drawing_dimensions: {w: 80,  h: 60 }, scrambles_per_row: 2}, //TODO: 3x3x3 with smaller images?
 		
 		// Unofficial events
-		//"skewb": {name: "Skewb", scrambler_file: "scramble_skewb.js", default_round: ["avg", 5]},
+		//"skewb"
 	}
 
 	// Javascript object don't retain key order in all browsers.
@@ -114,7 +114,7 @@ scramble = (function() {
 	];
 
 	var defaultRounds = [
-		["333", "Round 1", events["333"].default_round[1]]
+		["333", "Round 1", 1, events["333"].default_round.num_scrambles]
 	];
 
 	// alg.garron.us puzzle ID mapping.
@@ -427,7 +427,7 @@ scramble = (function() {
 
 		var numSolves = numSolvesOpt;
 		if (numSolvesOpt === undefined) {
-			numSolves = events[eventID].default_round[1];
+			numSolves = events[eventID].default_round.num_scrambles;
 		}
 
 		var eventTBody = document.getElementById("events_tbody");
@@ -602,9 +602,9 @@ scramble = (function() {
 		scrambleTD.innerHTML = scrambleHTML;
 
 		var drawingTD = document.getElementById(scrambleID + "_drawing");
-		drawingTD.width = events[eventID].drawing_dimensions[0]; // Sadly, this is more robust than setProperty(...).
-		var drawingWidth = events[eventID].drawing_dimensions[0];
-		var drawingHeight = events[eventID].drawing_dimensions[1];
+		drawingTD.width = events[eventID].drawing_dimensions.w; // Sadly, this is more robust than setProperty(...).
+		var drawingWidth = events[eventID].drawing_dimensions.w;
+		var drawingHeight = events[eventID].drawing_dimensions.h;
 		scramblers[eventID].drawScramble(drawingTD, state, drawingWidth, drawingHeight);
 	}
 
