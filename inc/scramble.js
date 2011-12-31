@@ -50,7 +50,7 @@ if (typeof console.log === "undefined") {
 
 scramble = (function() {
 
-	var version = "December 30, 2011";
+	var version = "December 31, 2011";
 
 	var eventsPerRow = 5;
 	var defaultNumGroups = 1;
@@ -115,6 +115,21 @@ scramble = (function() {
 
 	var defaultRounds = [
 		["333", "Round 1", 1, events["333"].default_round.num_scrambles]
+	];
+
+	var defaultBenchmarkRounds = [
+		["222", "Round 2x2x2", 5],
+		["333", "Round 3x3x3", 5],
+		["444", "Round 4x4x4", 5],
+		["555", "Round 5x5x5", 5],
+		["666", "Round 6x6x6", 3],
+		["777", "Round 7x7x7", 3],
+		["clock", "Round Clock", 5],
+		["pyram", "Round Pyraminx", 5],
+		["minx", "Round Megaminx", 5],
+		["sq1", "Round Square-1", 5],
+		["333mbf", "Round 3x3x3 Multi Blind",  20],
+		["333", "Round 3x3x3 Again",  5]
 	];
 
 	// alg.garron.us puzzle ID mapping.
@@ -565,8 +580,7 @@ scramble = (function() {
 		addClass(scrambleTD, "loading_scrambler");
 	}
 
-	// Specific to alg.garron.us right now.
-	var scrambleLink = function(eventID, scramble) {
+	var algGarronUSLink = function(eventID, scramble) {
 
 		var puzzleID = eventIDToAlgPuzzleID[eventID];
 
@@ -575,6 +589,11 @@ scramble = (function() {
 		}
 
 		return "<a href=\"http://alg.garron.us/?ini=" + encodeURIComponent(scramble) + "&cube=" + puzzleID + "&name=" + encodeURIComponent(events[eventID].name + " Scramble") + "&notation=WCA\" target=\"_blank\" class=\"scramble_link\">" + scramble + "</a>";
+	}
+
+	var scrambleLink = function(eventID, scramble) {
+		// Specific to alg.garron.us right now.
+		return algGarronUSLink(eventID, scramble);
 	}
 
 	var insertScramble = function(scrambleID, eventID, num, scramble, state) {
@@ -870,12 +889,8 @@ scramble = (function() {
       return out;
     };
 
-	var go = function() {
-
-		resetUpdatesGeneral();
-		hideInterface();
-
-		var competitionName = document.getElementById('competitionName').value;
+    var getCompetitionNameAndSetPageTitle = function() {
+    	var competitionName = document.getElementById('competitionName').value;
 
 		if (competitionName === "") {
 			document.title = "Scrambles from Mark 2";
@@ -884,6 +899,16 @@ scramble = (function() {
 		else {
 			document.title = "Scrambles for " + competitionName;
 		}
+
+		return competitionName;
+    }
+
+	var go = function() {
+
+		resetUpdatesGeneral();
+		hideInterface();
+
+		var competitionName = getCompetitionNameAndSetPageTitle();
 
 		var pages = getPages();
 
@@ -923,8 +948,8 @@ scramble = (function() {
 			"- Benchmark version: 6 (December 18, 2011)";
 
 		hideInterface();
-		document.getElementById("benchmark").style.display="block";
-		document.getElementById("updates").style.display="none";
+		showElement(document.getElementById("benchmark"));
+		hideElement(document.getElementById("updates"));
 
 		document.title = "Mark 2 Benchmark v6";
 
@@ -939,20 +964,7 @@ scramble = (function() {
 			//document.getElementById("benchmark_details").innerHTML = "Benchmark Results:\n\nDone!\n\n" + benchmarkString;
 		};
 
-		var actualRounds = [
-			["222", "Round 2x2x2", 5],
-			["333", "Round 3x3x3", 5],
-			["444", "Round 4x4x4", 5],
-			["555", "Round 5x5x5", 5],
-			["666", "Round 6x6x6", 3],
-			["777", "Round 7x7x7", 3],
-			["clock", "Round Clock", 5],
-			["pyram", "Round Pyraminx", 5],
-			["minx", "Round Megaminx", 5],
-			["sq1", "Round Square-1", 5],
-			["333mbf", "Round 3x3x3 Multi Blind",  20],
-			["333", "Round 3x3x3 Again",  5]
-		];
+		var actualRounds = defaultBenchmarkRounds;
 		if (typeof rounds !== "undefined") {
 			actualRounds = rounds;
 		}
