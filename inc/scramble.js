@@ -117,21 +117,6 @@ scramble = (function() {
 		["333", "Round 1", 1, events["333"].default_round.num_scrambles]
 	];
 
-	var defaultBenchmarkRounds = [
-		["222", "Round 2x2x2", 5],
-		["333", "Round 3x3x3", 5],
-		["444", "Round 4x4x4", 5],
-		["555", "Round 5x5x5", 5],
-		["666", "Round 6x6x6", 3],
-		["777", "Round 7x7x7", 3],
-		["clock", "Round Clock", 5],
-		["pyram", "Round Pyraminx", 5],
-		["minx", "Round Megaminx", 5],
-		["sq1", "Round Square-1", 5],
-		["333mbf", "Round 3x3x3 Multi Blind",  20],
-		["333", "Round 3x3x3 Again",  5]
-	];
-
 	// alg.garron.us puzzle ID mapping.
 	eventIDToAlgPuzzleID = {
 		"333": "3x3x3",
@@ -191,10 +176,6 @@ scramble = (function() {
 
 			case "message_exception":
 				console.error("[Web worker exception]", e.data.data);
-			break;
-
-			case "initialize_benchmark_response":
-				console.log("Benchmark initialized for worker " + e.data.worker_id + ".");
 			break;
 
 			case "get_random_scramble_initializing_scrambler":
@@ -765,12 +746,12 @@ scramble = (function() {
 		add_page(nextContinuation, competitionName, rounds[0][0], rounds[0][1], rounds[0][2]);
 	}
 
-	var hideElement = function(el) {
-		el.style.display = "none";
-	}
-
 	var showElement = function(el) {
 		el.style.display = "block";
+	}
+
+	var hideElement = function(el) {
+		el.style.display = "none";
 	}
 
 	var showUpdates = function() {
@@ -789,13 +770,6 @@ scramble = (function() {
 		hideElement(document.getElementById("updates_specific"));
 	}
 
-	var hideInterface = function() {
-		var interfaceElements = document.getElementsByClassName("interface");
-		for (var i=0; i < interfaceElements.length; i++) {
-			hideElement(interfaceElements[i]);
-		}
-	}
-
 	var showInterface = function() {
 		var interfaceElements = document.getElementsByClassName("interface");
 		for (var i=0; i < interfaceElements.length; i++) {
@@ -803,8 +777,12 @@ scramble = (function() {
 		}
 	}
 
-	var benchmarkMode = false;
-	var benchmarkString = "";
+	var hideInterface = function() {
+		var interfaceElements = document.getElementsByClassName("interface");
+		for (var i=0; i < interfaceElements.length; i++) {
+			hideElement(interfaceElements[i]);
+		}
+	}
 
 	var currentTime = function() {
 		return (new Date()).getTime();
@@ -843,12 +821,6 @@ scramble = (function() {
 
 		createNewElement(updatesGeneralDiv, "li", null, null, str);
 
-		if (benchmarkMode) {
-			var cur = currentTime();
-			benchmarkString = "- General [" + (cur - updatesGeneralLastTime) + "ms, " + (cur - updatesGeneralStartTime) + "ms] " + str + "\n" + benchmarkString;
-			updatesGeneralLastTime = cur;
-			document.getElementById("benchmark_details").innerHTML = "Benchmark In Progress:\n\n" + benchmarkString;
-		}
 	}
 
 	var addUpdateSpecific = function(str) {
@@ -858,12 +830,6 @@ scramble = (function() {
 
 		createNewElement(updatesSpecificDiv, "li", null, null, str);
 
-		if (benchmarkMode) {
-			var cur = currentTime();
-			benchmarkString = "- Detail [" + (cur - updatesSpecificLastTime) + "ms, " + (cur - updatesSpecificStartTime) + "ms, " + (cur - updatesGeneralStartTime) + "ms] " + str + "\n" + benchmarkString;
-			updatesSpecificLastTime = cur;
-			document.getElementById("benchmark_details").innerHTML = "Benchmark In Progress:\n\n" + benchmarkString;
-		}
 	}
 
     // Converts 1, 2, ... to A, B, ..., Z, AA, AB, ..., ZZ, AAA, AAB, ...
@@ -935,43 +901,6 @@ scramble = (function() {
 		initializeWorkers();
 	}
 
-	var benchmark = function(rounds) {
-
-		restartWebWorkers();
-
-		resetUpdatesGeneral();
-		resetUpdatesSpecific();
-		benchmarkMode = true;
-
-		benchmarkString = "\nBenchmark Settings:\n" + 
-			"- Web Workers: " + (usingWebWorkers? "yes" : "no") + "\n" +
-			"- Benchmark version: 6 (December 18, 2011)";
-
-		hideInterface();
-		showElement(document.getElementById("benchmark"));
-		hideElement(document.getElementById("updates"));
-
-		document.title = "Mark 2 Benchmark v6";
-
-		// Give everyone the same benchmark.
-		randomSource = new MersenneTwisterObject(333);
-
-		for (i in workers) {
-			workers[i].postMessage({action: "initialize_benchmark", random_seed: Math.floor(randomSource.random()*0xffffffff)});
-		}
-
-		var callback = function (){
-			//document.getElementById("benchmark_details").innerHTML = "Benchmark Results:\n\nDone!\n\n" + benchmarkString;
-		};
-
-		var actualRounds = defaultBenchmarkRounds;
-		if (typeof rounds !== "undefined") {
-			actualRounds = rounds;
-		}
-
-		generate_scrambles(callback, "Benchmark", actualRounds);
-	}
-
 	var printKeyCodes = false;
 
 	var keyDownHandler = function(e) {
@@ -1009,7 +938,6 @@ scramble = (function() {
 		generate_scrambles: generate_scrambles,
 		go: go,
 		addRound: addRound,
-		benchmark: benchmark,
 		terminateWebWorkers: terminateWebWorkers,
 		removeRound: removeRound,
 		changeNumRounds: changeNumRounds,
