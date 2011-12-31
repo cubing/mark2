@@ -101,13 +101,6 @@ var web_worker_manager = (function() {
 		});
 	}
 
-	var initializeBenchmark = function(randomSeed) {
-
-		randomSource.init(randomSeed);
-
-		postMessage({action: "initialize_benchmark_response", worker_id: workerID});
-	}
-
 	onmessage = function(e) {
 		try {
 			switch(e.data.action) {
@@ -121,10 +114,6 @@ var web_worker_manager = (function() {
 
 				case "echo":
 					postMessage({action: "echo_response", info: e.data});
-				break;
-
-				case "initialize_benchmark":
-					initializeBenchmark(e.data.random_seed);
 				break;
 
 				default:
