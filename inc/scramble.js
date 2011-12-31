@@ -75,7 +75,7 @@ scramble = (function() {
 		"777": {name: "7x7 Cube", scrambler_file: "scramble_NNN.js", default_round: ["mean", 3], drawing_dimensions: [200, 150], scrambles_per_row: 1},
 		//"magic": {name: "Rubik's Magic", scrambler_file: "scramble_magic.js", default_round: ["avg", 5]},
 		//"mmagic": {name: "Master Magic", scrambler_file: "scramble_mmagic.js", default_round: ["avg", 5]},
-		"444bf": {name: "4x4 blindfolded", scrambler_file: "scramble_NNN.js", default_round: ["best", 3], default_num_rounds: 0, drawing_dimensions: [200, 120], scrambles_per_row: 1},
+		"444bf": {name: "4x4 blindfolded", scrambler_file: "scramble_NNN.js", default_round: ["best", 3] drawing_dimensions: [200, 120], scrambles_per_row: 1},
 		"555bf": {name: "5x5 blindfolded", scrambler_file: "scramble_NNN.js", default_round: ["best", 3], drawing_dimensions: [200, 120], scrambles_per_row: 1},
 		"333mbf": {name: "3x3 multi blind", scrambler_file: "scramble_333.js", default_round: ["mbf", 20], drawing_dimensions: [80, 60], scrambles_per_row: 2}, //TODO: 3x3x3 with smaller images?
 		
