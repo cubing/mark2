@@ -71,14 +71,14 @@ scramble = (function() {
 
 	var events = {
 		// Official WCA events as of November 24, 2011
-		"333":    {name: "Rubik's Cube",     scrambler_file: "scramble_333.js",   default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
-		"444":    {name: "4x4 Cube",         scrambler_file: "scramble_NNN.js",   default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
-		"555":    {name: "5x5 Cube",         scrambler_file: "scramble_NNN.js",   default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
-		"222":    {name: "2x2 Cube",         scrambler_file: "scramble_222.js",   default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
-		"333bf":  {name: "3x3 blindfolded",  scrambler_file: "scramble_333.js",   default_round: {type: "best", num_scrambles: 3 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
-		"333oh":  {name: "3x3 one-handed",   scrambler_file: "scramble_333.js",   default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
-		"333fm":  {name: "3x3 fewest moves", scrambler_file: "scramble_333.js",   default_round: {type: "best", num_scrambles: 2 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1}, //TODO: FCF support
-		"333ft":  {name: "3x3 with feet",    scrambler_file: "scramble_333.js",   default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
+		"333":    {name: "Rubik's Cube",     scrambler_file: "scramble_333.js",   default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 160, h: 120}, scrambles_per_row: 1},
+		"444":    {name: "4x4 Cube",         scrambler_file: "scramble_NNN.js",   default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 160, h: 120}, scrambles_per_row: 1},
+		"555":    {name: "5x5 Cube",         scrambler_file: "scramble_NNN.js",   default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 160, h: 120}, scrambles_per_row: 1},
+		"222":    {name: "2x2 Cube",         scrambler_file: "scramble_222.js",   default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 160, h: 120}, scrambles_per_row: 1},
+		"333bf":  {name: "3x3 blindfolded",  scrambler_file: "scramble_333.js",   default_round: {type: "best", num_scrambles: 3 }, drawing_dimensions: {w: 160, h: 120}, scrambles_per_row: 1},
+		"333oh":  {name: "3x3 one-handed",   scrambler_file: "scramble_333.js",   default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 160, h: 120}, scrambles_per_row: 1},
+		"333fm":  {name: "3x3 fewest moves", scrambler_file: "scramble_333.js",   default_round: {type: "best", num_scrambles: 2 }, drawing_dimensions: {w: 160, h: 120}, scrambles_per_row: 1}, //TODO: FCF support
+		"333ft":  {name: "3x3 with feet",    scrambler_file: "scramble_333.js",   default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 160, h: 120}, scrambles_per_row: 1},
 		"minx":   {name: "Megaminx",         scrambler_file: "scramble_minx.js",  default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
 		"pyram":  {name: "Pyraminx",         scrambler_file: "scramble_pyram.js", default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
 		"sq1":    {name: "Square-1",         scrambler_file: "scramble_sq1.js",   default_round: {type: "avg",  num_scrambles: 5 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
@@ -87,8 +87,8 @@ scramble = (function() {
 		"777":    {name: "7x7 Cube",         scrambler_file: "scramble_NNN.js",   default_round: {type: "mean", num_scrambles: 3 }, drawing_dimensions: {w: 200, h: 150}, scrambles_per_row: 1},
 		//"magic" 
 		//"mmagic"
-		"444bf":  {name: "4x4 blindfolded",  scrambler_file: "scramble_NNN.js",   default_round: {type: "best", num_scrambles: 3 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
-		"555bf":  {name: "5x5 blindfolded",  scrambler_file: "scramble_NNN.js",   default_round: {type: "best", num_scrambles: 3 }, drawing_dimensions: {w: 200, h: 120}, scrambles_per_row: 1},
+		"444bf":  {name: "4x4 blindfolded",  scrambler_file: "scramble_NNN.js",   default_round: {type: "best", num_scrambles: 3 }, drawing_dimensions: {w: 160, h: 120}, scrambles_per_row: 1},
+		"555bf":  {name: "5x5 blindfolded",  scrambler_file: "scramble_NNN.js",   default_round: {type: "best", num_scrambles: 3 }, drawing_dimensions: {w: 160, h: 120}, scrambles_per_row: 1},
 		"333mbf": {name: "3x3 multi blind",  scrambler_file: "scramble_333.js",   default_round: {type: "mbf",  num_scrambles: 20}, drawing_dimensions: {w: 80,  h: 60 }, scrambles_per_row: 2}
 		
 		// Unofficial events
@@ -477,7 +477,7 @@ scramble = (function() {
 			var scrambleID = nextAutoID();
 		
 			createNewElement(scrambleTR, "td", "number number_" + eventID, scrambleID + "_number", "" + (num + i) + ".");
-			createNewElement(scrambleTR, "td", "scramble scramble_" + eventID, scrambleID + "_scramble",  "[Space for Scramble #" + num + "]");
+			createNewElement(scrambleTR, "td", "scramble scramble_" + eventID, scrambleID + "_scramble",  "[Space for Scramble #" + (num + i) + "]");
 			var drawingTD = createNewElement(scrambleTR, "td", "drawing drawing_" + eventID, scrambleID + "_drawing", "[Space for Drawing]");
 			drawingTD.width = events[eventID].drawing_dimensions.w;
 			drawingTD.height = events[eventID].drawing_dimensions.h;
@@ -491,7 +491,7 @@ scramble = (function() {
 					event_id: eventID,
 					return_data: {
 						scramble_id: scrambleID,
-						num: num
+						num: (num + i)
 					}
 				});
 			}

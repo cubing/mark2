@@ -271,7 +271,7 @@ h1 {
 
 .scramble_set .scramble_table td {
   border: 1px solid #00c0c0;
-  padding: 4px 8px;
+  padding: 8px;
   line-height: 150%;
 }
 
@@ -285,70 +285,71 @@ h1 {
 }
 
 .scramble_set .scramble_table .drawing {
+  line-height: 1em;
+  padding: 8px;
+  font-size: 1px; /* Hack to prevent the (empty) text from making the td taller. */
 }
 
 
 
 .scramble_set .scramble_table .loading_scramble {
   
-  background-color: #FAA;
-  background-image: -webkit-repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
-  background-image: -moz-repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
-  background-image: -o-repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
-  background-image: repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
-
-  -webkit-animation: loading_scramble_frames 2s infinite linear;
-  -moz-animation: loading_scramble_frames 2s infinite linear;
-  animation: loading_scramble_frames 2s infinite linear;
-}
-
-@-webkit-keyframes loading_scramble_frames {
-  0% {background: #8DD;}
-  50% {background: #FFF;}
-  100% {background: #8DD;}
-}
-
-@-moz-keyframes loading_scramble_frames {
-  0% {background: #8DD;}
-  50% {background: #FFF;}
-  100% {background: #8DD;}
-}
-
-@keyframes loading_scramble_frames {
-  0% {background: #8DD;}
-  50% {background: #FFF;}
-  100% {background: #8DD;}
-}
-
-.scramble_set .scramble_table .loading_scrambler {
-  
-  background-color: #FAA;
+  background-color: #AEE;
   background-image: -webkit-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
   background-image: -moz-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
   background-image: -o-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
   background-image: repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
 
-  -webkit-animation: loading_scrambler_frames 2s infinite linear;
-  -moz-animation: loading_scrambler_frames 2s infinite linear;
-  animation: loading_scrambler_frames 2s infinite linear;
+  -webkit-animation: loading_scramble_frames 2s infinite linear;
+  -moz-animation: loading_scramble_frames 2s infinite linear;
+  animation: loading_scramble_frames 2s infinite linear;
+
+  background-size: 128px 128px;
+}
+
+@-webkit-keyframes loading_scramble_frames {
+    0% { background-position: 000px 0px;}
+  100% { background-position: 128px 0px;}
+}
+
+@-moz-keyframes loading_scramble_frames {
+    0% { background-position: 000px 0px;}
+  100% { background-position: 128px 0px;}
+}
+
+@keyframes loading_scramble_frames {
+    0% { background-position: 000px 0px;}
+  100% { background-position: 128px 0px;}
+}
+
+.scramble_set .scramble_table .loading_scrambler {
+  
+  background-color: #FCC;
+  background-image: -webkit-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
+  background-image: -moz-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
+  background-image: -o-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
+  background-image: repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
+
+  -webkit-animation: loading_scrambler_frames 4s infinite linear;
+  -moz-animation: loading_scrambler_frames 4s infinite linear;
+  animation: loading_scrambler_frames 4s infinite linear;
+
+  background-size: 128px 128px;
 }
 
 @-webkit-keyframes loading_scrambler_frames {
-  0% {background: #D88;}
-  50% {background: #FFF;}
-  100% {background: #D88;}
+    0% { background-position: 000px 0px;}
+  100% { background-position: 128px 0px;}
 }
 
 @-moz-keyframes loading_scrambler_frames {
-  0% {background: #D88;}
-  50% {background: #FFF;}
-  100% {background: #D88;}
+    0% { background-position: 000px 0px;}
+  100% { background-position: 128px 0px;}
 }
 
 @keyframes loading_scrambler_frames {
-  0% {background: #D88;}
-  50% {background: #FFF;}
-  100% {background: #D88;}
+    0% { background-position: 000px 0px;}
+  100% { background-position: 128px 0px;}
 }
 
 
@@ -380,7 +381,7 @@ h1 {
 }
 
 .scramble_table td.scramble_777 {
-  font-size: 110%;
+  font-size: 100%;
 }
 
 .scramble_table td.scramble_minx {
