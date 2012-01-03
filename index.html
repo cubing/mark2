@@ -17,10 +17,12 @@
 <script type="text/javascript" src="inc/scramblers/scramble_pyram.js"></script>
 <script type="text/javascript" src="inc/scramblers/scramble_sq1.js"></script>
 
-<script type="text/javascript" src="inc/scramble.js"></script>
+<script type="text/javascript" src="inc/mark2.main.js"></script>
+<script type="text/javascript" src="inc/mark2.ui.js"></script>
+<script type="text/javascript" src="inc/mark2.controller.js"></script>
 
 </head> 
-<body onload="scramble.initialize();">
+<body onload="mark2.go();">
 
 <div id="updates">
 	<ul id="updates_general">
@@ -43,7 +45,7 @@
 
 		<input id="competitionName" value="" placeholder="Competition Name" onchange="scramble.updateHash();" onkeyup="scramble.updateHash();"/>
 	<br><br>
-	<button onclick="scramble.go(); this.blur();" id="goButton" autofocus>Scramble!</button>
+	<button onclick="mark2.controller.go(); this.blur();" id="goButton" autofocus>Scramble!</button>
 	</center>
 </div>
 
