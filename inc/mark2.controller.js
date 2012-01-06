@@ -14,6 +14,8 @@ mark2.controller = (function() {
 
 	var version = "January 03, 2012";
 
+	web_worker_file = "inc/mark2.workers.js";
+
 	var events;
 	var workerGroups;
 
@@ -509,7 +511,7 @@ mark2.controller = (function() {
 
 			for (i in workerGroups) {
 
-				var worker = new Worker("inc/web_worker_manager.js");
+				var worker = new Worker(web_worker_file);
 				var scramblerFiles = {};
 
 				for (j in workerGroups[i].events) {
