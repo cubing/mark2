@@ -63,7 +63,7 @@ mark2.controller = (function() {
     var getScrambleSetsJSON = function() {
 
     	var rounds = mark2.ui.getRoundsJSON();
-    	pages = [];
+    	scrambleSets = [];
 
 		for (var i = 0; i < rounds.length; i++) {
 
@@ -74,11 +74,11 @@ mark2.controller = (function() {
 
 			for (var j = 1; j <= numGroups; j++) {
 				var groupString = ((numGroups === 1) ? ("") : ("<br>Group " + intToLetters(j)));
-				pages.push([eventID, roundName + groupString, numSolves]); // TODO Find a better way to handle multi-line round names.
+				scrambleSets.push([eventID, roundName + groupString, numSolves]); // TODO Find a better way to handle multi-line round names.
 			}
 		}
 
-		return pages;
+		return scrambleSets;
     }
 
 	var markScrambleStarting = function(scrambleID, eventID, num) {
@@ -192,22 +192,22 @@ mark2.controller = (function() {
 
 	var addScrambleSet = function(continuation, competitionName, eventID, roundName, numScrambles) {
 
-		var pages = document.getElementById("scramble_sets");
+		var scrambleSets = document.getElementById("scramble_sets");
 
 		if (!events[eventID]) {
-			var newPage = mark2.dom.createNewElement(pages, "div", "unupported", null, "Sorry, but \"" + eventID + "\" scrambles are not currently supported.");
+			mark2.dom.createNewElement(scrambleSets, "div", "unupported", null, "Sorry, but \"" + eventID + "\" scrambles are not currently supported.");
 			return;
 		}
 
 		var scrambler = scramblers[eventID];
 
-		// Create a new Page.
+		// Create a new scramble set.
 		
-		var newPage = mark2.dom.createNewElement(pages, "div", "scramble_set");
+		var newScrambleSet = mark2.dom.createNewElement(scrambleSets, "div", "scramble_set");
 
 			// Header Table
 
-			var newInfoTable = mark2.dom.createNewElement(newPage, "table", "info_table");
+			var newInfoTable = mark2.dom.createNewElement(newScrambleSet, "table", "info_table");
 				var newInfoTHead = mark2.dom.createNewElement(newInfoTable, "thead");
 					var newInfoTR = mark2.dom.createNewElement(newInfoTHead, "tr");
 						
@@ -217,12 +217,12 @@ mark2.controller = (function() {
 
 			// Scrambles Table
 
-			var newScramblesTable = mark2.dom.createNewElement(newPage, "table", "scramble_table");
+			var newScramblesTable = mark2.dom.createNewElement(newScrambleSet, "table", "scramble_table");
 				var newScramblesTBody = mark2.dom.createNewElement(newScramblesTable, "tbody");
 					
 			// Footer Table
 
-			var newFooterTable = mark2.dom.createNewElement(newPage, "table", "footer_table");
+			var newFooterTable = mark2.dom.createNewElement(newScrambleSet, "table", "footer_table");
 				var newFooterTHead = mark2.dom.createNewElement(newFooterTable, "thead");
 					var newFooterTR = mark2.dom.createNewElement(newFooterTHead, "tr");
 
@@ -328,16 +328,16 @@ mark2.controller = (function() {
 
 		var competitionName = getCompetitionNameAndSetPageTitle();
 
-		var pages = getScrambleSetsJSON();
+		var scrambleSets = getScrambleSetsJSON();
 
-		if (pages.length === 0) {
+		if (scrambleSets.length === 0) {
 			addUpdateGeneral("Nothing to do, because there are no rounds to scramble.");
 			return;
 		}
 
-		addUpdateGeneral("Generating " + pages.length + " round" + ((pages.length === 1) ? "" : "s") + " of scrambles.");
+		addUpdateGeneral("Generating " + scrambleSets.length + " round" + ((scrambleSets.length === 1) ? "" : "s") + " of scrambles.");
 
-		generateScrambleSets(hideUpdates, competitionName, pages);
+		generateScrambleSets(hideUpdates, competitionName, scrambleSets);
 	};
 
 
