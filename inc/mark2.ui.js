@@ -227,6 +227,11 @@ mark2.ui = (function() {
 	}
 
 	var changeNumRounds = function(eventID, newNum) {
+
+		if (isNaN(newNum)) {
+			return;
+		}
+
 		var currentNum = numCurrentRounds(eventID);
 
 		if (currentNum < newNum) {
