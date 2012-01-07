@@ -81,7 +81,9 @@ mark2.dom = (function() {
 		if (id) {
 			newElement.setAttribute("id", id);
 		}
-		elementToAppendTo.appendChild(newElement);
+		if (elementToAppendTo) {
+			elementToAppendTo.appendChild(newElement);
+		}
 		return newElement;
 	};
 
@@ -104,6 +106,14 @@ mark2.dom = (function() {
 		
 	}
 
+	var showElement = function(el) {
+		el.style.display = "block";
+	}
+
+	var hideElement = function(el) {
+		el.style.display = "none";
+	}
+
 
 
 	/*
@@ -114,7 +124,9 @@ mark2.dom = (function() {
 		createNewElement: createNewElement,
 		nextAutoID: nextAutoID,
 		addClass: addClass,
-		removeClass: removeClass
+		removeClass: removeClass,
+		showElement: showElement,
+		hideElement: hideElement
 	};
 })();
 

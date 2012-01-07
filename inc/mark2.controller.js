@@ -204,6 +204,7 @@ mark2.controller = (function() {
 		// Create a new scramble set.
 		
 		var newScrambleSet = mark2.dom.createNewElement(scrambleSets, "div", "scramble_set");
+		mark2.dom.hideElement(newScrambleSet);
 
 			// Header Table
 
@@ -235,7 +236,12 @@ mark2.controller = (function() {
 		addUpdateGeneral("Generating " + numScrambles + " scramble" + ((numScrambles === 1) ? "" : "s") + " for " + events[eventID].name + ": " + roundName + "");
 		resetUpdatesSpecific("Details for " + events[eventID].name + ": " + roundName);
 		
-		var nextContinuation = generateScrambleSet.bind(null, continuation, competitionName, newScramblesTBody, eventID, scrambler, 1, numScrambles, {});
+		var delayedDOMUpdateContinuation = function() {
+			mark2.dom.showElement(newScrambleSet);
+			continuation();	
+		};
+
+		var nextContinuation = generateScrambleSet.bind(null, delayedDOMUpdateContinuation, competitionName, newScramblesTBody, eventID, scrambler, 1, numScrambles, {});
 		var call;
 		if (!webWorkersRunning && !events[eventID].initialized) {
 		    addUpdateSpecific("Initializing " + events[eventID].name + " scrambler (only needs to be done once).");
@@ -403,41 +409,33 @@ mark2.controller = (function() {
 	 * Displaying Progress Updates
 	 */
 
-	var showElement = function(el) {
-		el.style.display = "block";
-	}
-
-	var hideElement = function(el) {
-		el.style.display = "none";
-	}
-
 	var showUpdates = function() {
-		showElement(document.getElementById("updates"));
+		mark2.dom.showElement(document.getElementById("updates"));
 	}
 
 	var hideUpdates = function() {
-		hideElement(document.getElementById("updates"));
+		mark2.dom.hideElement(document.getElementById("updates"));
 	}
 
 	var showUpdatesSpecific = function() {
-		showElement(document.getElementById("updates_specific"));
+		mark2.dom.showElement(document.getElementById("updates_specific"));
 	}
 
 	var hideUpdatesSpecific = function() {
-		hideElement(document.getElementById("updates_specific"));
+		mark2.dom.hideElement(document.getElementById("updates_specific"));
 	}
 
 	var showInterface = function() {
 		var interfaceElements = document.getElementsByClassName("interface");
 		for (var i=0; i < interfaceElements.length; i++) {
-			hideElement(interfaceElements[i]);
+			mark2.dom.hideElement(interfaceElements[i]);
 		}
 	}
 
 	var hideInterface = function() {
 		var interfaceElements = document.getElementsByClassName("interface");
 		for (var i=0; i < interfaceElements.length; i++) {
-			hideElement(interfaceElements[i]);
+			mark2.dom.hideElement(interfaceElements[i]);
 		}
 	}
 
@@ -621,12 +619,12 @@ mark2.controller = (function() {
 		 	switch (e.keyCode) {
 
 				case 85: // "U" for ">U<pdates".
-					showElement(document.getElementById("updates"));
+					mark2.dom.showElement(document.getElementById("updates"));
 					return true;
 					break;
 
 				case 66: // "B" for ">B<enchmark". (And "A>b<out?)
-					showElement(document.getElementById("about"));
+					mark2.dom.showElement(document.getElementById("about"));
 					return true;
 					break;
 
