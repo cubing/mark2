@@ -47,39 +47,6 @@ h1 {
 
 
 
-#updates {
-  padding: 1em;
-  margin: 1em;
-  font-family: Helvetica;
-  border-radius: 1em;
-  background: #00C0C0;
-  display: none;
-  padding: 4px;
-}
-
-#updates.visible {
-  display: block;
-}
-
-#updates h2 {
-  margin: 0px 0px 4px;
-}
-
-#updates > ul {
-  clear: both;
-  font-family: monospace;
-  background: #FFF;
-  border-radius: 8px;
-  margin: 8px;
-  padding: 12px;
-}
-
-#updates > ul > li {
-  margin-left: 2em;
-}
-
-
-
 .interface {
   padding: 1em;
   margin: 1em;

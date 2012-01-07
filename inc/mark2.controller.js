@@ -184,7 +184,6 @@ mark2.controller = (function() {
 			call = generateScrambleSet.bind(null, continuation, competitionName, tBody, eventID, scrambler, num + scramblesInThisRow, numTotal, options);
 		}
 		else {
-			hideUpdatesSpecific();
 			call = continuation;
 		}
 		setTimeout(call, 0);
@@ -343,7 +342,11 @@ mark2.controller = (function() {
 
 		addUpdateGeneral("Generating " + scrambleSets.length + " round" + ((scrambleSets.length === 1) ? "" : "s") + " of scrambles.");
 
-		generateScrambleSets(hideUpdates, competitionName, scrambleSets);
+		var continuation = function() {
+			addUpdateGeneral("Done with synchronous calls.");
+		}
+
+		generateScrambleSets(continuation, competitionName, scrambleSets);
 	};
 
 
@@ -409,22 +412,6 @@ mark2.controller = (function() {
 	 * Displaying Progress Updates
 	 */
 
-	var showUpdates = function() {
-		mark2.dom.showElement(document.getElementById("updates"));
-	}
-
-	var hideUpdates = function() {
-		mark2.dom.hideElement(document.getElementById("updates"));
-	}
-
-	var showUpdatesSpecific = function() {
-		mark2.dom.showElement(document.getElementById("updates_specific"));
-	}
-
-	var hideUpdatesSpecific = function() {
-		mark2.dom.hideElement(document.getElementById("updates_specific"));
-	}
-
 	var showInterface = function() {
 		var interfaceElements = document.getElementsByClassName("interface");
 		for (var i=0; i < interfaceElements.length; i++) {
@@ -446,26 +433,12 @@ mark2.controller = (function() {
 	var updatesGeneralStartTime;
 	var updatesGeneralLastTime;
 	var resetUpdatesGeneral = function() {
-
-		var updatesGeneralDiv = document.getElementById("updates_general");
-		updatesGeneralDiv.innerHTML = "";
-		mark2.dom.createNewElement(updatesGeneralDiv, "h2", null, null, "Updates");
-
-		showUpdates();
-
 		updatesGeneralLastTime = updatesGeneralStartTime = currentTime();
 	}
 
 	var updatesSpecificStartTime;
 	var updatesSpecificLastTime;
 	var resetUpdatesSpecific = function(str) {
-
-		var updatesSpecificDiv = document.getElementById("updates_specific");
-		updatesSpecificDiv.innerHTML = "";
-		mark2.dom.createNewElement(updatesSpecificDiv, "h2", null, null, str);
-
-		showUpdatesSpecific();
-
 		updatesSpecificLastTime = updatesSpecificStartTime = currentTime();
 	}
 
@@ -474,16 +447,12 @@ mark2.controller = (function() {
 		console.log(str);
 		var updatesGeneralDiv = document.getElementById("updates_general");
 
-		mark2.dom.createNewElement(updatesGeneralDiv, "li", null, null, str);
-
 	}
 
 	var addUpdateSpecific = function(str) {
 
 		console.log(str);
 		var updatesSpecificDiv = document.getElementById("updates_specific");
-
-		mark2.dom.createNewElement(updatesSpecificDiv, "li", null, null, str);
 
 	}
 
@@ -617,11 +586,6 @@ mark2.controller = (function() {
 
 		if (e.ctrlKey) {
 		 	switch (e.keyCode) {
-
-				case 85: // "U" for ">U<pdates".
-					mark2.dom.showElement(document.getElementById("updates"));
-					return true;
-					break;
 
 				case 66: // "B" for ">B<enchmark". (And "A>b<out?)
 					mark2.dom.showElement(document.getElementById("about"));
