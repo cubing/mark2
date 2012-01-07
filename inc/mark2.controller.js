@@ -57,8 +57,8 @@ mark2.controller = (function() {
 	 * Scramble Sets
 	 */
 
-	var doneCreatingRounds = false;
-	var scramblesStillAwaiting = [];
+	var totalNumScrambles;
+	var numScramblesDone;
 
     var getScrambleSetsJSON = function() {
 
@@ -114,21 +114,16 @@ mark2.controller = (function() {
 
 	var insertScramble = function(scrambleID, eventID, num, scramble, state) {
 
-		if (webWorkersRunning) {
+		numScramblesDone++;
+		updateProgress();
+		var numScramblesRemaining = totalNumScrambles - numScramblesDone;
 
-			var index = scramblesStillAwaiting.indexOf(scrambleID);
-			scramblesStillAwaiting.splice(index, 1)
+		var stillRemainingString = " " + numScramblesRemaining + " scramble" + (numScramblesRemaining === 1 ? "" : "s") + " still remaining overall."
+		addUpdateSpecific("Generated " + eventID + " scramble #" + num + " for some round." + stillRemainingString);
 
-			var stillRemainingString = " " + scramblesStillAwaiting.length + " scramble" + (scramblesStillAwaiting.length === 1 ? "" : "s") + " still remaining overall."
-			if (!doneCreatingRounds) {
-				stillRemainingString = " At least" + stillRemainingString;
-			}
-
-			addUpdateSpecific("Generated " + eventID + " scramble #" + num + " for some round." + stillRemainingString);
-
-			if (scramblesStillAwaiting.length === 0 && doneCreatingRounds) {
-				addUpdateGeneral("\n\nDone generating all scrambles for all rounds.\n");
-			}
+		if (numScramblesRemaining === 0) {
+			showProgressDone();
+			addUpdateGeneral("Done generating all scrambles for all rounds.");
 		}
 					
 		var scrambleTD = document.getElementById(scrambleID + "_scramble");
@@ -142,6 +137,7 @@ mark2.controller = (function() {
 		var drawingWidth = events[eventID].drawing_dimensions.w;
 		var drawingHeight = events[eventID].drawing_dimensions.h;
 		scramblers[eventID].drawScramble(drawingTD, state, drawingWidth, drawingHeight);
+
 	}
 
 	var generateScrambleSet = function(continuation, competitionName, tBody, eventID, scrambler, num, numTotal, options) {
@@ -161,8 +157,6 @@ mark2.controller = (function() {
 			drawingTD.height = events[eventID].drawing_dimensions.h;
 
 			if (webWorkersRunning) {
-
-				scramblesStillAwaiting.push(scrambleID);
 
 				events[eventID].worker.postMessage({
 					action: "get_random_scramble",
@@ -275,8 +269,7 @@ mark2.controller = (function() {
 			nextContinuation = function(){
 
 				if (webWorkersRunning) {
-					addUpdateGeneral("Done creating all rounds. " + scramblesStillAwaiting.length + " scrambles still need to be filled in.");
-					doneCreatingRounds = true;
+					addUpdateGeneral("Done creating all rounds. " + (totalNumScrambles - numScramblesDone) + " scrambles still need to be filled in.");
 				}
 				else {
 					addUpdateGeneral("Done creating all rounds.");
@@ -326,14 +319,29 @@ mark2.controller = (function() {
 		return competitionName;
     }
 
+    var countScrambles = function(scrambleSets) {
+    	var total = 0;
+
+    	for (var i=0; i < scrambleSets.length; i++) {
+    		total += scrambleSets[i][2];
+    	}
+
+    	return total;
+    }
+
 	var go = function() {
 
+		mark2.ui.updateHash();
 		resetUpdatesGeneral();
 		hideInterface();
 
 		var competitionName = getCompetitionNameAndSetPageTitle();
-
 		var scrambleSets = getScrambleSetsJSON();
+		
+		totalNumScrambles = countScrambles(scrambleSets);
+		numScramblesDone = 0;
+		updateProgress();
+		showUpdates();
 
 		if (scrambleSets.length === 0) {
 			addUpdateGeneral("Nothing to do, because there are no rounds to scramble.");
@@ -456,6 +464,23 @@ mark2.controller = (function() {
 
 	}
 
+	var showUpdates = function() {
+		var updatesPanel = document.getElementById("updates");
+		mark2.dom.showElement(updatesPanel);
+	}
+
+	var updateProgress = function(fraction) {
+
+		var progressBar = document.getElementById("progress_bar");
+
+		progressBar.setAttribute("value", numScramblesDone / totalNumScrambles);
+		progressBar.innerHTML = "" + numScramblesDone + "/" + totalNumScrambles + " scrambles done.";
+	}
+
+	var showProgressDone = function() {
+		var doneMessageDiv = document.getElementById("progress_message");
+		doneMessageDiv.innerHTML = "<br>All scrambles have been generated.<br>You can print them now (this panel will not print).";
+	}
 
 
 	/*

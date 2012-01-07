@@ -27,6 +27,38 @@ h1 {
 
 
 
+.interface, #updates {
+  padding: 1em;
+  margin: 1em;
+  font-family: Helvetica;
+  border-radius: 1em;
+  background: #00c0c0;
+}
+
+
+
+#updates {
+  text-align: center;
+  display: none;
+  padding: 0px;
+  margin: 1em auto;
+  width: 640px;
+}
+
+#updates #updates_wrapper {
+  padding: 1em;
+}
+
+#updates #progress_bar {
+  width: 100%;
+}
+
+#updates #progress_message {
+  font-weight: bold;
+}
+
+
+
 #top_interface h1#title {
   font-size: 400%;
 }
@@ -46,14 +78,6 @@ h1 {
 }
 
 
-
-.interface {
-  padding: 1em;
-  margin: 1em;
-  font-family: Helvetica;
-  border-radius: 1em;
-  background: #00c0c0;
-}
 
 #about {
   display: none; /* To simplify the interface when it loads. */
