@@ -285,9 +285,8 @@ h1 {
 }
 
 .scramble_set .scramble_table .drawing {
-  line-height: 1em;
+  line-height: 1px; /* Hack to prevent the (empty) text from making the td taller. */
   padding: 8px;
-  font-size: 1px; /* Hack to prevent the (empty) text from making the td taller. */
 }
 
 
