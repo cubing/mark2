@@ -342,6 +342,7 @@ mark2.controller = (function() {
 		numScramblesDone = 0;
 		updateProgress();
 		showUpdates();
+		showProgressMessage("Generating " + totalNumScrambles + " scrambles...");
 
 		if (scrambleSets.length === 0) {
 			addUpdateGeneral("Nothing to do, because there are no rounds to scramble.");
@@ -477,9 +478,13 @@ mark2.controller = (function() {
 		progressBar.innerHTML = "" + numScramblesDone + "/" + totalNumScrambles + " scrambles done.";
 	}
 
-	var showProgressDone = function() {
+	var showProgressMessage = function(message) {
 		var doneMessageDiv = document.getElementById("progress_message");
-		doneMessageDiv.innerHTML = "<br>All scrambles have been generated.<br>You can print them now (this panel will not print).";
+		doneMessageDiv.innerHTML = "<br>" + message;
+	}
+
+	var showProgressDone = function() {
+		showProgressMessage("All scrambles have been generated.<br>You can print them now (this panel will not print).");
 	}
 
 
