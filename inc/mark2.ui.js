@@ -90,13 +90,13 @@ mark2.ui = (function() {
 			events[eventID].initialized = false;
 
 			if (i % eventsPerRow === 0) {
-				currentEventsTR = mark2.dom.createNewElement(eventsTable, "tr");
+				currentEventsTR = mark2.dom.appendElement(eventsTable, "tr");
 			}
 
-			var eventTD = mark2.dom.createNewElement(currentEventsTR, "td", "event_amount_label", null, "" + eventID + ":");
+			var eventTD = mark2.dom.appendElement(currentEventsTR, "td", "event_amount_label", null, "" + eventID + ":");
 
-			var val = mark2.dom.createNewElement(currentEventsTR, "td", "event_amount_value_td", "");
-			var valInput = mark2.dom.createNewElement(val, "input", "event_amount_value");
+			var val = mark2.dom.appendElement(currentEventsTR, "td", "event_amount_value_td", "");
+			var valInput = mark2.dom.appendElement(val, "input", "event_amount_value");
 			valInput.setAttribute("value", numCurrentRounds(eventID));
 			valInput.setAttribute("id", "event_amount_value_" + eventID);
 			valInput.setAttribute("type", "number");
@@ -177,29 +177,29 @@ mark2.ui = (function() {
 
 
 		var newEventTR_ID = mark2.dom.nextAutoID();
-		var newEventTR = mark2.dom.createNewElement(eventTBody, "tr", "event_tr_" + eventID, newEventTR_ID);
+		var newEventTR = mark2.dom.appendElement(eventTBody, "tr", "event_tr_" + eventID, newEventTR_ID);
 			newEventTR.setAttribute("data-event-id", eventID);
 
-		var nameTD = mark2.dom.createNewElement(newEventTR, "td", "event_name", null, events[eventID].name);
+		var nameTD = mark2.dom.appendElement(newEventTR, "td", "event_name", null, events[eventID].name);
 		
-		var roundNameTD = mark2.dom.createNewElement(newEventTR, "td");
-		var roundNameInput = mark2.dom.createNewElement(roundNameTD, "input", "round_name");
+		var roundNameTD = mark2.dom.appendElement(newEventTR, "td");
+		var roundNameInput = mark2.dom.appendElement(roundNameTD, "input", "round_name");
 			roundNameInput.setAttribute("value", roundName);
 
-		var numSolvesTD = mark2.dom.createNewElement(newEventTR, "td", null);
-		var numSolvesInput = mark2.dom.createNewElement(numSolvesTD, "input", "num_groups");
+		var numSolvesTD = mark2.dom.appendElement(newEventTR, "td", null);
+		var numSolvesInput = mark2.dom.appendElement(numSolvesTD, "input", "num_groups");
 			numSolvesInput.setAttribute("type", "number");
 			numSolvesInput.setAttribute("value", numGroups);
 			numSolvesInput.setAttribute("min", "1");
 
-		var numSolvesTD = mark2.dom.createNewElement(newEventTR, "td", null);
-		var numSolvesInput = mark2.dom.createNewElement(numSolvesTD, "input", "num_solves");
+		var numSolvesTD = mark2.dom.appendElement(newEventTR, "td", null);
+		var numSolvesInput = mark2.dom.appendElement(numSolvesTD, "input", "num_solves");
 			numSolvesInput.setAttribute("type", "number");
 			numSolvesInput.setAttribute("value", numSolves);
 			numSolvesInput.setAttribute("min", "1");
 
-		var removeTD = mark2.dom.createNewElement(newEventTR, "td", "round_remove");
-		var removeButton = mark2.dom.createNewElement(removeTD, "button", null, null, "&nbsp;&nbsp;X&nbsp;&nbsp;");
+		var removeTD = mark2.dom.appendElement(newEventTR, "td", "round_remove");
+		var removeButton = mark2.dom.appendElement(removeTD, "button", null, null, "&nbsp;&nbsp;X&nbsp;&nbsp;");
 			removeButton.setAttribute("onclick", "mark2.ui.removeRound(\"" + eventID + "\", \"" + newEventTR_ID + "\")");
 	}
 

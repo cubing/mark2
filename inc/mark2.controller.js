@@ -142,7 +142,7 @@ mark2.controller = (function() {
 
 	var generateScrambleSet = function(continuation, competitionName, tBody, eventID, scrambler, num, numTotal, options) {
 		
-		var scrambleTR = mark2.dom.createNewElement(tBody, "tr");
+		var scrambleTR = mark2.dom.appendElement(tBody, "tr");
 
 		var scramblesInThisRow = Math.min(events[eventID].scrambles_per_row, numTotal - num + 1);
 
@@ -150,9 +150,9 @@ mark2.controller = (function() {
 
 			var scrambleID = mark2.dom.nextAutoID();
 		
-			mark2.dom.createNewElement(scrambleTR, "td", "number number_" + eventID, scrambleID + "_number", "" + (num + i) + ".");
-			mark2.dom.createNewElement(scrambleTR, "td", "scramble scramble_" + eventID, scrambleID + "_scramble",  "[Space for Scramble #" + (num + i) + "]");
-			var drawingTD = mark2.dom.createNewElement(scrambleTR, "td", "drawing drawing_" + eventID, scrambleID + "_drawing", "[Space for Drawing]");
+			mark2.dom.appendElement(scrambleTR, "td", "number number_" + eventID, scrambleID + "_number", "" + (num + i) + ".");
+			mark2.dom.appendElement(scrambleTR, "td", "scramble scramble_" + eventID, scrambleID + "_scramble",  "[Space for Scramble #" + (num + i) + "]");
+			var drawingTD = mark2.dom.appendElement(scrambleTR, "td", "drawing drawing_" + eventID, scrambleID + "_drawing", "[Space for Drawing]");
 			drawingTD.width = events[eventID].drawing_dimensions.w;
 			drawingTD.height = events[eventID].drawing_dimensions.h;
 
@@ -188,7 +188,7 @@ mark2.controller = (function() {
 		var scrambleSets = document.getElementById("scramble_sets");
 
 		if (!events[eventID]) {
-			mark2.dom.createNewElement(scrambleSets, "div", "unupported", null, "Sorry, but \"" + eventID + "\" scrambles are not currently supported.");
+			mark2.dom.appendElement(scrambleSets, "div", "unupported", null, "Sorry, but \"" + eventID + "\" scrambles are not currently supported.");
 			return;
 		}
 
@@ -196,33 +196,33 @@ mark2.controller = (function() {
 
 		// Create a new scramble set.
 		
-		var newScrambleSet = mark2.dom.createNewElement(scrambleSets, "div", "scramble_set");
+		var newScrambleSet = mark2.dom.appendElement(scrambleSets, "div", "scramble_set");
 		mark2.dom.hideElement(newScrambleSet);
 
 			// Header Table
 
-			var newInfoTable = mark2.dom.createNewElement(newScrambleSet, "table", "info_table");
-				var newInfoTHead = mark2.dom.createNewElement(newInfoTable, "thead");
-					var newInfoTR = mark2.dom.createNewElement(newInfoTHead, "tr");
+			var newInfoTable = mark2.dom.appendElement(newScrambleSet, "table", "info_table");
+				var newInfoTHead = mark2.dom.appendElement(newInfoTable, "thead");
+					var newInfoTR = mark2.dom.appendElement(newInfoTHead, "tr");
 						
-						mark2.dom.createNewElement(newInfoTR, "td", "puzzle_name", null, events[eventID].name);
-						mark2.dom.createNewElement(newInfoTR, "td", "competition_name", null, competitionName);
-						mark2.dom.createNewElement(newInfoTR, "td", "round_name", null, roundName);
+						mark2.dom.appendElement(newInfoTR, "td", "puzzle_name", null, events[eventID].name);
+						mark2.dom.appendElement(newInfoTR, "td", "competition_name", null, competitionName);
+						mark2.dom.appendElement(newInfoTR, "td", "round_name", null, roundName);
 
 			// Scrambles Table
 
-			var newScramblesTable = mark2.dom.createNewElement(newScrambleSet, "table", "scramble_table");
-				var newScramblesTBody = mark2.dom.createNewElement(newScramblesTable, "tbody");
+			var newScramblesTable = mark2.dom.appendElement(newScrambleSet, "table", "scramble_table");
+				var newScramblesTBody = mark2.dom.appendElement(newScramblesTable, "tbody");
 					
 			// Footer Table
 
-			var newFooterTable = mark2.dom.createNewElement(newScrambleSet, "table", "footer_table");
-				var newFooterTHead = mark2.dom.createNewElement(newFooterTable, "thead");
-					var newFooterTR = mark2.dom.createNewElement(newFooterTHead, "tr");
+			var newFooterTable = mark2.dom.appendElement(newScrambleSet, "table", "footer_table");
+				var newFooterTHead = mark2.dom.appendElement(newFooterTable, "thead");
+					var newFooterTR = mark2.dom.appendElement(newFooterTHead, "tr");
 
-						mark2.dom.createNewElement(newFooterTR, "td", null, null, '<u>Scrambles generated at:</u><br>' + (new Date().toString()));
-						mark2.dom.createNewElement(newFooterTR, "td", null, null, '<div style="text-align: right;"><u>' + events[eventID].name + ' Scrambler Version</u><br>' + scrambler.version + '</div>');
-						mark2.dom.createNewElement(newFooterTR, "td", null, null, '<img src="inc/wca_logo.svg" class="wca_logo">');
+						mark2.dom.appendElement(newFooterTR, "td", null, null, '<u>Scrambles generated at:</u><br>' + (new Date().toString()));
+						mark2.dom.appendElement(newFooterTR, "td", null, null, '<div style="text-align: right;"><u>' + events[eventID].name + ' Scrambler Version</u><br>' + scrambler.version + '</div>');
+						mark2.dom.appendElement(newFooterTR, "td", null, null, '<img src="inc/wca_logo.svg" class="wca_logo">');
 		
 		// Generate those scrambles!
 		

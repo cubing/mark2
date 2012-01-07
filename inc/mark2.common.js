@@ -69,7 +69,7 @@ mark2.dom = (function() {
 	 * DOM Manipulation
 	 */
 
-	var createNewElement = function(elementToAppendTo, type, className, id, content) {
+	var appendElement = function(elementToAppendTo, type, className, id, content) {
 
 		var newElement = document.createElement(type);
 		if (className) {
@@ -121,7 +121,7 @@ mark2.dom = (function() {
 	 */
 
 	return {
-		createNewElement: createNewElement,
+		appendElement: appendElement,
 		nextAutoID: nextAutoID,
 		addClass: addClass,
 		removeClass: removeClass,
