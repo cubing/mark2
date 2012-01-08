@@ -14,7 +14,7 @@ mark2.controller = (function() {
 
 	var version = "January 03, 2012";
 
-	web_worker_file = "inc/mark2.workers.js";
+	web_worker_file = mark2.settings.assets_root + "mark2/workers.js";
 
 	var events;
 	var workerGroups;
@@ -222,7 +222,7 @@ mark2.controller = (function() {
 
 						mark2.dom.appendElement(newFooterTR, "td", null, null, '<u>Scrambles generated at:</u><br>' + (new Date().toString()));
 						mark2.dom.appendElement(newFooterTR, "td", null, null, '<div style="text-align: right;"><u>' + events[eventID].name + ' Scrambler Version</u><br>' + scrambler.version + '</div>');
-						mark2.dom.appendElement(newFooterTR, "td", null, null, '<img src="inc/wca_logo.svg" class="wca_logo">');
+						mark2.dom.appendElement(newFooterTR, "td", null, null, '<img src="' + mark2.settings.assets_root + 'img/wca_logo.svg" class="wca_logo">');
 		
 		// Generate those scrambles!
 		
@@ -513,7 +513,7 @@ mark2.controller = (function() {
 
 				for (j in workerGroups[i].events) {
 					events[workerGroups[i].events[j]].worker = worker;
-					scramblerFiles[workerGroups[i].events[j]] = "scramblers/" + events[workerGroups[i].events[j]].scrambler_file;
+					scramblerFiles[workerGroups[i].events[j]] = "../scramblers/" + events[workerGroups[i].events[j]].scrambler_file;
 				}
 				worker.onmessage = handleWorkerMessage;
 

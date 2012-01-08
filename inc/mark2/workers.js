@@ -3,7 +3,7 @@ Math.random = undefined; // So we won't use it by accident.
 
 var web_worker_manager = (function() {
 
-	importScripts("mersennetwister.js");
+	importScripts("../lib/mersennetwister.js");
 
 	var console;
 	if (typeof window !== "undefined") {

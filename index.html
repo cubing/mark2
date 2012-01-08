@@ -4,10 +4,10 @@
 
 <title>Mark 2: WCA-Style Puzzle Scrambler</title>
 
-<link href="inc/scramble.css" rel="stylesheet" type="text/css" />
+<link href="inc/css/scramble.css" rel="stylesheet" type="text/css" />
 
-<script type="text/javascript" src="inc/raphael-min.js"></script>
-<script type="text/javascript" src="inc/mersennetwister.js"></script>
+<script type="text/javascript" src="inc/lib/raphael-min.js"></script>
+<script type="text/javascript" src="inc/lib/mersennetwister.js"></script>
 
 <script type="text/javascript" src="inc/scramblers/scramble_222.js"></script>
 <script type="text/javascript" src="inc/scramblers/scramble_333.js"></script>
@@ -17,9 +17,9 @@
 <script type="text/javascript" src="inc/scramblers/scramble_pyram.js"></script>
 <script type="text/javascript" src="inc/scramblers/scramble_sq1.js"></script>
 
-<script type="text/javascript" src="inc/mark2.common.js"></script>
-<script type="text/javascript" src="inc/mark2.ui.js"></script>
-<script type="text/javascript" src="inc/mark2.controller.js"></script>
+<script type="text/javascript" src="inc/mark2/common.js"></script>
+<script type="text/javascript" src="inc/mark2/ui.js"></script>
+<script type="text/javascript" src="inc/mark2/controller.js"></script>
 
 </head> 
 <body onload="mark2.go();">
@@ -36,7 +36,7 @@
 
 <div class="interface" id="about">
 	<center>
-		<a href="./inc/offline.html">Enable Offline Access</a>
+		<a href="./inc/offline/">Enable Offline Access</a>
 		<br><br>
 		<a href="https://github.com/lgarron/mark2">View Source Code on GitHub</a>
 	</center>
@@ -44,7 +44,7 @@
 
 <div class="interface" id="top_interface">
 	<center>
-		<h1 id="title"><img src="inc/wca_logo.svg" class="wca_logo_top"> <!--WCA Official Puzzle Scrambler: <span class="mark2_title"-->Mark 2 <span class="beta">BETA</span></span></h1><br>
+		<h1 id="title"><img src="inc/img/wca_logo.svg" class="wca_logo_top"> <!--WCA Official Puzzle Scrambler: <span class="mark2_title"-->Mark 2 <span class="beta">BETA</span></span></h1><br>
 
 		<input id="competitionName" value="" placeholder="Competition Name" onchange="scramble.updateHash();" onkeyup="scramble.updateHash();"/>
 	<br><br>

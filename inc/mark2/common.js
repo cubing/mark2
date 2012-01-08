@@ -170,10 +170,13 @@ mark2.settings = (function() {
 		{events: ["sq1"], auto_ini: false}
 	];
 
+	var assetsRootFromHTML = "./inc/";
+
 	return {
 		events: events,
 		default_rounds: defaultRounds,
-		worker_groups: workerGroups
+		worker_groups: workerGroups,
+		assets_root: assetsRootFromHTML
 	};
 })();
 
