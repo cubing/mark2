@@ -27,6 +27,38 @@ h1 {
 
 
 
+.interface, #updates {
+  padding: 1em;
+  margin: 1em;
+  font-family: Helvetica;
+  border-radius: 1em;
+  background: #00c0c0;
+}
+
+
+
+#updates {
+  text-align: center;
+  display: none;
+  padding: 0px;
+  margin: 1em auto;
+  width: 640px;
+}
+
+#updates #updates_wrapper {
+  padding: 1em;
+}
+
+#updates #progress_bar {
+  width: 100%;
+}
+
+#updates #progress_message {
+  font-weight: bold;
+}
+
+
+
 #top_interface h1#title {
   font-size: 400%;
 }
@@ -46,47 +78,6 @@ h1 {
 }
 
 
-
-#updates {
-  padding: 1em;
-  margin: 1em;
-  font-family: Helvetica;
-  border-radius: 1em;
-  background: #00C0C0;
-  display: none;
-  padding: 4px;
-}
-
-#updates.visible {
-  display: block;
-}
-
-#updates h2 {
-  margin: 0px 0px 4px;
-}
-
-#updates > ul {
-  clear: both;
-  font-family: monospace;
-  background: #FFF;
-  border-radius: 8px;
-  margin: 8px;
-  padding: 12px;
-}
-
-#updates > ul > li {
-  margin-left: 2em;
-}
-
-
-
-.interface {
-  padding: 1em;
-  margin: 1em;
-  font-family: Helvetica;
-  border-radius: 1em;
-  background: #00c0c0;
-}
 
 #about {
   display: none; /* To simplify the interface when it loads. */
@@ -271,7 +262,7 @@ h1 {
 
 .scramble_set .scramble_table td {
   border: 1px solid #00c0c0;
-  padding: 4px 8px;
+  padding: 8px;
   line-height: 150%;
 }
 
@@ -285,70 +276,70 @@ h1 {
 }
 
 .scramble_set .scramble_table .drawing {
+  line-height: 1px; /* Hack to prevent the (empty) text from making the td taller. */
+  padding: 8px;
 }
 
 
 
 .scramble_set .scramble_table .loading_scramble {
   
-  background-color: #FAA;
-  background-image: -webkit-repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
-  background-image: -moz-repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
-  background-image: -o-repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
-  background-image: repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
-
-  -webkit-animation: loading_scramble_frames 2s infinite linear;
-  -moz-animation: loading_scramble_frames 2s infinite linear;
-  animation: loading_scramble_frames 2s infinite linear;
-}
-
-@-webkit-keyframes loading_scramble_frames {
-  0% {background: #8DD;}
-  50% {background: #FFF;}
-  100% {background: #8DD;}
-}
-
-@-moz-keyframes loading_scramble_frames {
-  0% {background: #8DD;}
-  50% {background: #FFF;}
-  100% {background: #8DD;}
-}
-
-@keyframes loading_scramble_frames {
-  0% {background: #8DD;}
-  50% {background: #FFF;}
-  100% {background: #8DD;}
-}
-
-.scramble_set .scramble_table .loading_scrambler {
-  
-  background-color: #FAA;
+  background-color: #AEE;
   background-image: -webkit-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
   background-image: -moz-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
   background-image: -o-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
   background-image: repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
 
-  -webkit-animation: loading_scrambler_frames 2s infinite linear;
-  -moz-animation: loading_scrambler_frames 2s infinite linear;
-  animation: loading_scrambler_frames 2s infinite linear;
+  -webkit-animation: loading_scramble_frames 2s infinite linear;
+  -moz-animation: loading_scramble_frames 2s infinite linear;
+  animation: loading_scramble_frames 2s infinite linear;
+
+  background-size: 128px 128px;
+}
+
+@-webkit-keyframes loading_scramble_frames {
+    0% { background-position: 000px 0px;}
+  100% { background-position: 128px 0px;}
+}
+
+@-moz-keyframes loading_scramble_frames {
+    0% { background-position: 000px 0px;}
+  100% { background-position: 128px 0px;}
+}
+
+@keyframes loading_scramble_frames {
+    0% { background-position: 000px 0px;}
+  100% { background-position: 128px 0px;}
+}
+
+.scramble_set .scramble_table .loading_scrambler {
+  
+  background-color: #FCC;
+  background-image: -webkit-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
+  background-image: -moz-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
+  background-image: -o-repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
+  background-image: repeating-linear-gradient(-45deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
+
+  -webkit-animation: loading_scrambler_frames 4s infinite linear;
+  -moz-animation: loading_scrambler_frames 4s infinite linear;
+  animation: loading_scrambler_frames 4s infinite linear;
+
+  background-size: 128px 128px;
 }
 
 @-webkit-keyframes loading_scrambler_frames {
-  0% {background: #D88;}
-  50% {background: #FFF;}
-  100% {background: #D88;}
+    0% { background-position: 000px 0px;}
+  100% { background-position: 128px 0px;}
 }
 
 @-moz-keyframes loading_scrambler_frames {
-  0% {background: #D88;}
-  50% {background: #FFF;}
-  100% {background: #D88;}
+    0% { background-position: 000px 0px;}
+  100% { background-position: 128px 0px;}
 }
 
 @keyframes loading_scrambler_frames {
-  0% {background: #D88;}
-  50% {background: #FFF;}
-  100% {background: #D88;}
+    0% { background-position: 000px 0px;}
+  100% { background-position: 128px 0px;}
 }
 
 
@@ -380,7 +371,7 @@ h1 {
 }
 
 .scramble_table td.scramble_777 {
-  font-size: 110%;
+  font-size: 100%;
 }
 
 .scramble_table td.scramble_minx {
