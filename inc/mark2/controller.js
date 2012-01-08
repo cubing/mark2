@@ -644,7 +644,6 @@ mark2.controller = (function() {
 	return {
 		version: version,
 		initialize: initialize,
-		go: go,
-		terminateWebWorkers: terminateWebWorkers,
+		go: go
 	};
 })();

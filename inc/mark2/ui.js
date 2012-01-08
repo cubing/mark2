@@ -61,10 +61,15 @@ mark2.ui = (function() {
 			valInput.setAttribute("id", "event_amount_value_" + eventID);
 			valInput.setAttribute("type", "number");
 			valInput.setAttribute("min", "0");
-			valInput.setAttribute("onchange", "mark2.ui.changeNumRounds(\"" + eventID + "\", parseInt(this.value));");
-			valInput.setAttribute("onmouseup", "mark2.ui.changeNumRounds(\"" + eventID + "\", parseInt(this.value));");
-			valInput.setAttribute("onkeyup", "mark2.ui.changeNumRounds(\"" + eventID + "\", parseInt(this.value));");
-			valInput.setAttribute("oninput", "mark2.ui.changeNumRounds(\"" + eventID + "\", parseInt(this.value));");
+
+			var changeNumRoundsListener = function(eventID, el) {
+				changeNumRounds(eventID, parseInt(el.value));
+			}.bind(null, eventID, valInput);
+
+			valInput.addEventListener("change", changeNumRoundsListener);
+			valInput.addEventListener("mouseup", changeNumRoundsListener);
+			valInput.addEventListener("keyup", changeNumRoundsListener);
+			valInput.addEventListener("input", changeNumRoundsListener);
 		}
 	}
 
@@ -160,7 +165,7 @@ mark2.ui = (function() {
 
 		var removeTD = mark2.dom.appendElement(newEventTR, "td", "round_remove");
 		var removeButton = mark2.dom.appendElement(removeTD, "button", null, null, "&nbsp;&nbsp;X&nbsp;&nbsp;");
-			removeButton.setAttribute("onclick", "mark2.ui.removeRound(\"" + eventID + "\", \"" + newEventTR_ID + "\")");
+			removeButton.addEventListener("click", removeRound.bind(null, eventID, newEventTR_ID), false);
 	}
 
     var addRounds = function(rounds) {
@@ -248,9 +253,6 @@ mark2.ui = (function() {
 	return {
 		version: version,
 		initialize: initialize,
-		addRound: addRound,
-		removeRound: removeRound,
-		changeNumRounds: changeNumRounds,
 		updateHash: updateHash,
 		getRoundsJSON: getRoundsJSON
 	};
