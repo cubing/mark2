@@ -160,27 +160,70 @@ mark2.settings = (function() {
 		//"skewb"
 	}
 
+	// Javascript objects don't retain key order in all browsers, so we create this list for iteration.
+	var eventOrder = [
+		"222",
+		"333",
+		"444",
+		"555",
+		"666",
+		"777",
+		"333bf",
+		"333oh",
+		"333fm",
+		"333ft",
+		"minx",
+		"pyram",
+		"sq1",
+		"clock",
+		//"magic",
+		//"mmagic",
+		"444bf",
+		"555bf",
+		"333mbf"
+		//"skewb"
+	];
+
 	var defaultRounds = [
 		["333", "Round 1", 1, events["333"].default_round.num_scrambles]
 	];
 
 	var workerGroups = [
-		{events: ["333", "333bf", "333oh", "333fm", "333ft", "333mbf"], auto_ini: true},
-		{events: ["222", "444", "555", "666", "777", "444bf", "555bf", "minx", "pyram", "clock"], auto_ini: false},
-		{events: ["sq1"], auto_ini: false}
+		{event_ids: ["333", "333bf", "333oh", "333fm", "333ft", "333mbf"], auto_ini: true},
+		{event_ids: ["222", "444", "555", "666", "777", "444bf", "555bf", "minx", "pyram", "clock"], auto_ini: false},
+		{event_ids: ["sq1"], auto_ini: false}
 	];
 
+	// Round types are not currently used.
+	/*
+	var roundTypeNames = {
+		"avg": "Average of",
+		"best": "Best of",
+		"combined": "Combined Round of",
+		"mean": "Mean of",
+		"mbf": "Multi Blind of"
+	}
+	*/
+
+	var defaultNumGroups = 1;
+
 	var assetsRootFromHTML = "./inc/";
+	var webWorkerFile = assetsRootFromHTML + "mark2/workers.js";
 
 	return {
 		events: events,
+		event_order: eventOrder,
 		default_rounds: defaultRounds,
 		worker_groups: workerGroups,
-		assets_root: assetsRootFromHTML
+		
+		default_num_groups: defaultNumGroups,
+
+		assets_root: assetsRootFromHTML,
+		web_worker_file: webWorkerFile
 	};
 })();
 
 mark2.go = function() {
-	mark2.ui.initialize(mark2.settings.events, mark2.settings.default_rounds);
-	mark2.controller.initialize(mark2.settings.events, mark2.settings.worker_groups);
+	mark2.ui.initialize(mark2.settings);
+	mark2.controller.initialize(mark2.settings);
 }

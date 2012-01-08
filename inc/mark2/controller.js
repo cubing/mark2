@@ -5,19 +5,17 @@
  *
  */
 
-
 mark2.controller = (function() {
 		
 	/*
 	 * Configuration Section
 	 */
 
-	var version = "January 03, 2012";
+	var version = "January 07, 2012";
 
-	web_worker_file = mark2.settings.assets_root + "mark2/workers.js";
-
-	var events;
-	var workerGroups;
+	var settings;
+	
+	var workerMap = {};
 
 	// alg.garron.us puzzle ID mapping.
 	eventIDToAlgPuzzleID = {
@@ -42,10 +40,9 @@ mark2.controller = (function() {
 	 * Mark 2 Initialization
 	 */
 
-	var initialize = function(eventsIn, workerGroupsIn) {
+	var initialize = function(settingsIn) {
 
-		events = eventsIn;
-		workerGroups = workerGroupsIn;
+		settings = settingsIn;
 
 		initializeRandomSource();
 		initializeWorkers();
@@ -104,7 +101,7 @@ mark2.controller = (function() {
 			return scramble;
 		}
 
-		return "<a href=\"http://alg.garron.us/?ini=" + encodeURIComponent(scramble) + "&cube=" + puzzleID + "&name=" + encodeURIComponent(events[eventID].name + " Scramble") + "&notation=WCA\" target=\"_blank\" class=\"scramble_link\">" + scramble + "</a>";
+		return "<a href=\"http://alg.garron.us/?ini=" + encodeURIComponent(scramble) + "&cube=" + puzzleID + "&name=" + encodeURIComponent(settings.events[eventID].name + " Scramble") + "&notation=WCA\" target=\"_blank\" class=\"scramble_link\">" + scramble + "</a>";
 	}
 
 	var scrambleLink = function(eventID, scramble) {
@@ -133,9 +130,9 @@ mark2.controller = (function() {
 
 		var drawingTD = document.getElementById(scrambleID + "_drawing");
 		drawingTD.innerHTML = "";
-		drawingTD.width = events[eventID].drawing_dimensions.w; // Sadly, this is more robust than setProperty(...).
-		var drawingWidth = events[eventID].drawing_dimensions.w;
-		var drawingHeight = events[eventID].drawing_dimensions.h;
+		drawingTD.width = settings.events[eventID].drawing_dimensions.w; // Sadly, this is more robust than setProperty(...).
+		var drawingWidth = settings.events[eventID].drawing_dimensions.w;
+		var drawingHeight = settings.events[eventID].drawing_dimensions.h;
 		scramblers[eventID].drawScramble(drawingTD, state, drawingWidth, drawingHeight);
 
 	}
@@ -144,7 +141,7 @@ mark2.controller = (function() {
 		
 		var scrambleTR = mark2.dom.appendElement(tBody, "tr");
 
-		var scramblesInThisRow = Math.min(events[eventID].scrambles_per_row, numTotal - num + 1);
+		var scramblesInThisRow = Math.min(settings.events[eventID].scrambles_per_row, numTotal - num + 1);
 
 		for (var i = 0; i < scramblesInThisRow; i++) {
 
@@ -153,12 +150,12 @@ mark2.controller = (function() {
 			mark2.dom.appendElement(scrambleTR, "td", "number number_" + eventID, scrambleID + "_number", "" + (num + i) + ".");
 			mark2.dom.appendElement(scrambleTR, "td", "scramble scramble_" + eventID, scrambleID + "_scramble",  "[Space for Scramble #" + (num + i) + "]");
 			var drawingTD = mark2.dom.appendElement(scrambleTR, "td", "drawing drawing_" + eventID, scrambleID + "_drawing", "[Space for Drawing]");
-			drawingTD.width = events[eventID].drawing_dimensions.w;
-			drawingTD.height = events[eventID].drawing_dimensions.h;
+			drawingTD.width = settings.events[eventID].drawing_dimensions.w;
+			drawingTD.height = settings.events[eventID].drawing_dimensions.h;
 
 			if (webWorkersRunning) {
 
-				events[eventID].worker.postMessage({
+				workerMap[eventID].postMessage({
 					action: "get_random_scramble",
 					event_id: eventID,
 					return_data: {
@@ -187,7 +184,7 @@ mark2.controller = (function() {
 
 		var scrambleSets = document.getElementById("scramble_sets");
 
-		if (!events[eventID]) {
+		if (!settings.events[eventID]) {
 			mark2.dom.appendElement(scrambleSets, "div", "unupported", null, "Sorry, but \"" + eventID + "\" scrambles are not currently supported.");
 			return;
 		}
@@ -205,7 +202,7 @@ mark2.controller = (function() {
 				var newInfoTHead = mark2.dom.appendElement(newInfoTable, "thead");
 					var newInfoTR = mark2.dom.appendElement(newInfoTHead, "tr");
 						
-						mark2.dom.appendElement(newInfoTR, "td", "puzzle_name", null, events[eventID].name);
+						mark2.dom.appendElement(newInfoTR, "td", "puzzle_name", null, settings.events[eventID].name);
 						mark2.dom.appendElement(newInfoTR, "td", "competition_name", null, competitionName);
 						mark2.dom.appendElement(newInfoTR, "td", "round_name", null, roundName);
 
@@ -221,13 +218,13 @@ mark2.controller = (function() {
 					var newFooterTR = mark2.dom.appendElement(newFooterTHead, "tr");
 
 						mark2.dom.appendElement(newFooterTR, "td", null, null, '<u>Scrambles generated at:</u><br>' + (new Date().toString()));
-						mark2.dom.appendElement(newFooterTR, "td", null, null, '<div style="text-align: right;"><u>' + events[eventID].name + ' Scrambler Version</u><br>' + scrambler.version + '</div>');
+						mark2.dom.appendElement(newFooterTR, "td", null, null, '<div style="text-align: right;"><u>' + settings.events[eventID].name + ' Scrambler Version</u><br>' + scrambler.version + '</div>');
 						mark2.dom.appendElement(newFooterTR, "td", null, null, '<img src="' + mark2.settings.assets_root + 'img/wca_logo.svg" class="wca_logo">');
 		
 		// Generate those scrambles!
 		
-		addUpdateGeneral("Generating " + numScrambles + " scramble" + ((numScrambles === 1) ? "" : "s") + " for " + events[eventID].name + ": " + roundName + "");
-		resetUpdatesSpecific("Details for " + events[eventID].name + ": " + roundName);
+		addUpdateGeneral("Generating " + numScrambles + " scramble" + ((numScrambles === 1) ? "" : "s") + " for " + settings.events[eventID].name + ": " + roundName + "");
+		resetUpdatesSpecific("Details for " + settings.events[eventID].name + ": " + roundName);
 		
 		var delayedDOMUpdateContinuation = function() {
 			mark2.dom.showElement(newScrambleSet);
@@ -236,8 +233,8 @@ mark2.controller = (function() {
 
 		var nextContinuation = generateScrambleSet.bind(null, delayedDOMUpdateContinuation, competitionName, newScramblesTBody, eventID, scrambler, 1, numScrambles, {});
 		var call;
-		if (!webWorkersRunning && !events[eventID].initialized) {
-		    addUpdateSpecific("Initializing " + events[eventID].name + " scrambler (only needs to be done once).");
+		if (!webWorkersRunning && !settings.events[eventID].initialized) {
+		    addUpdateSpecific("Initializing " + settings.events[eventID].name + " scrambler (only needs to be done once).");
 
 		    var statusCallback = function(str) {
 		    	addUpdateSpecific(str);
@@ -245,14 +242,14 @@ mark2.controller = (function() {
 		    }
 
 			call = scrambler.initialize.bind(null, nextContinuation, randomSource, statusCallback);
-			events[eventID].initialized = true;
+			settings.events[eventID].initialized = true;
 		}
 		else {
 
 			if (webWorkersRunning) {
 			}
-			else if (events[eventID].initialized) {
-		    	addUpdateSpecific("" + events[eventID].name + " scrambler already initialized.");
+			else if (settings.events[eventID].initialized) {
+		    	addUpdateSpecific("" + settings.events[eventID].name + " scrambler already initialized.");
 			}
 			call = nextContinuation;
 		}
@@ -506,20 +503,20 @@ mark2.controller = (function() {
 
 		try {
 
-			for (i in workerGroups) {
+			for (i in settings.worker_groups) {
 
-				var worker = new Worker(web_worker_file);
+				var worker = new Worker(settings.web_worker_file);
 				var scramblerFiles = {};
 
-				for (j in workerGroups[i].events) {
-					events[workerGroups[i].events[j]].worker = worker;
-					scramblerFiles[workerGroups[i].events[j]] = "../scramblers/" + events[workerGroups[i].events[j]].scrambler_file;
+				for (j in settings.worker_groups[i].event_ids) {
+					workerMap[settings.worker_groups[i].event_ids[j]] = worker;
+					scramblerFiles[settings.worker_groups[i].event_ids[j]] = "../scramblers/" + settings.events[settings.worker_groups[i].event_ids[j]].scrambler_file;
 				}
 				worker.onmessage = handleWorkerMessage;
 
 				workers[i] = worker;
 
-				worker.postMessage({action: "initialize", worker_id: i, event_ids: workerGroups[i].events, auto_ini: workerGroups[i].auto_ini, scrambler_files: scramblerFiles, random_seed: getRandomSeed()});
+				worker.postMessage({action: "initialize", worker_id: i, event_ids: settings.worker_groups[i].event_ids, auto_ini: settings.worker_groups[i].auto_ini, scrambler_files: scramblerFiles, random_seed: getRandomSeed()});
 			}
 
 			webWorkersRunning = true;
@@ -579,7 +576,7 @@ mark2.controller = (function() {
 			break;
 
 			case "get_random_scramble_response":
-				//console.log("Received a " + events[e.data.event_id].name +	 " scramble: " + e.data.scramble.scramble_string);
+				//console.log("Received a " + settings.events[e.data.event_id].name +	 " scramble: " + e.data.scramble.scramble_string);
 				insertScramble(
 					e.data.return_data.scramble_id,
 					e.data.event_id,
