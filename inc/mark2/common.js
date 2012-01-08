@@ -154,7 +154,7 @@ mark2.settings = (function() {
 		//"mmagic"
 		"444bf":  {name: "4x4 blindfolded",  scrambler_file: "scramble_NNN.js",   default_round: {type: "best", num_scrambles: 3 }, drawing_dimensions: {w: 160, h: 120}, scrambles_per_row: 1},
 		"555bf":  {name: "5x5 blindfolded",  scrambler_file: "scramble_NNN.js",   default_round: {type: "best", num_scrambles: 3 }, drawing_dimensions: {w: 160, h: 120}, scrambles_per_row: 1},
-		"333mbf": {name: "3x3 multi blind",  scrambler_file: "scramble_333.js",   default_round: {type: "mbf",  num_scrambles: 20}, drawing_dimensions: {w: 80,  h: 60 }, scrambles_per_row: 2}
+		"333mbf": {name: "3x3 multi blind",  scrambler_file: "scramble_333.js",   default_round: {type: "mbf",  num_scrambles: 28}, drawing_dimensions: {w: 60,  h: 45}, scrambles_per_row: 2}
 		
 		// Unofficial events
 		//"skewb"
