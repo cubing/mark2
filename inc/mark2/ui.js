@@ -66,10 +66,10 @@ mark2.ui = (function() {
 				changeNumRounds(eventID, parseInt(el.value));
 			}.bind(null, eventID, valInput);
 
-			valInput.addEventListener("change", changeNumRoundsListener);
-			valInput.addEventListener("mouseup", changeNumRoundsListener);
-			valInput.addEventListener("keyup", changeNumRoundsListener);
-			valInput.addEventListener("input", changeNumRoundsListener);
+			valInput.addEventListener("change", changeNumRoundsListener, false);
+			valInput.addEventListener("mouseup", changeNumRoundsListener, false);
+			valInput.addEventListener("keyup", changeNumRoundsListener, false);
+			valInput.addEventListener("input", changeNumRoundsListener, false);
 		}
 	}
 
