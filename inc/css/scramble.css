@@ -4,14 +4,14 @@ body, div, p {
 }
 
 body {
+  max-width: 800px;
   font-family: Helvetica, Tahoma, Arial;
 
-  background-color: #EEE;
-  background-image: -webkit-repeating-linear-gradient(0deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
-  background-image: -moz-repeating-linear-gradient(0deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
-  background-image: -o-repeating-linear-gradient(0deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
-  background-image: repeating-linear-gradient(0deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
-  max-width: 800px;
+  background: #DEE;
+}
+
+body.busy {
+  background: #EED;
 }
 
 body.done {

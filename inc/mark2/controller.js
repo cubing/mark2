@@ -469,6 +469,8 @@ mark2.controller = (function() {
 
 	var updateProgress = function(fraction) {
 
+		mark2.dom.addClass(document.body, "busy");
+
 		var progressBar = document.getElementById("progress_bar");
 
 		progressBar.setAttribute("value", numScramblesDone / totalNumScrambles);
@@ -483,6 +485,7 @@ mark2.controller = (function() {
 	var showProgressDone = function() {
 
 		showProgressMessage("Done generating " + totalNumScrambles + " scrambles.");
+		mark2.dom.removeClass(document.body, "busy");
 		mark2.dom.addClass(document.body, "done");
 	}
 
