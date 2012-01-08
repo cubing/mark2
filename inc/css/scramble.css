@@ -354,7 +354,7 @@ h1 {
  */
 
 .scramble_table td.scramble_333, .scramble_table td.scramble_333bf, .scramble_table td.scramble_333oh, .scramble_table td.scramble_333fm, .scramble_table td.scramble_333ft {
-  font-size: 150%;
+  font-size: 120%;
 }
 
 .scramble_set .scramble_table td.number_333mbf, .scramble_set .scramble_table td.scramble_333mbf, .scramble_set .scramble_table td.drawing_333mbf {
@@ -364,11 +364,11 @@ h1 {
 }
 
 .scramble_table td.scramble_222 {
-  font-size: 200%;
+  font-size: 120%;
 }
 
 .scramble_table td.scramble_pyram {
-  font-size: 180%;
+  font-size: 120%;
 }
 
 .scramble_table td.scramble_666 {
@@ -386,7 +386,7 @@ h1 {
 
 .scramble_table td.scramble_clock {
   font-family: monospace;
-  font-size: 140%;
+  font-size: 120%;
 }
 
 
