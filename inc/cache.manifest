@@ -1,13 +1,15 @@
 CACHE MANIFEST
 # Uploaded on [DATE]
+mark2.common.js
+mark2.controller.js
+mark2.ui.js
+mark2.workers.js
 mersennetwister.js
 offline_storage_example.png
 offline.html
 raphael-min.js
 scramble.css
-scramble.js
 wca_logo.svg
-web_worker_manager.js
 scramblers/scramble_222.js
 scramblers/scramble_333.js
 scramblers/scramble_clock.js
