@@ -14,6 +14,10 @@ body {
   max-width: 800px;
 }
 
+body.done {
+  background: #DEE;
+}
+
 
 
 h1 {
@@ -55,6 +59,7 @@ h1 {
 
 #updates #progress_message {
   font-weight: bold;
+  line-height: 2em;
 }
 
 

@@ -14,7 +14,7 @@ mark2.controller = (function() {
 	var version = "January 07, 2012";
 
 	var settings;
-	
+
 	var workerMap = {};
 
 	// alg.garron.us puzzle ID mapping.
@@ -477,11 +477,13 @@ mark2.controller = (function() {
 
 	var showProgressMessage = function(message) {
 		var doneMessageDiv = document.getElementById("progress_message");
-		doneMessageDiv.innerHTML = "<br>" + message;
+		doneMessageDiv.innerHTML = "" + message;
 	}
 
 	var showProgressDone = function() {
-		showProgressMessage("All scrambles have been generated.<br>You can print them now (this panel will not print).");
+
+		showProgressMessage("Done generating " + totalNumScrambles + " scrambles.");
+		mark2.dom.addClass(document.body, "done");
 	}
 
 
