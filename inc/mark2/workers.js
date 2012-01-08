@@ -39,7 +39,7 @@ var web_worker_manager = (function() {
 
 		randomSource = new MersenneTwisterObject(randomSeed);
 
-		for (i in eventIDs) {
+		for (var i = 0; i < eventIDs.length; i++) {
 			var eventID = eventIDs[i];
 
 			// Import script if not already done. (Allows multiple scramblers to use the same scrambler, like 3x3x3 events.)

@@ -508,12 +508,12 @@ mark2.controller = (function() {
 
 		try {
 
-			for (i in settings.worker_groups) {
+			for (var i =0; i < settings.worker_groups.length; i++) {
 
 				var worker = new Worker(settings.web_worker_file);
 				var scramblerFiles = {};
 
-				for (j in settings.worker_groups[i].event_ids) {
+				for (var j = 0; j < settings.worker_groups[i].event_ids.length; j++) {
 					workerMap[settings.worker_groups[i].event_ids[j]] = worker;
 					scramblerFiles[settings.worker_groups[i].event_ids[j]] = "../scramblers/" + settings.events[settings.worker_groups[i].event_ids[j]].scrambler_file;
 				}
@@ -534,7 +534,7 @@ mark2.controller = (function() {
 	}
 
 	var terminateWebWorkers = function() {
-		for (var i in workers) {
+		for (var i = 0; i < workers.length; i++) {
 			workers[i].terminate();
 		}
 		workers = {};

@@ -169,7 +169,7 @@ mark2.ui = (function() {
 	}
 
     var addRounds = function(rounds) {
-    	for (var i in rounds) {
+    	for (var i = 0; i < rounds.length; i++) {
 	    	addRound(rounds[i][0], rounds[i][1], rounds[i][2], rounds[i][3]);
 	    }
     }
