@@ -12,60 +12,20 @@ mark2.ui = (function() {
 	 * Configuration Section
 	 */
 
-	var version = "January 03, 2012";
+	var version = "January 07, 2012";
+
+	var settings;
 
 	var eventsPerRow = 5;
-	var defaultNumGroups = 1;
 	
-	var events;
-
-	// Javascript objects don't retain key order in all browsers, so we create this list for iteration.
-	var eventOrder = [
-		"222",
-		"333",
-		"444",
-		"555",
-		"666",
-		"777",
-		"333bf",
-		"333oh",
-		"333fm",
-		"333ft",
-		"minx",
-		"pyram",
-		"sq1",
-		"clock",
-		//"magic",
-		//"mmagic",
-		"444bf",
-		"555bf",
-		"333mbf"
-		//"skewb"
-	];
-
-	var defaultRounds;
-
-	// Round types are not currently used.
-	/*
-	var roundTypeNames = {
-		"avg": "Average of",
-		"best": "Best of",
-		"combined": "Combined Round of",
-		"mean": "Mean of",
-		"mbf": "Multi Blind of"
-	}
-	*/
-
-
 
 	/*
 	 * Mark 2 Initialization
 	 */
 
-	var initialize = function(eventsIn, defaultRoundsIn) {
+	var initialize = function(settingsIn) {
 
-		events = eventsIn;
-		defaultRounds = defaultRoundsIn;
+		settings = settingsIn;
 
 		initializeEvents();
 		initializeEventsTable();
@@ -84,10 +44,10 @@ mark2.ui = (function() {
 		var eventsTable = document.getElementById("events_table");
 		var currentEventsTR;
 
-		for (var i =0; i < eventOrder.length; i++) {
-			eventID = eventOrder[i]
+		for (var i =0; i < settings.event_order.length; i++) {
+			eventID = settings.event_order[i]
 
-			events[eventID].initialized = false;
+			settings.events[eventID].initialized = false;
 
 			if (i % eventsPerRow === 0) {
 				currentEventsTR = mark2.dom.appendElement(eventsTable, "tr");
@@ -101,10 +61,15 @@ mark2.ui = (function() {
 			valInput.setAttribute("id", "event_amount_value_" + eventID);
 			valInput.setAttribute("type", "number");
 			valInput.setAttribute("min", "0");
-			valInput.setAttribute("onchange", "mark2.ui.changeNumRounds(\"" + eventID + "\", parseInt(this.value));");
-			valInput.setAttribute("onmouseup", "mark2.ui.changeNumRounds(\"" + eventID + "\", parseInt(this.value));");
-			valInput.setAttribute("onkeyup", "mark2.ui.changeNumRounds(\"" + eventID + "\", parseInt(this.value));");
-			valInput.setAttribute("oninput", "mark2.ui.changeNumRounds(\"" + eventID + "\", parseInt(this.value));");
+
+			var changeNumRoundsListener = function(eventID, el) {
+				changeNumRounds(eventID, parseInt(el.value));
+			}.bind(null, eventID, valInput);
+
+			valInput.addEventListener("change", changeNumRoundsListener, false);
+			valInput.addEventListener("mouseup", changeNumRoundsListener, false);
+			valInput.addEventListener("keyup", changeNumRoundsListener, false);
+			valInput.addEventListener("input", changeNumRoundsListener, false);
 		}
 	}
 
@@ -132,7 +97,7 @@ mark2.ui = (function() {
 		var roundsHash = getHashParameter("rounds", null);
 
 		if (roundsHash === null) {
-			addRounds(defaultRounds);
+			addRounds(settings.default_rounds);
 		}
 		else {
 			var rounds = JSON.parse(decodeURIComponent(roundsHash));
@@ -165,12 +130,12 @@ mark2.ui = (function() {
 
 		var numGroups = numGroupsOpt;
 		if (numGroupsOpt === undefined) {
-			numGroups = defaultNumGroups;
+			numGroups = settings.default_num_groups;
 		}
 
 		var numSolves = numSolvesOpt;
 		if (numSolvesOpt === undefined) {
-			numSolves = events[eventID].default_round.num_scrambles;
+			numSolves = settings.events[eventID].default_round.num_scrambles;
 		}
 
 		var eventTBody = document.getElementById("rounds_tbody");
@@ -180,7 +145,7 @@ mark2.ui = (function() {
 		var newEventTR = mark2.dom.appendElement(eventTBody, "tr", "event_tr_" + eventID, newEventTR_ID);
 			newEventTR.setAttribute("data-event-id", eventID);
 
-		var nameTD = mark2.dom.appendElement(newEventTR, "td", "event_name", null, events[eventID].name);
+		var nameTD = mark2.dom.appendElement(newEventTR, "td", "event_name", null, settings.events[eventID].name);
 		
 		var roundNameTD = mark2.dom.appendElement(newEventTR, "td");
 		var roundNameInput = mark2.dom.appendElement(roundNameTD, "input", "round_name");
@@ -200,11 +165,11 @@ mark2.ui = (function() {
 
 		var removeTD = mark2.dom.appendElement(newEventTR, "td", "round_remove");
 		var removeButton = mark2.dom.appendElement(removeTD, "button", null, null, "&nbsp;&nbsp;X&nbsp;&nbsp;");
-			removeButton.setAttribute("onclick", "mark2.ui.removeRound(\"" + eventID + "\", \"" + newEventTR_ID + "\")");
+			removeButton.addEventListener("click", removeRound.bind(null, eventID, newEventTR_ID), false);
 	}
 
     var addRounds = function(rounds) {
-    	for (var i in rounds) {
+    	for (var i = 0; i < rounds.length; i++) {
 	    	addRound(rounds[i][0], rounds[i][1], rounds[i][2], rounds[i][3]);
 	    }
     }
@@ -288,9 +253,6 @@ mark2.ui = (function() {
 	return {
 		version: version,
 		initialize: initialize,
-		addRound: addRound,
-		removeRound: removeRound,
-		changeNumRounds: changeNumRounds,
 		updateHash: updateHash,
 		getRoundsJSON: getRoundsJSON
 	};

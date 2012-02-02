@@ -19,6 +19,7 @@ The name "Mark 2" represents that this is an entirely rewritten second-generatio
 
 - When updating a scrambler, update date of the version at the end of the file.
 - Make sure all scramblers use implement a setRandomSource(src) methoda and use randomSource.random() instead of Math.random().
+- Always loop over an array using `for (var i=0; i < array.length; i++)` instead of `for (var i in array)`.
 
 # Credit
 
