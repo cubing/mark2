@@ -1,0 +1,27 @@
+CACHE MANIFEST
+# Uploaded on [DATE]
+
+./
+offline_storage_example.png
+
+../css/scramble.css
+
+../img/wca_logo.svg
+
+../lib/mersennetwister.js
+../lib/raphael-min.js
+
+../mark2/common.js
+../mark2/controller.js
+../mark2/ui.js
+../mark2/workers.js
+
+../scramblers/scramble_222.js
+../scramblers/scramble_333.js
+../scramblers/scramble_clock.js
+../scramblers/scramble_minx.js
+../scramblers/scramble_NNN.js
+../scramblers/scramble_pyram.js
+../scramblers/scramble_sq1.js
+
+../../

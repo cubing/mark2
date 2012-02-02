@@ -4,14 +4,18 @@ body, div, p {
 }
 
 body {
+  max-width: 800px;
   font-family: Helvetica, Tahoma, Arial;
 
-  background-color: #EEE;
-  background-image: -webkit-repeating-linear-gradient(0deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
-  background-image: -moz-repeating-linear-gradient(0deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
-  background-image: -o-repeating-linear-gradient(0deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
-  background-image: repeating-linear-gradient(0deg, transparent, transparent 15px, rgba(255,255,255,.5) 15px, rgba(255,255,255,.5) 30px);
-  max-width: 800px;
+  background: #DEE;
+}
+
+body.busy {
+  background: #EED;
+}
+
+body.done {
+  background: #DEE;
 }
 
 
@@ -55,6 +59,7 @@ h1 {
 
 #updates #progress_message {
   font-weight: bold;
+  line-height: 2em;
 }
 
 
@@ -349,7 +354,7 @@ h1 {
  */
 
 .scramble_table td.scramble_333, .scramble_table td.scramble_333bf, .scramble_table td.scramble_333oh, .scramble_table td.scramble_333fm, .scramble_table td.scramble_333ft {
-  font-size: 150%;
+  font-size: 120%;
 }
 
 .scramble_set .scramble_table td.number_333mbf, .scramble_set .scramble_table td.scramble_333mbf, .scramble_set .scramble_table td.drawing_333mbf {
@@ -359,11 +364,11 @@ h1 {
 }
 
 .scramble_table td.scramble_222 {
-  font-size: 200%;
+  font-size: 120%;
 }
 
 .scramble_table td.scramble_pyram {
-  font-size: 180%;
+  font-size: 120%;
 }
 
 .scramble_table td.scramble_666 {
@@ -381,7 +386,7 @@ h1 {
 
 .scramble_table td.scramble_clock {
   font-family: monospace;
-  font-size: 140%;
+  font-size: 120%;
 }
 
 
