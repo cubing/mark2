@@ -1,4 +1,4 @@
-
+"use strict";
 Math.random = undefined; // So we won't use it by accident.
 
 var web_worker_manager = (function() {

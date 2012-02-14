@@ -3,7 +3,7 @@
 /* Random-State modification by Lucas Garron (lucasg a t gmx d o t de / garron.us) in collaboration with Michael Gottlieb (mzrg.com)*/
 /* Optimal modification by Michael Gottlieb (qqwref a t gmail d o t com) from Jaap's code */
 /* Version 1.0*/
-
+"use strict";
 if (typeof scramblers == "undefined") {
   var scramblers = {};
 }
@@ -92,7 +92,6 @@ scramblers["pyram"] = (function() {
    
    for( n = 0; n < numcub; n++){
     initbrd();
-    calcperm();
     dosolve();
    
     scramblestring[n]="";
@@ -534,6 +533,7 @@ scramblers["pyram"] = (function() {
     setRandomSource(iniRandomSource);
     
     parse();
+    calcperm();
 
     if (continuation) {
       setTimeout(continuation, 0);

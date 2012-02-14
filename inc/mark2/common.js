@@ -1,4 +1,4 @@
-
+"use strict";
 // Offline Caching
 if (typeof window.applicationCache !== "undefined") {
 	window.applicationCache.addEventListener('updateready', function() {

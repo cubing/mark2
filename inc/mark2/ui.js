@@ -5,7 +5,7 @@
  *
  */
 
-
+"use strict";
 mark2.ui = (function() {
 		
 	/*
@@ -45,7 +45,7 @@ mark2.ui = (function() {
 		var currentEventsTR;
 
 		for (var i =0; i < settings.event_order.length; i++) {
-			eventID = settings.event_order[i]
+			var eventID = settings.event_order[i]
 
 			settings.events[eventID].initialized = false;
 
