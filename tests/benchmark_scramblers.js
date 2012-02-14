@@ -1,5 +1,7 @@
 // Initialization Data
 
+"use strict";
+
 var DEFAULT_NUM = 100;
 
 var eventIDs = [
