@@ -29,7 +29,7 @@ if (typeof IN_BROWSER === "undefined") {
     // From http://stackoverflow.com/questions/5797852/in-node-js-how-do-i-include-functions-from-my-other-files
     // Closest thing we have to simulating web-worker-style includes.
 
-	eval(fs.readFileSync('../inc/mersennetwister.js')+'');
+	eval(fs.readFileSync('../inc/lib/mersennetwister.js')+'');
 
 	eval(fs.readFileSync('../inc/scramblers/scramble_222.js')+'');
 	eval(fs.readFileSync('../inc/scramblers/scramble_333.js')+'');

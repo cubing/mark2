@@ -4,7 +4,7 @@
  * Lucas Garron, November/December 2011
  *
  */
-
+"use strict";
 mark2.controller = (function() {
 		
 	/*
@@ -18,7 +18,7 @@ mark2.controller = (function() {
 	var workerMap = {};
 
 	// alg.garron.us puzzle ID mapping.
-	eventIDToAlgPuzzleID = {
+	var eventIDToAlgPuzzleID = {
 		"333": "3x3x3",
 		"444": "4x4x4",
 		"555": "5x5x5",
@@ -60,7 +60,7 @@ mark2.controller = (function() {
     var getScrambleSetsJSON = function() {
 
     	var rounds = mark2.ui.getRoundsJSON();
-    	scrambleSets = [];
+    	var scrambleSets = [];
 
 		for (var i = 0; i < rounds.length; i++) {
 
