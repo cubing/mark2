@@ -115,9 +115,9 @@ var benchmark = function(eventID, num) {
 
 	for (var i = 0; i < num; i++) {
 	  
-	  preTime = currentTime();
+	  var preTime = currentTime();
 	  var scr = scramblers[eventID].getRandomScramble();
-	  time = currentTime() - preTime;
+	  var time = currentTime() - preTime;
 	  
 	  trials.push(time);
 	  
