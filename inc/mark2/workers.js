@@ -101,7 +101,7 @@ var web_worker_manager = (function() {
 		});
 	}
 
-	onmessage = function(e) {
+	var onmessage = function(e) {
 		try {
 			switch(e.data.action) {
 				case "initialize":
@@ -133,4 +133,4 @@ var web_worker_manager = (function() {
 })();
 
 var console = web_worker_manager.console;
-onmessage = web_worker_manager.onmessage;
+this.onmessage = web_worker_manager.onmessage;
