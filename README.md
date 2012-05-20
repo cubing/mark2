@@ -39,4 +39,4 @@ The name "Mark 2" represents that this is an entirely rewritten second-generatio
 - [Michael Gottlieb](http://mzrg.com/) (Square-1)
 - [Lucas Garron](http://www.garron.us/) (Square-1, Mark 2)
 - Evan Gates (QBX)
-- Shuang Chen (Fast GWT-compiled 3x3x3 scrambler)
+- Shuang Chen (Fast GWT-compiled 3x3x3 scrambler and Square-1 scrambler)
