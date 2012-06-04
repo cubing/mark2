@@ -133,7 +133,7 @@ mark2.controller = (function() {
 		drawingTD.width = settings.events[eventID].drawing_dimensions.w; // Sadly, this is more robust than setProperty(...).
 		var drawingWidth = settings.events[eventID].drawing_dimensions.w;
 		var drawingHeight = settings.events[eventID].drawing_dimensions.h;
-		scramblers[eventID].drawScramble(drawingTD, state, drawingWidth, drawingHeight);
+		scramblers[eventID].drawScramble(drawingTD, state, drawingWidth, drawingHeight, scramble);
 
 	}
 
